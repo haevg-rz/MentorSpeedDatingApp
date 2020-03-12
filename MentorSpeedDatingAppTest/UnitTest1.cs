@@ -10,5 +10,11 @@ namespace MentorSpeedDatingAppTest
         {
 
         }
+
+        [Fact]
+        public void Test2()
+        {
+            throw new Exception();
+        }
     }
 }
