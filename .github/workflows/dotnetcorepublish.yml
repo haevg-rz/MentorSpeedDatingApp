@@ -16,7 +16,7 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Publish with dotnet
-      run: dotnet publish --o publish
+      run: dotnet publish -o publish
 
     - name: Action Release
       uses: yakuhzi/action-release@v1.2.0
