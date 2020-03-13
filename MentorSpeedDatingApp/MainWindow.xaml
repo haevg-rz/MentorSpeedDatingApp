@@ -5,10 +5,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MentorSpeedDatingApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="1000" Width="800"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         >
     <Grid>
+        <!-- Tabellen Region -->
+        <Grid HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">Mentor</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">Mentee</TextBlock>
+                <!-- Mentoren Tabelle -->
+                <ListView ItemsSource="{Binding Mentors}" Grid.Row="1" Grid.Column="0">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="True" ColumnHeaderToolTip="Mentors">
+                            <GridViewColumn DisplayMemberBinding="{Binding Titel}" Header="Titel" Width="50" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" Width="100" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Vorname}" Width="100" Header="Vorname" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
 
+                <!-- Mentee Tabelle -->
+                <ListView ItemsSource="{Binding Mentees}" Grid.Row="1" Grid.Column="1">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="True" ColumnHeaderToolTip="Mentors">
+                            <GridViewColumn DisplayMemberBinding="{Binding Titel}" Header="Titel" Width="50" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" Width="100" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Vorname}" Header="Vorname" Width="100" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+        </Grid>
     </Grid>
 </Window>
