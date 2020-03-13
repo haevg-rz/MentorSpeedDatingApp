@@ -6,11 +6,19 @@ using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using MentorSpeedDatingApp.Models;
+using Newtonsoft.Json;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        #region Properties
+
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+
+        #endregion
+
         #region Lists
 
         public ObservableCollection<Mentee> Mentees { get; set; }
@@ -26,7 +34,6 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand GenerateMatchingCommand { get; set; }
 
         #endregion
-
 
         public MainViewModel()
         {
@@ -66,7 +73,11 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            throw new NotImplementedException();
+            var jsonMentors = JsonConvert.SerializeObject(this.Mentors, Formatting.Indented);
+            var jsonMentees = JsonConvert.SerializeObject(this.Mentees, Formatting.Indented);
+
+            File.WriteAllText(@"..\..\SavedData\mentors.json", jsonMentors);
+            File.WriteAllText(@"..\..\SavedData\mentees.json", jsonMentees);
         }
 
         private void OnCloseCommandHandling()
@@ -76,7 +87,11 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void OnLoadCommandHandling()
         {
-            throw new NotImplementedException();
+            var jsonMentorsData = File.ReadAllText(@"..\..\SavedData\mentors.json");
+            this.Mentors = JsonConvert.DeserializeObject<ObservableCollection<Mentor>>(jsonMentorsData);
+
+            var jsonMenteesData = File.ReadAllText(@"..\..\SavedData\mentees.json");
+            this.Mentees = JsonConvert.DeserializeObject<ObservableCollection<Mentee>>(jsonMenteesData);
         }
     }
 }
