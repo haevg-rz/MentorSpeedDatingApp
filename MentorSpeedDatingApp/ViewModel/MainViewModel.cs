@@ -1,30 +1,64 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.RightsManagement;
 using System.Windows;
+using CommonServiceLocator;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using Newtonsoft.Json;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
+    [DataContract]
     public class MainViewModel : ViewModelBase
     {
+        #region ClassMembers
+
+        #region Fields
+
+        #endregion
+
         #region Properties
 
-        public string Headline { get; set; }
-        public DateTime Date { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
+        private string headLine;
+
+        [DataMember]
+        public string HeadLine
+        {
+            get => this.headLine;
+            set => base.Set(ref this.headLine, value);
+        }
+
+        private DateTime startTime;
+
+        [DataMember]
+        public DateTime StartTime
+        {
+            get => this.startTime;
+            set => base.Set(ref this.startTime, value);
+        }
+
+        private DateTime endTime;
+
+        [DataMember]
+        public DateTime EndTime
+        {
+            get => this.endTime;
+            set => base.Set(ref this.endTime, value);
+        }
 
         #endregion
 
         #region Lists
 
-        public ObservableCollection<Mentee> Mentees { get; set; }
-        public ObservableCollection<Mentor> Mentors { get; set; }
+        [DataMember] public ObservableCollection<Mentee> Mentees { get; set; }
+        [DataMember] public ObservableCollection<Mentor> Mentors { get; set; }
 
         #endregion
 
@@ -34,6 +68,10 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand OnCloseCommand { get; set; }
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
+        public RelayCommand DeleteMentorsCommand { get; set; }
+        public RelayCommand DeleteMenteesCommand { get; set; }
+
+        #endregion
 
         #endregion
 
@@ -48,6 +86,10 @@ namespace MentorSpeedDatingApp.ViewModel
             this.OnCloseCommand = new RelayCommand(this.OnCloseCommandHandling);
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
             this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling);
+            this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
+            this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
+
+            this.OnLoadCommandHandling();
 
             if (base.IsInDesignMode)
             {
@@ -71,6 +113,18 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
+        #region CommandHandlings
+
+        private void DeleteMenteesCommandHandling()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DeleteMentorsCommandHandling()
+        {
+            throw new NotImplementedException();
+        }
+
         private void GenerateMatchingCommandHandling()
         {
             throw new NotImplementedException();
@@ -78,25 +132,62 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var jsonMentors = JsonConvert.SerializeObject(this.Mentors, Formatting.Indented);
-            var jsonMentees = JsonConvert.SerializeObject(this.Mentees, Formatting.Indented);
+            var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
 
-            File.WriteAllText( @"..\..\..\..\SavedData\mentors.json", jsonMentors);
-            File.WriteAllText(@"..\..\..\..\SavedData\mentees.json", jsonMentees);
+            File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
         }
 
         private void OnCloseCommandHandling()
         {
-            throw new NotImplementedException();
+            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
+            {
+                return;
+            }
+
+            var definition = new
+            {
+                HeadLine = "",
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
+                Mentees = new ObservableCollection<Mentee>(),
+                Mentors = new ObservableCollection<Mentor>()
+            };
+            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
+
+            if (!this.Mentors.CompareCollectionsOnEqualContent(deserializedJson.Mentors,
+                (mVM, mSerialized) => mVM.Name == mSerialized.Name && mVM.Vorname == mSerialized.Vorname &&
+                                      mVM.Titel == mSerialized.Titel))
+            {
+                MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!");
+            }
         }
 
         private void OnLoadCommandHandling()
         {
-            var jsonMentorsData = File.ReadAllText(@"..\..\..\..\SavedData\mentors.json");
-            this.Mentors = JsonConvert.DeserializeObject<ObservableCollection<Mentor>>(jsonMentorsData);
+            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
+            {
+                return;
+            }
 
-            var jsonMenteesData = File.ReadAllText(@"..\..\..\..\SavedData\mentees.json");
-            this.Mentees = JsonConvert.DeserializeObject<ObservableCollection<Mentee>>(jsonMenteesData);
+            var definition = new
+            {
+                HeadLine = "",
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
+                Mentees = new ObservableCollection<Mentee>(),
+                Mentors = new ObservableCollection<Mentor>()
+            };
+            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
+
+            this.HeadLine = deserializedJson.HeadLine;
+            this.StartTime = deserializedJson.StartTime;
+            this.EndTime = deserializedJson.EndTime;
+            this.Mentors = deserializedJson.Mentors;
+            this.Mentees = deserializedJson.Mentees;
         }
+
+        #endregion
     }
 }

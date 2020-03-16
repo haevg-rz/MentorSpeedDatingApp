@@ -1,0 +1,59 @@
+{
+  "Mentors": [
+    {
+      "Titel": "Dr.",
+      "Name": "Portman",
+      "Vorname": "Natalie"
+    },
+    {
+      "Titel": "",
+      "Name": "Streep",
+      "Vorname": "Meryl"
+    },
+    {
+      "Titel": "Dr. Dr.",
+      "Name": "Jolie",
+      "Vorname": "Angelina"
+    },
+    {
+      "Titel": "",
+      "Name": "Theron",
+      "Vorname": "Charlize"
+    },
+    {
+      "Titel": "Prof.",
+      "Name": "Watson",
+      "Vorname": "Emma"
+    }
+  ],
+  "Mentees": [
+    {
+      "Titel": "Dr.",
+      "Name": "Johansson",
+      "Vorname": "Scarlett"
+    },
+    {
+      "Titel": "Prof.",
+      "Name": "Lawrence",
+      "Vorname": "Jennifer"
+    },
+    {
+      "Titel": "Dr. med.",
+      "Name": "Roberts",
+      "Vorname": "Julia"
+    },
+    {
+      "Titel": "Prof. Dr.",
+      "Name": "Aniston",
+      "Vorname": "Jennifer"
+    },
+    {
+      "Titel": "",
+      "Name": "Bullock",
+      "Vorname": "Sandra"
+    }
+  ],
+  "HeadLine": "blablabla",
+  "StartTime": "2020-03-16T11:13:15.6023026+01:00",
+  "EndTime": "2020-03-16T00:00:00+01:00"
+}
