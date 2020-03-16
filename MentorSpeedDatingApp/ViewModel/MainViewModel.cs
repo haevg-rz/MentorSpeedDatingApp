@@ -14,8 +14,10 @@ namespace MentorSpeedDatingApp.ViewModel
     {
         #region Properties
 
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public string Headline { get; set; }
+        public DateTime Date { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
 
         #endregion
 
@@ -37,6 +39,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public MainViewModel()
         {
+            this.Date = DateTime.Now;
+
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
 
@@ -47,6 +51,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
             if (base.IsInDesignMode)
             {
+                this.Date = DateTime.Today;
                 this.Mentees = new ObservableCollection<Mentee>
                 {
                     new Mentee {Vorname = "Scarlett", Name = "Johansson", Titel = "Dr."},

@@ -4,22 +4,63 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MentorSpeedDatingApp"
+        xmlns:costumControls="clr-namespace:MentorSpeedDatingApp"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="600"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        >
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
+        
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded" >
+            <i:InvokeCommandAction Command="{Binding OnLoadCommand}" />
+        </i:EventTrigger>
+        </i:Interaction.Triggers>
+
+
     <Grid>
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <!-- Control Region upper -->
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Überschrift: " HorizontalAlignment="Center" />
+                <TextBox MinWidth="200" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Text="{Binding Headline}" ToolTip="Bitte die Überschrift eingeben."/>
+                <DatePicker SelectedDate="{Binding Date}" MinWidth="200" HorizontalContentAlignment="Center" HorizontalAlignment="Center" IsTodayHighlighted="True" Grid.Row="2" ToolTip="Bitte das Datum auswählen" BorderBrush="Transparent"/>
+                <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition  Width="Auto" MinWidth="50"/>
+                        <ColumnDefinition  Width="Auto" MinWidth="50"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Start-Uhrzeit" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                    <TextBox  Grid.Column="1" Grid.Row="0" Text="07" HorizontalContentAlignment="Center"/>
+                    <TextBox  Grid.Column="2" Grid.Row="0" Text="00" HorizontalContentAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Ende-Uhrzeit" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" Text="18" HorizontalContentAlignment="Center"/>
+                    <TextBox Grid.Column="2" Grid.Row="1" Text="00" HorizontalContentAlignment="Center"/>
+                </Grid>
+            </Grid>
+            <!-- End Control Region upper -->
+
             <!-- Tabellen Region -->
-            <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -54,7 +95,7 @@
             <!-- Tabelle Region Ende -->
 
             <!-- Control Region -->
-            <Grid Grid.Row="1" >
+            <Grid Grid.Row="2" >
                 <Grid.ColumnDefinitions >
                     <ColumnDefinition />
                     <ColumnDefinition />
