@@ -76,8 +76,8 @@ namespace MentorSpeedDatingApp.ViewModel
             var jsonMentors = JsonConvert.SerializeObject(this.Mentors, Formatting.Indented);
             var jsonMentees = JsonConvert.SerializeObject(this.Mentees, Formatting.Indented);
 
-            File.WriteAllText(@"..\..\SavedData\mentors.json", jsonMentors);
-            File.WriteAllText(@"..\..\SavedData\mentees.json", jsonMentees);
+            File.WriteAllText( @"..\..\..\..\SavedData\mentors.json", jsonMentors);
+            File.WriteAllText(@"..\..\..\..\SavedData\mentees.json", jsonMentees);
         }
 
         private void OnCloseCommandHandling()
@@ -87,10 +87,10 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void OnLoadCommandHandling()
         {
-            var jsonMentorsData = File.ReadAllText(@"..\..\SavedData\mentors.json");
+            var jsonMentorsData = File.ReadAllText(@"..\..\..\..\SavedData\mentors.json");
             this.Mentors = JsonConvert.DeserializeObject<ObservableCollection<Mentor>>(jsonMentorsData);
 
-            var jsonMenteesData = File.ReadAllText(@"..\..\SavedData\mentees.json");
+            var jsonMenteesData = File.ReadAllText(@"..\..\..\..\SavedData\mentees.json");
             this.Mentees = JsonConvert.DeserializeObject<ObservableCollection<Mentee>>(jsonMenteesData);
         }
     }
