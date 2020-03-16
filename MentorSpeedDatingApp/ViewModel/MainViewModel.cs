@@ -49,19 +49,19 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 this.Mentees = new ObservableCollection<Mentee>
                 {
-                    new Mentee {Vorname = "Max", Name = "Mustermann", Titel = "Dr."},
-                    new Mentee {Vorname = "Frerik", Name = "Ebert", Titel = "Prof."},
-                    new Mentee {Vorname = "Teo", Name = "Limbert", Titel = "Dr. med."},
-                    new Mentee {Vorname = "Dereck", Name = "Watson", Titel = "Prof. Dr."},
-                    new Mentee {Vorname = "Jack", Name = "Sparrow", Titel = ""}
+                    new Mentee {Vorname = "Scarlett", Name = "Johansson", Titel = "Dr."},
+                    new Mentee {Vorname = "Jennifer", Name = "Lawrence", Titel = "Prof."},
+                    new Mentee {Vorname = "Julia", Name = "Roberts", Titel = "Dr. med."},
+                    new Mentee {Vorname = "Jennifer", Name = "Aniston", Titel = "Prof. Dr."},
+                    new Mentee {Vorname = "Sandra", Name = "Bullock", Titel = ""}
                 };
                 this.Mentors = new ObservableCollection<Mentor>
                 {
-                    new Mentor {Vorname = "Benedickt", Name = "Cumbersnatch", Titel = "Dr."},
-                    new Mentor {Vorname = "Brad", Name = "Pitt", Titel = ""},
-                    new Mentor {Vorname = "Leonardo", Name = "DaVinci", Titel = ""},
-                    new Mentor {Vorname = "Vincent", Name = "Van Gohg", Titel = ""},
-                    new Mentor {Vorname = "Rosetta", Name = "Brown", Titel = ""}
+                    new Mentor {Vorname = "Natalie", Name = "Portman", Titel = "Dr."},
+                    new Mentor {Vorname = "Meryl", Name = "Streep", Titel = ""},
+                    new Mentor {Vorname = "Angelina", Name = "Jolie", Titel = "Dr. Dr."},
+                    new Mentor {Vorname = "Charlize", Name = "Theron", Titel = ""},
+                    new Mentor {Vorname = "Emma", Name = "Watson", Titel = "Prof."}
                 };
             }
         }
