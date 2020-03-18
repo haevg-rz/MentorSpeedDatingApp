@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Security.RightsManagement;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using CommonServiceLocator;
 using GalaSoft.MvvmLight;
@@ -79,14 +80,14 @@ namespace MentorSpeedDatingApp.ViewModel
         private string startTime;
         public string StartTime
         {
-            get => this.ConvertTimes(this.StartTimeHours, this.StartTimeMinutes);
+            get => this.BuildTimes(this.StartTimeHours, this.StartTimeMinutes);
             set => base.Set(ref this.startTime, value);
         }
 
         private string endTime;
         public string EndTime
         {
-            get => this.ConvertTimes(this.EndTimeHours, this.EndTimeMinutes);
+            get => this.BuildTimes(this.EndTimeHours, this.EndTimeMinutes);
             set => base.Set(ref this.endTime, value);
         }
 
@@ -126,7 +127,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.OnLoadCommand = new RelayCommand(this.OnLoadCommandHandling);
             this.OnCloseCommand = new RelayCommand(this.OnCloseCommandHandling);
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
-            this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling);
+            this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
 
@@ -168,6 +169,11 @@ namespace MentorSpeedDatingApp.ViewModel
         private void GenerateMatchingCommandHandling()
         {
             throw new NotImplementedException();
+        }
+
+        private bool CanExecuteGenerateMatchingCommandHandling()
+        {
+            return true;
         }
 
         private void SaveCommandHandling()
@@ -228,7 +234,24 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Mentees = deserializedJson.Mentees;
         }
 
-        private string ConvertTimes(string hours, string minutes)
+        #endregion
+
+        #region Helpermethods
+
+        private bool ValidateHoursInput(string hours)
+        {
+            Regex reg = new Regex("^(20|21|22|23|[01]\\d|\\d)$");
+            MatchCollection matches = reg.Matches(input: hours);
+            return matches.Any();
+        }
+        private bool ValidateMinutesInput(string minutes)
+        {
+            Regex reg = new Regex("^([0-5]\\d)$");
+            MatchCollection matches = reg.Matches(input: minutes);
+            return matches.Any();
+        }
+
+        private string BuildTimes(string hours, string minutes)
         {
             var sb = new StringBuilder();
             sb.Append(hours);
@@ -238,5 +261,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         #endregion
+
     }
 }
