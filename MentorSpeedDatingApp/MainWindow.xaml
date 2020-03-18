@@ -14,16 +14,10 @@
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding OnCloseCommand}"/>
         </i:EventTrigger>
-    </i:Interaction.Triggers>
-
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
-        
-    <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded" >
             <i:InvokeCommandAction Command="{Binding OnLoadCommand}" />
         </i:EventTrigger>
-        </i:Interaction.Triggers>
-
+    </i:Interaction.Triggers>
 
     <Grid>
         <Grid Margin="10">
@@ -51,6 +45,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition  Width="Auto" MinWidth="50"/>
+                        <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" MinWidth="50"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -58,11 +53,13 @@
                         <RowDefinition Height="20" />
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Start-Uhrzeit" HorizontalAlignment="Right" Margin="0,0,5,0"/>
-                    <TextBox  Grid.Column="1" Grid.Row="0" Text="07" HorizontalContentAlignment="Center"/>
-                    <TextBox  Grid.Column="2" Grid.Row="0" Text="00" HorizontalContentAlignment="Center"/>
+                    <TextBox  Grid.Column="1" Grid.Row="0" Text="{Binding StartTimeHours}" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="30"/>
+                    <TextBlock Grid.Column="2" Grid.Row="0" Margin="5,0,5,0">:</TextBlock>
+                    <TextBox  Grid.Column="3" Grid.Row="0" Text="{Binding StartTimeMinutes}" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="30"/>
                     <TextBlock Grid.Column="0" Grid.Row="1" Text="Ende-Uhrzeit" HorizontalAlignment="Right" Margin="0,0,5,0"/>
-                    <TextBox Grid.Column="1" Grid.Row="1" Text="18" HorizontalContentAlignment="Center"/>
-                    <TextBox Grid.Column="2" Grid.Row="1" Text="00" HorizontalContentAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding EndTimeHours}" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="30"/>
+                    <TextBlock Grid.Column="2" Grid.Row="1" Margin="5,0,5,0">:</TextBlock>
+                    <TextBox Grid.Column="3" Grid.Row="1" Text="{Binding EndTimeMinutes}" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="30"/>
                 </Grid>
             </Grid>
             <!-- End Control Region upper -->
@@ -77,8 +74,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">Mentor</TextBlock>
-                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">Mentee</TextBlock>
+                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">Mentorinnen</TextBlock>
+                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">Mentees</TextBlock>
                 <!-- Mentoren Tabelle -->
                 <ListView ItemsSource="{Binding Mentors}" Grid.Row="1" Grid.Column="0">
                     <ListView.View>

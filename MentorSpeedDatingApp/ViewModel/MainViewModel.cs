@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Security.RightsManagement;
+using System.Text;
 using System.Windows;
 using CommonServiceLocator;
 using GalaSoft.MvvmLight;
@@ -26,30 +28,65 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Properties
 
-        private string headLine;
+        private string headline;
 
         [DataMember]
-        public string HeadLine
+        public string Headline
         {
-            get => this.headLine;
-            set => base.Set(ref this.headLine, value);
+            get => this.headline;
+            set => base.Set(ref this.headline, value);
         }
 
-        private DateTime startTime;
+        private DateTime date;
 
-        [DataMember]
-        public DateTime StartTime
+        public DateTime Date
         {
-            get => this.startTime;
+            get => this.date;
+            set => base.Set(ref this.date, value);
+        }
+
+        private string startTimeHours;
+        [DataMember]
+        public string StartTimeHours
+        {
+            get => this.startTimeHours;
+            set => base.Set(ref this.startTimeHours, value);
+        }
+
+        private string startTimeMinutes;
+
+        public string StartTimeMinutes
+        {
+            get => this.startTimeMinutes;
+            set => base.Set(ref this.startTimeMinutes, value);
+        }
+
+        private string endTimeHours;
+        [DataMember]
+        public string EndTimeHours
+        {
+            get => this.endTimeHours;
+            set => base.Set(ref this.endTimeHours, value);
+        }
+
+        private string endTimeMinutes;
+        public string EndTimeMinutes
+        {
+            get => this.endTimeMinutes;
+            set => base.Set(ref this.endTimeMinutes, value);
+        }
+
+        private string startTime;
+        public string StartTime
+        {
+            get => this.ConvertTimes(this.StartTimeHours, this.StartTimeMinutes);
             set => base.Set(ref this.startTime, value);
         }
 
-        private DateTime endTime;
-
-        [DataMember]
-        public DateTime EndTime
+        private string endTime;
+        public string EndTime
         {
-            get => this.endTime;
+            get => this.ConvertTimes(this.EndTimeHours, this.EndTimeMinutes);
             set => base.Set(ref this.endTime, value);
         }
 
@@ -77,6 +114,10 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public MainViewModel()
         {
+            this.StartTimeHours = "00";
+            this.StartTimeMinutes = "00";
+            this.EndTimeHours = "00";
+            this.EndTimeMinutes = "00";
             this.Date = DateTime.Now;
 
             this.Mentees = new ObservableCollection<Mentee>();
@@ -93,7 +134,6 @@ namespace MentorSpeedDatingApp.ViewModel
 
             if (base.IsInDesignMode)
             {
-                this.Date = DateTime.Today;
                 this.Mentees = new ObservableCollection<Mentee>
                 {
                     new Mentee {Vorname = "Scarlett", Name = "Johansson", Titel = "Dr."},
@@ -147,8 +187,8 @@ namespace MentorSpeedDatingApp.ViewModel
             var definition = new
             {
                 HeadLine = "",
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now,
+                StartTime = "",
+                EndTime = "",
                 Mentees = new ObservableCollection<Mentee>(),
                 Mentors = new ObservableCollection<Mentor>()
             };
@@ -173,19 +213,28 @@ namespace MentorSpeedDatingApp.ViewModel
             var definition = new
             {
                 HeadLine = "",
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now,
+                StartTime = "",
+                EndTime = "",
                 Mentees = new ObservableCollection<Mentee>(),
                 Mentors = new ObservableCollection<Mentor>()
             };
             var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
 
-            this.HeadLine = deserializedJson.HeadLine;
+            this.Headline = deserializedJson.HeadLine;
             this.StartTime = deserializedJson.StartTime;
             this.EndTime = deserializedJson.EndTime;
             this.Mentors = deserializedJson.Mentors;
             this.Mentees = deserializedJson.Mentees;
+        }
+
+        private string ConvertTimes(string hours, string minutes)
+        {
+            var sb = new StringBuilder();
+            sb.Append(hours);
+            sb.Append(":");
+            sb.Append(minutes);
+            return sb.ToString();
         }
 
         #endregion
