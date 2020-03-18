@@ -80,15 +80,23 @@ namespace MentorSpeedDatingApp.ViewModel
         private string startTime;
         public string StartTime
         {
-            get => this.BuildTimes(this.StartTimeHours, this.StartTimeMinutes);
-            set => base.Set(ref this.startTime, value);
+            get => this.startTime;
+            set
+            {
+                value = this.BuildTimes(this.StartTimeHours, this.StartTimeMinutes);
+                base.Set(ref this.startTime, value);
+            } 
         }
 
         private string endTime;
         public string EndTime
         {
-            get => this.BuildTimes(this.EndTimeHours, this.EndTimeMinutes);
-            set => base.Set(ref this.endTime, value);
+            get => this.endTime;
+            set
+            {
+                value = this.BuildTimes(this.EndTimeHours, this.EndTimeMinutes);
+                base.Set(ref this.endTime, value);
+            } 
         }
 
         #endregion
@@ -237,19 +245,6 @@ namespace MentorSpeedDatingApp.ViewModel
         #endregion
 
         #region Helpermethods
-
-        private bool ValidateHoursInput(string hours)
-        {
-            Regex reg = new Regex("^(20|21|22|23|[01]\\d|\\d)$");
-            MatchCollection matches = reg.Matches(input: hours);
-            return matches.Any();
-        }
-        private bool ValidateMinutesInput(string minutes)
-        {
-            Regex reg = new Regex("^([0-5]\\d)$");
-            MatchCollection matches = reg.Matches(input: minutes);
-            return matches.Any();
-        }
 
         private string BuildTimes(string hours, string minutes)
         {
