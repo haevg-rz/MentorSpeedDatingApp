@@ -186,9 +186,6 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            Mentors.Add(new Mentor(){Titel = "nawd",Name = "nad",Vorname = "add"});
-            Mentees.Add(new Mentee() { Titel = "nawd", Name = "nad", Vorname = "add" });
-            return;
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
 
             File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
