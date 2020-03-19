@@ -186,6 +186,9 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
+            Mentors.Add(new Mentor(){Titel = "nawd",Name = "nad",Vorname = "add"});
+            Mentees.Add(new Mentee() { Titel = "nawd", Name = "nad", Vorname = "add" });
+            return;
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
 
             File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
@@ -238,8 +241,16 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Headline = deserializedJson.HeadLine;
             this.StartTime = deserializedJson.StartTime;
             this.EndTime = deserializedJson.EndTime;
-            this.Mentors = deserializedJson.Mentors;
-            this.Mentees = deserializedJson.Mentees;
+            this.Mentors.Clear();
+            this.Mentees.Clear();
+            foreach (var mentor in deserializedJson.Mentors)
+            {
+                this.Mentors.Add(mentor);
+            }
+            foreach (var mentee in deserializedJson.Mentees)
+            {
+                this.Mentees.Add(mentee);
+            }
         }
 
         #endregion

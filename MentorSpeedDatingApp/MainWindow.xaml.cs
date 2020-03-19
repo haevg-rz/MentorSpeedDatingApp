@@ -28,16 +28,16 @@ namespace MentorSpeedDatingApp
             InitializeComponent();
         }
 
-        private void DataGrid_OnRowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+/*        private void DataGrid_OnRowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
             if (e.EditAction == DataGridEditAction.Commit)
             {
                 IPerson person = e.Row.DataContext as IPerson;
                 person.Save();
             }
-        }
+        }*/
 
-        private void DataGrid_OnPreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+/*        private void DataGrid_OnPreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             if (e.Command == DataGrid.DeleteCommand)
             {
@@ -46,6 +46,6 @@ namespace MentorSpeedDatingApp
                     e.Handled = true;
                 }
             }
-        }
+        }*/
     }
 }
