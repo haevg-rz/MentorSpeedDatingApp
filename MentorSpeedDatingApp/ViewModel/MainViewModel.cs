@@ -95,6 +95,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand GenerateMatchingCommand { get; set; }
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
+        public RelayCommand DeleteAllDataCommand { get; set; }
 
         #endregion
 
@@ -111,6 +112,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
+            this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
 
             this.OnLoadCommandHandling();
 
@@ -142,6 +144,18 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         #region CommandHandlings
+
+        private void DeleteAllDataCommandHandling()
+        {
+            this.Headline = "";
+            this.StartTimeHours = "";
+            this.StartTimeMinutes = "";
+            this.EndTimeHours = "";
+            this.EndTimeMinutes = "";
+            this.Date = DateTime.Now;
+            this.Mentors.Clear();
+            this.Mentees.Clear();
+        }
 
         private void DeleteMenteesCommandHandling()
         {
