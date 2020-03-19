@@ -112,6 +112,8 @@
                 <!-- Mentoren Tabelle -->
                 <DataGrid Grid.Row="1" Grid.Column="0" 
                           ItemsSource="{Binding Mentors}" 
+                          RowEditEnding="DataGrid_OnRowEditEnding"
+                          CommandManager.PreviewExecuted="DataGrid_OnPreviewExecuted"
                           RowHeaderWidth="0"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto"
