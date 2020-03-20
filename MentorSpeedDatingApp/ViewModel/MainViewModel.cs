@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -89,8 +90,6 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region RelayCommands
 
-        public RelayCommand OnLoadCommand { get; set; }
-        public RelayCommand OnCloseCommand { get; set; }
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
         public RelayCommand DeleteMentorsCommand { get; set; }
@@ -106,8 +105,6 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
 
-            this.OnLoadCommand = new RelayCommand(this.OnLoadCommandHandling);
-            this.OnCloseCommand = new RelayCommand(this.OnCloseCommandHandling);
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
             this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
@@ -184,28 +181,6 @@ namespace MentorSpeedDatingApp.ViewModel
             File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
         }
 
-        private void OnCloseCommandHandling()
-        {
-            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
-            {
-                return;
-            }
-
-            if (this.OnClosingDetectUnsavedChanges())
-            {
-                var userDecision = MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!\n" +
-                                                   "Drücken Sie \"OK\" zum Speichern, oder\n" +
-                                                   "\"Abbrechen\" zum Verlassen ohne zu speichern.",
-                    "Warnung", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                if (userDecision == MessageBoxResult.OK)
-                {
-                    this.SaveCommandHandling();
-                }
-            }
-
-            ViewModelLocator.Cleanup();
-        }
-
         private void OnLoadCommandHandling()
         {
             if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
@@ -249,6 +224,26 @@ namespace MentorSpeedDatingApp.ViewModel
         #endregion
 
         #region Helpermethods
+
+        public static MessageBoxResult OnCloseCommand()
+        {
+            var userDecision = new MessageBoxResult();
+
+            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
+            {
+                return userDecision;
+            }
+
+            if (SimpleIoc.Default.GetInstance<MainViewModel>().OnClosingDetectUnsavedChanges())
+            {
+                userDecision = MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!\n" +
+                                               "Drücken Sie \"OK\" zum verwerfen, oder\n" +
+                                               "\"Abbrechen\", um in die Anwendung zurückzukehren.",
+                    "Warnung", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            }
+
+            return userDecision;
+        }
 
         private bool OnClosingDetectUnsavedChanges()
         {

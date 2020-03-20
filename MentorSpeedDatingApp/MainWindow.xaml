@@ -1,24 +1,14 @@
 ﻿<Window x:Class="MentorSpeedDatingApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MentorSpeedDatingApp"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:validators="clr-namespace:MentorSpeedDatingApp.Validators"
         mc:Ignorable="d"
         Title="Mentor Speed Dating Matching" Height="600" Width="600"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+        Closing="MainWindow_OnClosing"
         >
-
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding OnCloseCommand}"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="Loaded" >
-            <i:InvokeCommandAction Command="{Binding OnLoadCommand}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
 
     <Grid>
         <Grid Margin="10">
