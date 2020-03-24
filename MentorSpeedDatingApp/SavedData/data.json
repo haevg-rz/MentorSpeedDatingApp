@@ -27,6 +27,11 @@
       "Titel": "Prof.",
       "Name": "Watson",
       "Vorname": "Emma"
+    },
+    {
+      "Titel": "Dr.",
+      "Name": "Stone",
+      "Vorname": "Emma"
     }
   ],
   "Mentees": [
