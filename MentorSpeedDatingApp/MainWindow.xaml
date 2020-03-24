@@ -190,15 +190,16 @@
             <Grid Grid.Row="2" >
                 <Grid.ColumnDefinitions >
                     <ColumnDefinition />
-                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Width="80" Height="60" Command="{Binding SaveCommand}">Speichern</Button>
-                    <Button Grid.Column="1" Width="80" Height="60" Command="{Binding GenerateMatchingCommand}">Matchen</Button>
+                    <Button Grid.Column="0" Width="80" Height="60" Command="{Binding DeleteAllDataCommand}">Alles löschen</Button>
+                    <Button Grid.Column="1" Width="80" Height="60" Command="{Binding SaveCommand}">Speichern</Button>
+                    <Button Grid.Column="2" Width="80" Height="60" Command="{Binding GenerateMatchingCommand}">Matchen</Button>
                 </Grid>
             </Grid>
             <!-- Control Region Ende -->
