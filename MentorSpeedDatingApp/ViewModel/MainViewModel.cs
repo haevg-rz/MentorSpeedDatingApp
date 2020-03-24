@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.Security.RightsManagement;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows;
-using CommonServiceLocator;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Windows;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -40,6 +36,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private DateTime date;
 
+        [DataMember]
         public DateTime Date
         {
             get => this.date;
@@ -47,6 +44,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string startTimeHours;
+
         [DataMember]
         public string StartTimeHours
         {
@@ -56,6 +54,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private string startTimeMinutes;
 
+        [DataMember]
         public string StartTimeMinutes
         {
             get => this.startTimeMinutes;
@@ -63,6 +62,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeHours;
+
         [DataMember]
         public string EndTimeHours
         {
@@ -71,32 +71,12 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeMinutes;
+
+        [DataMember]
         public string EndTimeMinutes
         {
             get => this.endTimeMinutes;
             set => base.Set(ref this.endTimeMinutes, value);
-        }
-
-        private string startTime;
-        public string StartTime
-        {
-            get => this.startTime;
-            set
-            {
-                value = this.BuildTimes(this.StartTimeHours, this.StartTimeMinutes);
-                base.Set(ref this.startTime, value);
-            } 
-        }
-
-        private string endTime;
-        public string EndTime
-        {
-            get => this.endTime;
-            set
-            {
-                value = this.BuildTimes(this.EndTimeHours, this.EndTimeMinutes);
-                base.Set(ref this.endTime, value);
-            } 
         }
 
         #endregion
@@ -110,12 +90,11 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region RelayCommands
 
-        public RelayCommand OnLoadCommand { get; set; }
-        public RelayCommand OnCloseCommand { get; set; }
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
+        public RelayCommand DeleteAllDataCommand { get; set; }
 
         #endregion
 
@@ -123,26 +102,25 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public MainViewModel()
         {
-            this.StartTimeHours = "00";
-            this.StartTimeMinutes = "00";
-            this.EndTimeHours = "00";
-            this.EndTimeMinutes = "00";
-            this.Date = DateTime.Now;
-
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
 
-            this.OnLoadCommand = new RelayCommand(this.OnLoadCommandHandling);
-            this.OnCloseCommand = new RelayCommand(this.OnCloseCommandHandling);
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
             this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
+            this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
 
             this.OnLoadCommandHandling();
 
-            if (base.IsInDesignMode)
+            if (base.IsInDesignMode || this.IsInDesignMode)
             {
+                this.StartTimeHours = "12";
+                this.StartTimeMinutes = "00";
+                this.EndTimeHours = "18";
+                this.EndTimeMinutes = "00";
+                this.Date = DateTime.Now;
+
                 this.Mentees = new ObservableCollection<Mentee>
                 {
                     new Mentee {Vorname = "Scarlett", Name = "Johansson", Titel = "Dr."},
@@ -164,14 +142,26 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region CommandHandlings
 
+        private void DeleteAllDataCommandHandling()
+        {
+            this.Headline = "";
+            this.StartTimeHours = "";
+            this.StartTimeMinutes = "";
+            this.EndTimeHours = "";
+            this.EndTimeMinutes = "";
+            this.Date = DateTime.Now;
+            this.Mentors.Clear();
+            this.Mentees.Clear();
+        }
+
         private void DeleteMenteesCommandHandling()
         {
-            throw new NotImplementedException();
+            this.Mentees.Clear();
         }
 
         private void DeleteMentorsCommandHandling()
         {
-            throw new NotImplementedException();
+            this.Mentors.Clear();
         }
 
         private void GenerateMatchingCommandHandling()
@@ -181,7 +171,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private bool CanExecuteGenerateMatchingCommandHandling()
         {
-            return true;
+            return this.Mentors.Any() && this.Mentees.Any();
         }
 
         private void SaveCommandHandling()
@@ -189,32 +179,6 @@ namespace MentorSpeedDatingApp.ViewModel
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
 
             File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
-        }
-
-        private void OnCloseCommandHandling()
-        {
-            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
-            {
-                return;
-            }
-
-            var definition = new
-            {
-                HeadLine = "",
-                StartTime = "",
-                EndTime = "",
-                Mentees = new ObservableCollection<Mentee>(),
-                Mentors = new ObservableCollection<Mentor>()
-            };
-            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
-            var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
-
-            if (!this.Mentors.CompareCollectionsOnEqualContent(deserializedJson.Mentors,
-                (mVM, mSerialized) => mVM.Name == mSerialized.Name && mVM.Vorname == mSerialized.Vorname &&
-                                      mVM.Titel == mSerialized.Titel))
-            {
-                MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!");
-            }
         }
 
         private void OnLoadCommandHandling()
@@ -227,23 +191,30 @@ namespace MentorSpeedDatingApp.ViewModel
             var definition = new
             {
                 HeadLine = "",
-                StartTime = "",
-                EndTime = "",
-                Mentees = new ObservableCollection<Mentee>(),
-                Mentors = new ObservableCollection<Mentor>()
+                Date = DateTime.Now,
+                StartTimeHours = "",
+                StartTimeMinutes = "",
+                EndTimeHours = "",
+                EndTimeMinutes = "",
+                Mentees = new List<Mentee>(),
+                Mentors = new List<Mentor>()
             };
             var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
 
             this.Headline = deserializedJson.HeadLine;
-            this.StartTime = deserializedJson.StartTime;
-            this.EndTime = deserializedJson.EndTime;
+            this.Date = deserializedJson.Date;
+            this.StartTimeHours = deserializedJson.StartTimeHours;
+            this.StartTimeMinutes = deserializedJson.StartTimeMinutes;
+            this.EndTimeHours = deserializedJson.EndTimeHours;
+            this.EndTimeMinutes = deserializedJson.EndTimeMinutes;
             this.Mentors.Clear();
             this.Mentees.Clear();
             foreach (var mentor in deserializedJson.Mentors)
             {
                 this.Mentors.Add(mentor);
             }
+
             foreach (var mentee in deserializedJson.Mentees)
             {
                 this.Mentees.Add(mentee);
@@ -254,16 +225,58 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Helpermethods
 
-        private string BuildTimes(string hours, string minutes)
+        public static MessageBoxResult OnCloseCommand()
         {
-            var sb = new StringBuilder();
-            sb.Append(hours);
-            sb.Append(":");
-            sb.Append(minutes);
-            return sb.ToString();
+            var userDecision = new MessageBoxResult();
+
+            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
+            {
+                return userDecision;
+            }
+
+            if (SimpleIoc.Default.GetInstance<MainViewModel>().OnClosingDetectUnsavedChanges())
+            {
+                userDecision = MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!\n" +
+                                               "Drücken Sie \"OK\" zum verwerfen, oder\n" +
+                                               "\"Abbrechen\", um in die Anwendung zurückzukehren.",
+                    "Warnung", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            }
+
+            return userDecision;
+        }
+
+        private bool OnClosingDetectUnsavedChanges()
+        {
+            var definition = new
+            {
+                HeadLine = "",
+                Date = DateTime.Now,
+                StartTimeHours = "",
+                StartTimeMinutes = "",
+                EndTimeHours = "",
+                EndTimeMinutes = "",
+                Mentees = new List<Mentee>(),
+                Mentors = new List<Mentor>()
+            };
+            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
+
+            return !this.Mentors.CompareCollectionsOnEqualContent(deserializedJson.Mentors,
+                       (mVM, mSerialized) => mVM.Name == mSerialized.Name
+                                             && mVM.Vorname == mSerialized.Vorname
+                                             && mVM.Titel == mSerialized.Titel)
+                   || !this.Mentees.CompareCollectionsOnEqualContent(deserializedJson.Mentees,
+                       (mVM, mSerialized) => mVM.Name == mSerialized.Name
+                                             && mVM.Vorname == mSerialized.Vorname
+                                             && mVM.Titel == mSerialized.Titel)
+                   || this.Headline != deserializedJson.HeadLine
+                   || this.Date != deserializedJson.Date
+                   || this.StartTimeHours != deserializedJson.StartTimeHours
+                   || this.StartTimeMinutes != deserializedJson.StartTimeMinutes
+                   || this.EndTimeHours != deserializedJson.EndTimeHours
+                   || this.EndTimeMinutes != deserializedJson.EndTimeMinutes;
         }
 
         #endregion
-
     }
 }

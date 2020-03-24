@@ -1,7 +1,10 @@
 {
   "Headline": "Mentor Speed Dating 2020",
-  "StartTimeHours": "00",
-  "EndTimeHours": "00",
+  "Date": "2020-03-20T00:00:00",
+  "StartTimeHours": "11",
+  "StartTimeMinutes": "45",
+  "EndTimeHours": "18",
+  "EndTimeMinutes": "30",
   "Mentors": [
     {
       "Titel": "Dr.",
