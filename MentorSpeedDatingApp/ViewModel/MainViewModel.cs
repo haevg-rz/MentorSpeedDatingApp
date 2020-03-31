@@ -1,5 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using Newtonsoft.Json;
@@ -8,9 +8,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Printing;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight.Ioc;
+using MentorSpeedDatingApp.Validators;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -18,10 +21,6 @@ namespace MentorSpeedDatingApp.ViewModel
     public class MainViewModel : ViewModelBase
     {
         #region ClassMembers
-
-        #region Fields
-
-        #endregion
 
         #region Properties
 
@@ -43,6 +42,9 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.date, value);
         }
 
+        #region Time Properties
+
+
         private string startTimeHours;
 
         [DataMember]
@@ -50,6 +52,14 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             get => this.startTimeHours;
             set => base.Set(ref this.startTimeHours, value);
+        }
+
+        private bool startTimeHoursHasErrors;
+
+        public bool StartTimeHoursHasErrors
+        {
+            get => this.startTimeHoursHasErrors;
+            set => base.Set(ref this.startTimeHoursHasErrors, value);
         }
 
         private string startTimeMinutes;
@@ -61,6 +71,14 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.startTimeMinutes, value);
         }
 
+        private bool startTimeMinutesHasErrors;
+
+        public bool StartTimeMinutessHasErrors
+        {
+            get => this.startTimeMinutesHasErrors;
+            set => base.Set(ref this.startTimeMinutesHasErrors, value);
+        }
+
         private string endTimeHours;
 
         [DataMember]
@@ -68,6 +86,14 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             get => this.endTimeHours;
             set => base.Set(ref this.endTimeHours, value);
+        }
+
+        private bool endTimeHoursHasErrors;
+
+        public bool EndTimeHoursHasErrors
+        {
+            get => this.endTimeHoursHasErrors;
+            set => base.Set(ref this.endTimeHoursHasErrors, value);
         }
 
         private string endTimeMinutes;
@@ -78,6 +104,18 @@ namespace MentorSpeedDatingApp.ViewModel
             get => this.endTimeMinutes;
             set => base.Set(ref this.endTimeMinutes, value);
         }
+
+        private bool endTimeMinutesHasErrors;
+
+        public bool EndTimeMinutesHasErrors
+        {
+            get => this.endTimeMinutesHasErrors;
+            set => base.Set(ref this.endTimeMinutesHasErrors, value);
+        }
+
+        #endregion
+
+        public bool ValidationRulesHasError => this.startTimeHoursHasErrors || this.startTimeMinutesHasErrors || this.endTimeHoursHasErrors || this.endTimeMinutesHasErrors;
 
         #endregion
 
@@ -102,6 +140,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public MainViewModel()
         {
+
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
 
@@ -171,7 +210,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private bool CanExecuteGenerateMatchingCommandHandling()
         {
-            return this.Mentors.Any() && this.Mentees.Any();
+            return this.Mentors.Any() && this.Mentees.Any() && !this.ValidationRulesHasError;
         }
 
         private void SaveCommandHandling()
