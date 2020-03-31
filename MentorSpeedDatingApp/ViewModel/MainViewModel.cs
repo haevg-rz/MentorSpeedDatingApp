@@ -8,9 +8,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Printing;
 using System.Runtime.Serialization;
 using System.Windows;
 using GalaSoft.MvvmLight.Ioc;
+using MentorSpeedDatingApp.Validators;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -20,6 +22,18 @@ namespace MentorSpeedDatingApp.ViewModel
         #region ClassMembers
 
         #region Fields
+
+        private bool startTimeHoursIsValid;
+
+        public bool StartTimeHoursIsValid
+        {
+            get => this.startTimeHoursIsValid;
+            set
+            {
+                base.Set(ref this.startTimeHoursIsValid, value);
+                GenerateMatchingCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         #endregion
 
@@ -48,8 +62,15 @@ namespace MentorSpeedDatingApp.ViewModel
         [DataMember]
         public string StartTimeHours
         {
-            get => this.startTimeHours;
-            set => base.Set(ref this.startTimeHours, value);
+            get
+            {
+                return this.startTimeHours;
+            }
+            set
+            {
+                base.Set(ref this.startTimeHours, value);
+                GenerateMatchingCommand.RaiseCanExecuteChanged();
+            }
         }
 
         private string startTimeMinutes;
@@ -171,7 +192,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private bool CanExecuteGenerateMatchingCommandHandling()
         {
-            return this.Mentors.Any() && this.Mentees.Any();
+            return this.Mentors.Any() && this.Mentees.Any() && this.StartTimeHoursIsValid;
         }
 
         private void SaveCommandHandling()
@@ -275,6 +296,17 @@ namespace MentorSpeedDatingApp.ViewModel
                    || this.StartTimeMinutes != deserializedJson.StartTimeMinutes
                    || this.EndTimeHours != deserializedJson.EndTimeHours
                    || this.EndTimeMinutes != deserializedJson.EndTimeMinutes;
+        }
+
+        private bool ValidateDate()
+        {
+            var hvr = new HourValidationRule();
+            var sthIsValid = hvr.ValidateNoValidationResult(this.StartTimeHours);
+            var ethIsValid = hvr.ValidateNoValidationResult(this.EndTimeHours);
+            var mvr = new MinuteValidationRule();
+            var stmIsValid = mvr.ValidateNoValidationResult(this.StartTimeMinutes);
+            var etmIsValid = mvr.ValidateNoValidationResult(this.EndTimeMinutes);
+            return sthIsValid && ethIsValid && stmIsValid && etmIsValid;
         }
 
         #endregion

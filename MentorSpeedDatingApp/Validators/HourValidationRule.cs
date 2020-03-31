@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MentorSpeedDatingApp.Validators
 {
@@ -10,10 +11,15 @@ namespace MentorSpeedDatingApp.Validators
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
+            return new ValidationResult(ValidateNoValidationResult(value), "Bitte eine korrekte Uhrzeit (Stunden) angeben. Zum Beispiel: 12");
+        }
+
+        public bool ValidateNoValidationResult(object value)
+        {
             var input = value?.ToString();
             Regex reg = new Regex("^(20|21|22|23|[01]\\d|\\d)$");
             MatchCollection matches = reg.Matches(input);
-            return new ValidationResult(matches.Any(), "Bitte eine korrekte Uhrzeit (Stunden) angeben. Zum Beispiel: 12");
+            return matches.Any();
         }
     }
 }
