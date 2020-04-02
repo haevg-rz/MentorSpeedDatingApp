@@ -11,10 +11,10 @@ namespace MentorSpeedDatingApp.Validators
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            return new ValidationResult(ValidateNoValidationResult(value), "Bitte eine korrekte Uhrzeit (Stunden) angeben. Zum Beispiel: 12");
+            return new ValidationResult(this.InputIsValid(value), "Bitte eine korrekte Uhrzeit (Stunden) angeben. Zum Beispiel: 12");
         }
 
-        public bool ValidateNoValidationResult(object value)
+        public bool InputIsValid(object value)
         {
             var input = value?.ToString();
             Regex reg = new Regex("^(20|21|22|23|[01]\\d|\\d)$");

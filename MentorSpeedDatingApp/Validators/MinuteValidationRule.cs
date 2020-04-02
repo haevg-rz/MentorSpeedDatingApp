@@ -9,13 +9,13 @@ namespace MentorSpeedDatingApp.Validators
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            return new ValidationResult(ValidateNoValidationResult(value), "Bitte eine korrekte Uhrzeit (Minuten) angeben. Zum Beispiel: 15");
+            return new ValidationResult(this.InputIsValid(value), "Bitte eine korrekte Uhrzeit (Minuten) angeben. Zum Beispiel: 15");
         }
 
-        public bool ValidateNoValidationResult(object value)
+        public bool InputIsValid(object value)
         {
             var input = value?.ToString();
-            Regex reg = new Regex("^([0-5]\\d)$");
+            Regex reg = new Regex("^([0-5]\\d|\\d)$");
             MatchCollection matches = reg.Matches(input);
             return matches.Any();
         }
