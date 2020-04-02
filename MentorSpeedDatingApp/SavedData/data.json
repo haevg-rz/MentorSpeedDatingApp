@@ -1,0 +1,67 @@
+{
+  "Headline": "Mentor Speed Dating 2020",
+  "Date": "2020-03-20T00:00:00",
+  "StartTimeHours": "11",
+  "StartTimeMinutes": "45",
+  "EndTimeHours": "18",
+  "EndTimeMinutes": "30",
+  "Mentors": [
+    {
+      "Titel": "Dr.",
+      "Name": "Portman",
+      "Vorname": "Natalie"
+    },
+    {
+      "Titel": "",
+      "Name": "Streep",
+      "Vorname": "Meryl"
+    },
+    {
+      "Titel": "Dr. Dr.",
+      "Name": "Jolie",
+      "Vorname": "Angelina"
+    },
+    {
+      "Titel": "",
+      "Name": "Theron",
+      "Vorname": "Charlize"
+    },
+    {
+      "Titel": "Prof.",
+      "Name": "Watson",
+      "Vorname": "Emma"
+    },
+    {
+      "Titel": "Dr.",
+      "Name": "Stone",
+      "Vorname": "Emma"
+    }
+  ],
+  "Mentees": [
+    {
+      "Titel": "Dr.",
+      "Name": "Johansson",
+      "Vorname": "Scarlett"
+    },
+    {
+      "Titel": "Prof.",
+      "Name": "Lawrence",
+      "Vorname": "Jennifer"
+    },
+    {
+      "Titel": "Dr. med.",
+      "Name": "Roberts",
+      "Vorname": "Julia"
+    },
+    {
+      "Titel": "Prof. Dr.",
+      "Name": "Aniston",
+      "Vorname": "Jennifer"
+    },
+    {
+      "Titel": "",
+      "Name": "Bullock",
+      "Vorname": "Sandra"
+    }
+  ]
+}
