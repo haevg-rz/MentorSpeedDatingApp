@@ -9,11 +9,16 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Printing;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.Validators;
+using Microsoft.Win32;
+
+[assembly: InternalsVisibleTo("MentorSpeedDatingAppTest")]
+
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -44,7 +49,6 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Time Properties
 
-
         private string startTimeHours;
 
         [DataMember]
@@ -73,7 +77,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private bool startTimeMinutesHasErrors;
 
-        public bool StartTimeMinutessHasErrors
+        public bool StartTimeMinutesHasErrors
         {
             get => this.startTimeMinutesHasErrors;
             set => base.Set(ref this.startTimeMinutesHasErrors, value);
@@ -115,7 +119,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #endregion
 
-        public bool ValidationRulesHasError => this.startTimeHoursHasErrors || this.startTimeMinutesHasErrors || this.endTimeHoursHasErrors || this.endTimeMinutesHasErrors;
+        public bool ValidationRulesHasError => this.startTimeHoursHasErrors || this.startTimeMinutesHasErrors ||
+                                               this.endTimeHoursHasErrors || this.endTimeMinutesHasErrors;
 
         #endregion
 
@@ -140,12 +145,12 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public MainViewModel()
         {
-
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
 
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
-            this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
+            this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling,
+                this.CanExecuteGenerateMatchingCommandHandling);
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
@@ -181,7 +186,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region CommandHandlings
 
-        private void DeleteAllDataCommandHandling()
+        internal void DeleteAllDataCommandHandling()
         {
             this.Headline = "";
             this.StartTimeHours = "";
@@ -193,12 +198,12 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Mentees.Clear();
         }
 
-        private void DeleteMenteesCommandHandling()
+        internal void DeleteMenteesCommandHandling()
         {
             this.Mentees.Clear();
         }
 
-        private void DeleteMentorsCommandHandling()
+        internal void DeleteMentorsCommandHandling()
         {
             this.Mentors.Clear();
         }
@@ -208,21 +213,39 @@ namespace MentorSpeedDatingApp.ViewModel
             throw new NotImplementedException();
         }
 
-        private bool CanExecuteGenerateMatchingCommandHandling()
+        internal bool CanExecuteGenerateMatchingCommandHandling()
         {
             return this.Mentors.Any() && this.Mentees.Any() && !this.ValidationRulesHasError;
         }
 
         private void SaveCommandHandling()
         {
+            this.SaveData();
+        }
+
+        private void SaveData()
+        {
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
 
-            File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
+
+            var saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var fullPath = Path.GetFullPath(@"..\..\..\..\SavedData");
+                saveFileDialog.InitialDirectory = fullPath;
+                saveFileDialog.RestoreDirectory = true;
+                File.WriteAllText(saveFileDialog.InitialDirectory, jsonData);
+            }
         }
 
         private void OnLoadCommandHandling()
         {
-            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
+            this.LoadSavedData(@"..\..\..\..\SavedData\data.json");
+        }
+
+        internal void LoadSavedData(string path)
+        {
+            if (!File.Exists(path))
             {
                 return;
             }
@@ -238,7 +261,7 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentees = new List<Mentee>(),
                 Mentors = new List<Mentor>()
             };
-            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var jsonData = File.ReadAllText(path);
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
 
             this.Headline = deserializedJson.HeadLine;
@@ -267,13 +290,13 @@ namespace MentorSpeedDatingApp.ViewModel
         public static MessageBoxResult OnCloseCommand()
         {
             var userDecision = new MessageBoxResult();
-
-            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
+            var path = @"..\..\..\..\SavedData\data.json";
+            if (!File.Exists(path))
             {
                 return userDecision;
             }
 
-            if (SimpleIoc.Default.GetInstance<MainViewModel>().OnClosingDetectUnsavedChanges())
+            if (SimpleIoc.Default.GetInstance<MainViewModel>().OnClosingDetectUnsavedChanges(path))
             {
                 userDecision = MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!\n" +
                                                "Drücken Sie \"OK\" zum verwerfen, oder\n" +
@@ -284,7 +307,7 @@ namespace MentorSpeedDatingApp.ViewModel
             return userDecision;
         }
 
-        private bool OnClosingDetectUnsavedChanges()
+        internal bool OnClosingDetectUnsavedChanges(string path)
         {
             var definition = new
             {
@@ -297,7 +320,7 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentees = new List<Mentee>(),
                 Mentors = new List<Mentor>()
             };
-            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var jsonData = File.ReadAllText(path);
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
 
             return !this.Mentors.CompareCollectionsOnEqualContent(deserializedJson.Mentors,

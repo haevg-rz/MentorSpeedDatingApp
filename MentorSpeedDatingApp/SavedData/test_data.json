@@ -1,0 +1,22 @@
+{
+  "Headline": "Mentor Speed Dating 2020",
+  "Date": "1982-06-09T00:00:00",
+  "StartTimeHours": "neu",
+  "StartTimeMinutes": "neu",
+  "EndTimeHours": "neu",
+  "EndTimeMinutes": "neu",
+  "Mentors": [
+    {
+      "Titel": "Dr.",
+      "Name": "Morgan",
+      "Vorname": "Cindy"
+    }
+  ],
+  "Mentees": [
+    {
+      "Titel": "Prof.",
+      "Name": "Wilde",
+      "Vorname": "Olivia"
+    }
+  ]
+}

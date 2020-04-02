@@ -54,7 +54,7 @@
                         </TextBox.Text>
                     </TextBox>
                         <TextBlock Grid.Column="2" Grid.Row="0" Margin="5,0,5,0" Text=":"></TextBlock>
-                    <TextBox validators:ValidationBehavior.HasError="{Binding StartTimeMinutessHasErrors}" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="30">
+                    <TextBox validators:ValidationBehavior.HasError="{Binding StartTimeMinutesHasErrors}" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="30">
                         <TextBox.Text>
                             <Binding Path="StartTimeMinutes" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
