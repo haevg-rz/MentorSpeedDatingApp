@@ -10,8 +10,8 @@
         Closing="MainWindow_OnClosing"
         >
 
-    <Grid>
-        <Grid Margin="10" x:Name="PrintLayout">
+    <Grid x:Name="PrintLayout">
+        <Grid Margin="10" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>

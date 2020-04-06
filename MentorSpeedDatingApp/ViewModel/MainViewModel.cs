@@ -229,13 +229,14 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void PrintMatchingCommandHandling(Visual v)
         {
-            PrintDialog printDialog = new PrintDialog();
-            printDialog.PageRangeSelection = PageRangeSelection.AllPages;
-            printDialog.UserPageRangeEnabled = true;
+            var printDialog = new PrintDialog
+            {
+                PageRangeSelection = PageRangeSelection.AllPages, UserPageRangeEnabled = true
+            };
 
             if (printDialog.ShowDialog() == true)
             {
-                printDialog.PrintVisual(v, "Matching drucken");
+                printDialog.PrintVisual(v, "Testdruck");
             }
         }
 
