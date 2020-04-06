@@ -11,7 +11,7 @@
         >
 
     <Grid>
-        <Grid Margin="10">
+        <Grid Margin="10" x:Name="PrintLayout">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
@@ -195,10 +195,12 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Width="80" Height="60" Command="{Binding DeleteAllDataCommand}">Alles löschen</Button>
                     <Button Grid.Column="1" Width="80" Height="60" Command="{Binding SaveCommand}">Speichern</Button>
                     <Button Grid.Column="2" Width="80" Height="60" Command="{Binding GenerateMatchingCommand}">Matchen</Button>
+                    <Button Grid.Column="3" Width="80" Height="60" Command="{Binding PrintMatchingCommand, Mode=OneWay}" CommandParameter="{Binding ElementName=PrintLayout, Mode=OneWay}">Drucken</Button>
                 </Grid>
             </Grid>
             <!-- Control Region Ende -->

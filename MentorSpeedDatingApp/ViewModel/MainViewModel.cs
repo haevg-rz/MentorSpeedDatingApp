@@ -11,7 +11,12 @@ using System.Linq;
 using System.Printing;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Windows.Annotations;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Threading;
+using System.Windows.Xps.Packaging;
 using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.Validators;
 
@@ -130,6 +135,9 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
+
+        public RelayCommand<Visual> PrintMatchingCommand { get;  }
+
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
         public RelayCommand DeleteAllDataCommand { get; set; }
@@ -145,7 +153,9 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Mentors = new ObservableCollection<Mentor>();
 
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
-            this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
+            this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling,
+                this.CanExecuteGenerateMatchingCommandHandling);           
+            this.PrintMatchingCommand = new RelayCommand<Visual>(this.PrintMatchingCommandHandling);
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
@@ -179,6 +189,9 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
+
+
+
         #region CommandHandlings
 
         private void DeleteAllDataCommandHandling()
@@ -211,6 +224,19 @@ namespace MentorSpeedDatingApp.ViewModel
         private bool CanExecuteGenerateMatchingCommandHandling()
         {
             return this.Mentors.Any() && this.Mentees.Any() && !this.ValidationRulesHasError;
+        }
+
+
+        private void PrintMatchingCommandHandling(Visual v)
+        {
+            PrintDialog printDialog = new PrintDialog();
+            printDialog.PageRangeSelection = PageRangeSelection.AllPages;
+            printDialog.UserPageRangeEnabled = true;
+
+            if (printDialog.ShowDialog() == true)
+            {
+                printDialog.PrintVisual(v, "Matching drucken");
+            }
         }
 
         private void SaveCommandHandling()
