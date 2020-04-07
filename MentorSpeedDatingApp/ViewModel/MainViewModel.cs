@@ -8,12 +8,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Printing;
 using System.Runtime.Serialization;
 using System.Windows;
-using System.Windows.Threading;
+using System.Windows.Controls;
+using System.Windows.Media;
 using GalaSoft.MvvmLight.Ioc;
-using MentorSpeedDatingApp.Validators;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
