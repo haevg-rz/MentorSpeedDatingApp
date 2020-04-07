@@ -1,0 +1,63 @@
+﻿<Window x:Class="MentorSpeedDatingApp.Views.MatchingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MentorSpeedDatingApp.Views"
+        mc:Ignorable="d"
+        xmlns:VM="clr-namespace:MentorSpeedDatingApp.ViewModel"
+        Title="MatchingWindow" Height="800" Width="600">
+    <Window.DataContext>
+        <VM:MatchingViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" >TITEL TITEL TITEL TITEL</TextBlock>
+            <Rectangle Grid.Column="0" Grid.Row="1" Fill="DarkOliveGreen" Height="2" />
+            <DataGrid Grid.Column="0" Grid.Row="2"
+                      ItemsSource="{Binding Matchings}"
+                      RowHeaderWidth="0"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalContentAlignment="Center"
+                      HorizontalAlignment="Center"
+                      HorizontalGridLinesBrush="DarkGreen"
+                      VerticalGridLinesBrush="DarkGreen"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="True"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="True"
+                      AlternatingRowBackground="DarkSeaGreen"
+                      RowBackground="LightGray"
+                      AlternationCount="2"
+                      Margin="0,0,5,0">
+                <DataGrid.Columns >
+                    <DataGridTextColumn 
+                        Header="Uhrzeit"
+                        CanUserSort="False"
+                        Binding="{Binding MatchedTime}"
+                        />
+                    <DataGridTextColumn Header="Mentorinnen"
+                                        CanUserSort="False"
+                                        Binding="{Binding MatchedMentor}"
+                                        IsReadOnly="False"
+                                        MinWidth="50" />
+                    <DataGridTextColumn Header="Mentees"
+                                        Binding="{Binding MatchedMentee}"
+                                        IsReadOnly="False"
+                                        MinWidth="100" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

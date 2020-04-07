@@ -1,0 +1,209 @@
+﻿<Window x:Class="MentorSpeedDatingApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:validators="clr-namespace:MentorSpeedDatingApp.Validators"
+        mc:Ignorable="d"
+        Title="Mentor Speed Dating Matching" Height="600" Width="600"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+        Closing="MainWindow_OnClosing"
+        >
+
+    <Grid x:Name="PrintLayout">
+        <Grid Margin="10" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Control Region upper -->
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Überschrift: " HorizontalAlignment="Center" />
+                <TextBox MinWidth="200" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Text="{Binding Headline}" ToolTip="Bitte die Überschrift eingeben."/>
+                <DatePicker SelectedDate="{Binding Date}" MinWidth="200" HorizontalContentAlignment="Center" HorizontalAlignment="Center" IsTodayHighlighted="True" Grid.Row="2" ToolTip="Bitte das Datum auswählen" BorderBrush="Transparent"/>
+                <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition  Width="Auto" MinWidth="50"/>
+                        <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition  Width="Auto" MinWidth="50"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Start-Uhrzeit" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                    <TextBox validators:ValidationBehavior.HasError="{Binding StartTimeHoursHasErrors}" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="30" >
+                        <TextBox.Text>
+                            <Binding Path="StartTimeHours" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                                <Binding.ValidationRules>
+                                    <validators:HourValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                        <TextBlock Grid.Column="2" Grid.Row="0" Margin="5,0,5,0" Text=":"></TextBlock>
+                    <TextBox validators:ValidationBehavior.HasError="{Binding StartTimeMinutessHasErrors}" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="30">
+                        <TextBox.Text>
+                            <Binding Path="StartTimeMinutes" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <validators:MinuteValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Ende-Uhrzeit" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                    <TextBox validators:ValidationBehavior.HasError="{Binding EndTimeHoursHasErrors}" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="30">
+                        <TextBox.Text>
+                            <Binding Path="EndTimeHours" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <validators:HourValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <TextBlock Grid.Column="2" Grid.Row="1" Margin="5,0,5,0">:</TextBlock>
+                    <TextBox validators:ValidationBehavior.HasError="{Binding EndTimeMinutesHasErrors}" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="30">
+                        <TextBox.Text>
+                            <Binding Path="EndTimeMinutes" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <validators:MinuteValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </Grid>
+            </Grid>
+            <!-- End Control Region upper -->
+
+            <!-- Tabellen Region -->
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">Mentorinnen</TextBlock>
+                <!-- Mentoren Tabelle -->
+                <DataGrid Grid.Row="1" Grid.Column="0" 
+                          ItemsSource="{Binding Mentors}"
+                          RowHeaderWidth="0"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalContentAlignment="Center"
+                          HorizontalGridLinesBrush="DarkGreen"
+                          VerticalGridLinesBrush="DarkGreen"
+                          AutoGenerateColumns="False" 
+                          CanUserAddRows="True"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="True"
+                          AlternatingRowBackground="DarkSeaGreen"
+                          RowBackground="LightGray"
+                          AlternationCount="2"
+                          Margin="0,0,5,0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Titel"
+                                            CanUserSort="True" 
+                                            SortMemberPath="Titel" 
+                                            Binding="{Binding Titel}" 
+                                            CanUserReorder="True" 
+                                            IsReadOnly="False" 
+                                            MinWidth="50"
+                                            />
+                        <DataGridTextColumn Header="Name"
+                                            CanUserSort="True"
+                                            SortMemberPath="Name"
+                                            Binding="{Binding Name}"
+                                            CanUserReorder="True"
+                                            IsReadOnly="False" 
+                                            MinWidth="100"/>
+                        <DataGridTextColumn Header="Vorname"
+                                            CanUserSort="True"
+                                            SortMemberPath="Name"
+                                            Binding="{Binding Vorname}"
+                                            CanUserReorder="True"
+                                            IsReadOnly="False"
+                                            MinWidth="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button Grid.Row="2" Grid.Column="0" Margin="0,0,5,0" Command="{Binding DeleteMentorsCommand}">Mentorinnen löschen</Button>
+                <!-- Mentee Tabelle -->
+                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">Mentees</TextBlock>
+                <DataGrid Grid.Row="1" Grid.Column="1" 
+                          ItemsSource="{Binding Mentees}" 
+                          RowHeaderWidth="0"
+                          HorizontalGridLinesBrush="DarkGreen"
+                          VerticalGridLinesBrush="DarkGreen"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto"
+                          AutoGenerateColumns="False" 
+                          CanUserAddRows="True"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="True"
+                          AlternatingRowBackground="DarkSeaGreen"
+                          RowBackground="LightGray"
+                          AlternationCount="2"
+                          Margin="5,0,0,0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Titel"
+                                            CanUserSort="True" 
+                                            SortMemberPath="Titel" 
+                                            Binding="{Binding Titel}" 
+                                            CanUserReorder="True" 
+                                            IsReadOnly="False" 
+                                            MinWidth="50"
+                                            />
+                        <DataGridTextColumn Header="Name"
+                                            CanUserSort="True"
+                                            SortMemberPath="Name"
+                                            Binding="{Binding Name}"
+                                            CanUserReorder="True"
+                                            IsReadOnly="False" 
+                                            MinWidth="100"/>
+                        <DataGridTextColumn Header="Vorname"
+                                            CanUserSort="True"
+                                            SortMemberPath="Name"
+                                            Binding="{Binding Vorname}"
+                                            CanUserReorder="True"
+                                            IsReadOnly="False"
+                                            MinWidth="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Command="{Binding DeleteMenteesCommand}">Mentees löschen</Button>
+            </Grid>
+            <!-- Tabelle Region Ende -->
+
+            <!-- Control Region -->
+            <Grid Grid.Row="2" Margin="0,10,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Width="80" Height="60" Command="{Binding DeleteAllDataCommand}">Alles löschen</Button>
+                    <Button Grid.Column="1" Width="80" Height="60" Command="{Binding SaveCommand}">Speichern</Button>
+                    <Button Grid.Column="2" Width="80" Height="60" Command="{Binding GenerateMatchingCommand}">Matchen</Button>
+                    <Button Grid.Column="3" Width="80" Height="60" Command="{Binding PrintMatchingCommand, Mode=OneWay}" CommandParameter="{Binding ElementName=PrintLayout, Mode=OneWay}">Drucken</Button>
+                </Grid>
+            </Grid>
+            <!-- Control Region Ende -->
+        </Grid>
+    </Grid>
+</Window>
