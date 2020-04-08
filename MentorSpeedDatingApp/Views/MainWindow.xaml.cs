@@ -1,8 +1,8 @@
-﻿using MentorSpeedDatingApp.ViewModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
+using MentorSpeedDatingApp.ViewModel;
 
-namespace MentorSpeedDatingApp
+namespace MentorSpeedDatingApp.Views
 {
     public partial class MainWindow : Window
     {

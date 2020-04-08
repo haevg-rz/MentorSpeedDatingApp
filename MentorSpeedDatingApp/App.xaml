@@ -6,7 +6,7 @@
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <viewModel:ViewModelLocator x:Key="Locator" xmlns:vm="clr-namespace:MentorSpeedDatingApp.ViewModel" />
+            <viewModel:ViewModelLocator x:Key="Locator" xmlns:vm="clr-namespace:MentorSpeedDatingApp.ViewModel"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

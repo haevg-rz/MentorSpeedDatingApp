@@ -22,41 +22,10 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" >TITEL TITEL TITEL TITEL</TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Titel}" />
             <Rectangle Grid.Column="0" Grid.Row="1" Fill="DarkOliveGreen" Height="2" />
-            <DataGrid Grid.Column="0" Grid.Row="2"
-                      ItemsSource="{Binding Matchings}"
-                      RowHeaderWidth="0"
-                      HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalContentAlignment="Center"
-                      HorizontalAlignment="Center"
-                      HorizontalGridLinesBrush="DarkGreen"
-                      VerticalGridLinesBrush="DarkGreen"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="True"
-                      CanUserReorderColumns="False"
-                      CanUserResizeColumns="True"
-                      AlternatingRowBackground="DarkSeaGreen"
-                      RowBackground="LightGray"
-                      AlternationCount="2"
-                      Margin="0,0,5,0">
-                <DataGrid.Columns >
-                    <DataGridTextColumn 
-                        Header="Uhrzeit"
-                        CanUserSort="False"
-                        Binding="{Binding MatchedTime}"
-                        />
-                    <DataGridTextColumn Header="Mentorinnen"
-                                        CanUserSort="False"
-                                        Binding="{Binding MatchedMentor}"
-                                        IsReadOnly="False"
-                                        MinWidth="50" />
-                    <DataGridTextColumn Header="Mentees"
-                                        Binding="{Binding MatchedMentee}"
-                                        IsReadOnly="False"
-                                        MinWidth="100" />
-                </DataGrid.Columns>
+            <DataGrid Grid.Column="0" Grid.Row="2" AutoGenerateColumns="True" ItemsSource="{Binding Data}">
+
             </DataGrid>
         </Grid>
     </Grid>

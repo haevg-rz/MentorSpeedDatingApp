@@ -8,11 +8,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Ioc;
+using MentorSpeedDatingApp.WindowManagement;
+
+[assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
+
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -43,6 +49,12 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Time Properties
 
+        private string timeInterval;
+        public string TimeInterval
+        {
+            get => this.timeInterval;
+            set => base.Set(ref this.timeInterval, value);
+        }
 
         private string startTimeHours;
 
@@ -105,7 +117,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool endTimeMinutesHasErrors;
-
         public bool EndTimeMinutesHasErrors
         {
             get => this.endTimeMinutesHasErrors;
@@ -114,7 +125,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #endregion
 
-        public bool ValidationRulesHasError => this.startTimeHoursHasErrors || this.startTimeMinutesHasErrors || this.endTimeHoursHasErrors || this.endTimeMinutesHasErrors;
+        public bool ValidationRulesHasError => this.startTimeHoursHasErrors || this.startTimeMinutesHasErrors ||
+                                               this.endTimeHoursHasErrors || this.endTimeMinutesHasErrors;
 
         #endregion
 
@@ -139,12 +151,12 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public MainViewModel()
         {
-
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
 
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
-            this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
+            this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling,
+                this.CanExecuteGenerateMatchingCommandHandling);
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
@@ -158,6 +170,7 @@ namespace MentorSpeedDatingApp.ViewModel
                 this.EndTimeHours = "18";
                 this.EndTimeMinutes = "00";
                 this.Date = DateTime.Now;
+                this.TimeInterval = "30";
 
                 this.Mentees = new ObservableCollection<Mentee>
                 {
@@ -204,7 +217,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void GenerateMatchingCommandHandling()
         {
-            throw new NotImplementedException();
+            WindowManager.ShowMatchingWindow();
         }
 
         private bool CanExecuteGenerateMatchingCommandHandling()
@@ -313,6 +326,28 @@ namespace MentorSpeedDatingApp.ViewModel
                    || this.StartTimeMinutes != deserializedJson.StartTimeMinutes
                    || this.EndTimeHours != deserializedJson.EndTimeHours
                    || this.EndTimeMinutes != deserializedJson.EndTimeMinutes;
+        }
+
+        private List<DateTime> GenerateTimeSlots()
+        {
+            TimeSpan interval = TimeSpan.Parse(this.TimeInterval);
+            DateTime startTime = new DateTime(this.Date.Year,this.Date.Month, this.Date.Day, Int32.Parse(this.StartTimeHours), Int32.Parse(this.StartTimeMinutes), 0);
+            DateTime endTime = new DateTime(this.Date.Year,this.Date.Month, this.Date.Day, Int32.Parse(this.EndTimeHours), Int32.Parse(this.EndTimeMinutes), 0);
+            var timeDifference = endTime.Subtract(startTime);
+            var maxAmountOfIntervals = timeDifference.TotalMinutes / interval.Minutes;
+            var intervals = new List<DateTime>();
+            DateTime timeSlot = startTime;
+            for (int i = 0; i <= maxAmountOfIntervals; i++)
+            {
+                if (i == 0)
+                {
+                    intervals.Add(startTime);
+                }
+                timeSlot = timeSlot.Add(interval);
+                intervals.Add(timeSlot);
+            }
+
+            return intervals;
         }
 
         #endregion

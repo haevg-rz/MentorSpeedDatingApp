@@ -10,6 +10,16 @@ namespace MentorSpeedDatingApp.ViewModel
     public class MatchingViewModel : ViewModelBase
     {
         public ObservableCollection<MatchingModel> Matchings { get; set; }
+        public Dictionary<string, string> Data { get; set; }
+
+
+
+        private string titel;
+        public string Titel
+        {
+            get => this.titel;
+            set => base.Set(ref this.titel, value);
+        }
 
         public MatchingViewModel()
         {
@@ -50,6 +60,7 @@ namespace MentorSpeedDatingApp.ViewModel
                             {Name = "TestName4", Titel = "TestTitel4", Vorname = "TestVorname4"}
                     }
                 };
+                this.Titel = "Speed Dating 2020 - Übersicht";
             }
 
             ;
