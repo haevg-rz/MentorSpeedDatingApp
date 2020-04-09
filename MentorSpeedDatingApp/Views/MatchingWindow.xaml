@@ -22,9 +22,10 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Titel}" />
-            <Rectangle Grid.Column="0" Grid.Row="1" Fill="DarkOliveGreen" Height="2" />
-            <DataGrid Grid.Column="0" Grid.Row="2" AutoGenerateColumns="True" ItemsSource="{Binding Data}">
+            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Headline}" />
+            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" Text="{Binding Date}" />
+            <Rectangle Grid.Column="0" Grid.Row="2" Fill="DarkOliveGreen" Height="2" />
+            <DataGrid x:Name="MatchingDataGrid" Grid.Column="0" Grid.Row="3" AutoGenerateColumns="False" ItemsSource="{Binding MatchingDataTable}">
 
             </DataGrid>
         </Grid>

@@ -30,7 +30,6 @@ namespace MentorSpeedDatingApp.ViewModel
         #region Properties
 
         private string headline;
-
         [DataMember]
         public string Headline
         {
@@ -39,7 +38,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private DateTime date;
-
         [DataMember]
         public DateTime Date
         {
@@ -49,15 +47,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Time Properties
 
-        private string timeInterval;
-        public string TimeInterval
-        {
-            get => this.timeInterval;
-            set => base.Set(ref this.timeInterval, value);
-        }
-
         private string startTimeHours;
-
         [DataMember]
         public string StartTimeHours
         {
@@ -66,7 +56,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool startTimeHoursHasErrors;
-
         public bool StartTimeHoursHasErrors
         {
             get => this.startTimeHoursHasErrors;
@@ -74,7 +63,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string startTimeMinutes;
-
         [DataMember]
         public string StartTimeMinutes
         {
@@ -83,7 +71,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool startTimeMinutesHasErrors;
-
         public bool StartTimeMinutessHasErrors
         {
             get => this.startTimeMinutesHasErrors;
@@ -91,7 +78,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeHours;
-
         [DataMember]
         public string EndTimeHours
         {
@@ -100,7 +86,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool endTimeHoursHasErrors;
-
         public bool EndTimeHoursHasErrors
         {
             get => this.endTimeHoursHasErrors;
@@ -108,7 +93,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeMinutes;
-
         [DataMember]
         public string EndTimeMinutes
         {
@@ -121,6 +105,13 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             get => this.endTimeMinutesHasErrors;
             set => base.Set(ref this.endTimeMinutesHasErrors, value);
+        }
+
+        private List<DateTime> timeSlots;
+        public List<DateTime> TimeSlots
+        {
+            get => this.timeSlots;
+            set => base.Set(ref this.timeSlots, value);
         }
 
         #endregion
@@ -170,7 +161,6 @@ namespace MentorSpeedDatingApp.ViewModel
                 this.EndTimeHours = "18";
                 this.EndTimeMinutes = "00";
                 this.Date = DateTime.Now;
-                this.TimeInterval = "30";
 
                 this.Mentees = new ObservableCollection<Mentee>
                 {
@@ -217,7 +207,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void GenerateMatchingCommandHandling()
         {
-            WindowManager.ShowMatchingWindow();
+            MainViewModel mvm = this;
+            WindowManager.ShowMatchingWindow(mvm);
         }
 
         private bool CanExecuteGenerateMatchingCommandHandling()
@@ -326,28 +317,6 @@ namespace MentorSpeedDatingApp.ViewModel
                    || this.StartTimeMinutes != deserializedJson.StartTimeMinutes
                    || this.EndTimeHours != deserializedJson.EndTimeHours
                    || this.EndTimeMinutes != deserializedJson.EndTimeMinutes;
-        }
-
-        private List<DateTime> GenerateTimeSlots()
-        {
-            TimeSpan interval = TimeSpan.Parse(this.TimeInterval);
-            DateTime startTime = new DateTime(this.Date.Year,this.Date.Month, this.Date.Day, Int32.Parse(this.StartTimeHours), Int32.Parse(this.StartTimeMinutes), 0);
-            DateTime endTime = new DateTime(this.Date.Year,this.Date.Month, this.Date.Day, Int32.Parse(this.EndTimeHours), Int32.Parse(this.EndTimeMinutes), 0);
-            var timeDifference = endTime.Subtract(startTime);
-            var maxAmountOfIntervals = timeDifference.TotalMinutes / interval.Minutes;
-            var intervals = new List<DateTime>();
-            DateTime timeSlot = startTime;
-            for (int i = 0; i <= maxAmountOfIntervals; i++)
-            {
-                if (i == 0)
-                {
-                    intervals.Add(startTime);
-                }
-                timeSlot = timeSlot.Add(interval);
-                intervals.Add(timeSlot);
-            }
-
-            return intervals;
         }
 
         #endregion

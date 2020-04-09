@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using MentorSpeedDatingApp.Views;
 using MentorSpeedDatingApp.ViewModel;
 
@@ -6,9 +7,12 @@ namespace MentorSpeedDatingApp.WindowManagement
 {
     public class WindowManager
     {
-        public static void ShowMatchingWindow()
+        public static void ShowMatchingWindow(MainViewModel mVm)
         {
-            var window = new MatchingWindow() {DataContext = new MatchingViewModel()};
+            //TESTDATETIME DATA:
+            DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 7, 0,0);
+            DateTime endTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0,0);
+            var window = new MatchingWindow() {DataContext = new MatchingViewModel(mVm.Headline, mVm.Mentors, mVm.Mentees, startTime, endTime)};
             window.Show();
         }
     }
