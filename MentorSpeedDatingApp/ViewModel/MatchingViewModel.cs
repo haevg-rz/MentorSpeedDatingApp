@@ -5,11 +5,12 @@ using System.Data;
 using System.DirectoryServices;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using GalaSoft.MvvmLight;
 using MentorSpeedDatingApp.Models;
-using  MentorSpeedDatingApp.ExtraFunctions;
+using MentorSpeedDatingApp.ExtraFunctions;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -17,16 +18,36 @@ namespace MentorSpeedDatingApp.ViewModel
     {
         #region Properties
 
-        public DataTable MatchingDataTable
+        public List<Matching> Matchings
         {
-            get => this.matchingDataTable;
-            set => base.Set(ref this.matchingDataTable, value);
+            get => this.matchings;
+            set
+            {
+                base.Set(ref this.matchings, value);
+                base.RaisePropertyChanged();
+            }
         }
 
-        public string Headline
+        public List<DateTime> Times
         {
-            get => this.headline;
-            set => base.Set(ref this.headline, value);
+            get => this.times;
+            set
+            {
+                base.Set(ref this.times, value);
+                base.RaisePropertyChanged();
+            }
+        }
+
+        public List<Mentor> Mentors
+        {
+            get => this.mentors;
+            set => base.Set(ref this.mentors, value);
+        }
+
+        public List<Mentee> Mentees
+        {
+            get => this.mentees;
+            set => base.Set(ref this.mentees, value);
         }
 
         public DateTime Date
@@ -55,24 +76,51 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Backing Fields
 
-        private string headline;
-        private ObservableCollection<Mentor> mentors;
-        private ObservableCollection<Mentee> mentees;
-        private List<DateTime> timeSlots;
-        private DateTime date;
-        private DataTable matchingDataTable;
+        private List<Mentor> mentors;
+        private List<Mentee> mentees;
+        private List<Matching> matchings;
+        private List<DateTime> times;
 
         #endregion
 
         #endregion
-
 
         public MatchingViewModel()
         {
             if (this.IsInDesignMode)
             {
-                this.Headline = "Speed Dating 2020 - Übersicht";
-                this.Date = DateTime.Now;
+                this.Mentors = new List<Mentor>()
+                {
+                    new Mentor() {Name = "TestMentor1", Vorname = "TestMentor1Vorname", Titel = "TestTitel1"},
+                    new Mentor() {Name = "TestMentor2", Vorname = "TestMentor2Vorname", Titel = "TestTitel2"},
+                    new Mentor() {Name = "TestMentor3", Vorname = "TestMentor3Vorname", Titel = "TestTitel3"},
+                    new Mentor() {Name = "TestMentor4", Vorname = "TestMentor4Vorname", Titel = "TestTitel4"},
+                    new Mentor() {Name = "TestMentor5", Vorname = "TestMentor5Vorname", Titel = "TestTitel5"},
+                };
+                this.Mentees = new List<Mentee>()
+                {
+                    new Mentee() {Name = "TestMentee1", Vorname = "TestMentee1Vorname", Titel = "TestTitel1"},
+                    new Mentee() {Name = "TestMentee2", Vorname = "TestMentee2Vorname", Titel = "TestTitel2"},
+                    new Mentee() {Name = "TestMentee3", Vorname = "TestMentee3Vorname", Titel = "TestTitel3"},
+                    new Mentee() {Name = "TestMentee4", Vorname = "TestMentee4Vorname", Titel = "TestTitel4"},
+                    new Mentee() {Name = "TestMentee5", Vorname = "TestMentee5Vorname", Titel = "TestTitel5"},
+                    new Mentee() {Name = "TestMentee6", Vorname = "TestMentee6Vorname", Titel = "TestTitel6"}
+                };
+                this.Times = new List<DateTime>();
+                var startTime = DateTime.Today;
+                for (int i = 0; i < 8; i++)
+                {
+                    this.Times.Add(startTime.AddHours(i));
+                }
+                this.Matchings = new List<Matching>();
+                foreach (var mentor in this.Mentors)
+                {
+                    this.Matchings.Add(new Matching()
+                    {
+                        Mentor = mentor,
+                        Dates = this.GenerateTestDates()
+                    });
+                }
             }
         }
 
@@ -82,22 +130,24 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Headline = headline;
             this.Mentors = mentorsList;
             this.Mentees = menteeList;
-            //Fill MacthedMentees for every Mentor with every Mentee (No No-Go-Dates yet implemented)
-            this.FillMatchedMenteesProperty(this.Mentees.ToList());
-            var tsc = new TimeSlotCalculator();
-            var minDates = this.Mentors[0].MatchedMentees.Count;
-            this.TimeSlots = tsc.CalculateTimeSlots(startTime, endTime, minDates);
-            //Fill DataTable with Lists
-            var mdtg = new MatchingDataTableGenerator();
-            this.MatchingDataTable = mdtg.GenerateTable(this.Mentors.ToList(), this.TimeSlots);
+            this.Mentors = mentorsList;
         }
 
-        private void FillMatchedMenteesProperty(List<Mentee> menteeList)
+        private List<IDate> GenerateTestDates()
         {
-            foreach (var mentor in this.Mentors)
+            List<IDate> dates = new List<IDate>();
+            foreach (var mentee in this.Mentees)
             {
-                mentor.MatchedMentees = menteeList;
+                var ts = DateTime.Now;
+                var addHours = ts.AddHours(1);
+                dates.Add(new Date()
+                {
+                    Mentee = mentee,
+                    TimeSlot = new TimeSlot() { IsBreak = false, Time = addHours}
+                });
             }
+
+            return dates;
         }
     }
 }

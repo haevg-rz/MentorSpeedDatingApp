@@ -5,29 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MentorSpeedDatingApp.Views"
         mc:Ignorable="d"
-        xmlns:VM="clr-namespace:MentorSpeedDatingApp.ViewModel"
+        xmlns:vm="clr-namespace:MentorSpeedDatingApp.ViewModel"
         Title="MatchingWindow" Height="800" Width="600">
     <Window.DataContext>
-        <VM:MatchingViewModel />
+        <vm:MatchingViewModel />
     </Window.DataContext>
 
     <Grid>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Headline}" />
-            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" Text="{Binding Date}" />
-            <Rectangle Grid.Column="0" Grid.Row="2" Fill="DarkOliveGreen" Height="2" />
-            <DataGrid x:Name="MatchingDataGrid" Grid.Column="0" Grid.Row="3" AutoGenerateColumns="False" ItemsSource="{Binding MatchingDataTable}">
-
-            </DataGrid>
+            <HeaderedItemsControl Margin="15" ItemsSource="{Binding Times}" Header="Zeiten">
+                <HeaderedItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding TimeOfDay}" Height="25"/>
+                    </DataTemplate>
+                </HeaderedItemsControl.ItemTemplate>
+            </HeaderedItemsControl>
+            <ItemsControl Grid.Column="1" ItemsSource="{Binding Matchings}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="Beige">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="{Binding Mentor.Name}" FontWeight="Bold" Margin="10"/>
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding Dates}" Margin="10">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{Binding TimeSlot.TimeOfDay.Hours}" />
+                                            <TextBlock Text="{Binding Mentee.Name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </Grid>
 </Window>

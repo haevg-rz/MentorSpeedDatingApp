@@ -12,5 +12,10 @@ namespace MentorSpeedDatingApp.Views
         {
             InitializeComponent();
         }
+
+        public MatchingWindow(List<Mentor> mentorList)
+        {
+            this.InitializeComponent();
+        }
     }
 }
