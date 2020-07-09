@@ -28,11 +28,13 @@
             </Grid.ColumnDefinitions>
 
             <!-- Begin Menu Region -->
-            <Canvas Grid.Column="1" VerticalAlignment="Stretch" ZIndex="1" x:Name="ExpanderCanvasNavMenu"
-                    Background="Transparent" Width="40" HorizontalAlignment="Left">
+            <Canvas Grid.Column="1" VerticalAlignment="Top" ZIndex="1" x:Name="ExpanderCanvasNavMenu"
+                    Background="Transparent" Width="40" Height="{Binding ElementName=ExpanderCanvasNavMenu, Path=ActualHeight}" HorizontalAlignment="Left">
                 <telerik:RadNavigationView x:Name="ExpandNavMenu" PaneBackground="Transparent" Background="Transparent"
-                                           Margin="0,0,0,0" AutoChangeDisplayMode="False" DisplayMode="Compact"
-                                           Height="{Binding ActualHeight, ElementName=ExpanderCanvasNavMenu}"
+                                           AutoChangeDisplayMode="False" DisplayMode="Compact"
+                                           Height="Auto"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Left"
                                            ExpandedPaneWidth="300"
                                            BorderBrush="Transparent">
                     <telerik:RadNavigationView.PaneHeader>
@@ -165,7 +167,7 @@
                         </telerik:RadWatermarkTextBox>
                     </Grid>
                     <Grid Grid.Row="0" RowSpan="4" Column="1">
-                        <telerik:RadButton Command="{Binding GenerateMatchingCommand}" HorizontalAlignment="Center"
+                        <telerik:RadButton Command="{Binding GenerateMatchingCommand}" HorizontalAlignment="Center" FontWeight="Bold"
                                            VerticalAlignment="Center" MinWidth="160" MinHeight="100" Content="Matchen!" />
                     </Grid>
                 </Grid>
@@ -184,9 +186,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
                                Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}" FontWeight="Bold"
-                               FontSize="18">
-                        Mentors
-                    </TextBlock>
+                               FontSize="18" Text="Mentorinnen"/>
                     <!-- Mentoren Tabelle -->
                     <telerik:RadGridView x:Name="MentorsGridView"
                                          Grid.Row="1" Grid.Column="0"
@@ -205,25 +205,24 @@
                         <telerik:RadGridView.Columns>
                             <telerik:GridViewDataColumn Header="Titel"
                                                         DataMemberBinding="{Binding Titel}"
-                                                        SortMemberPath="Titel" IsReadOnly="False"
+                                                        SortMemberPath="Titel" 
+                                                        IsReadOnly="False"
                                                         MinWidth="50" />
+                            <telerik:GridViewDataColumn Header="Vorname"
+                                                        SortMemberPath="Vorname"
+                                                        DataMemberBinding="{Binding Vorname}"
+                                                        IsReadOnly="False"
+                                                        MinWidth="100" />
                             <telerik:GridViewDataColumn Header="Name"
                                                         SortMemberPath="Name"
                                                         DataMemberBinding="{Binding Name}"
                                                         IsReadOnly="False"
                                                         MinWidth="100" />
-                            <telerik:GridViewDataColumn Header="Vorname"
-                                                        SortMemberPath="Name"
-                                                        DataMemberBinding="{Binding Vorname}"
-                                                        IsReadOnly="False"
-                                                        MinWidth="100" />
                         </telerik:RadGridView.Columns>
                     </telerik:RadGridView>
                     <Button Grid.Row="2" Grid.Column="0" Margin="0,0,5,0" Command="{Binding DeleteMentorsCommand}"
-                            Style="{StaticResource BottomMenuButtonStyle}">
-                        Mentors löschen
-                    </Button>
-                    <!-- Mentee Tabelle -->
+                            Style="{StaticResource BottomMenuButtonStyle}" Content="Mentorinnen löschen"/>
+                        <!-- Mentee Tabelle -->
                     <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"
                                Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}" FontWeight="Bold"
                                FontSize="18">
@@ -249,20 +248,18 @@
                                                         MinWidth="50" />
                             <telerik:GridViewDataColumn Header="Name"
                                                         SortMemberPath="Name"
-                                                        DataMemberBinding="{Binding Name}"
+                                                        DataMemberBinding="{Binding Vorname}"
                                                         IsReadOnly="False"
                                                         MinWidth="100" />
                             <telerik:GridViewDataColumn Header="Vorname"
                                                         SortMemberPath="Name"
-                                                        DataMemberBinding="{Binding Vorname}"
+                                                        DataMemberBinding="{Binding Name}"
                                                         IsReadOnly="False"
                                                         MinWidth="100" />
                         </telerik:RadGridView.Columns>
                     </telerik:RadGridView>
                     <Button Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Command="{Binding DeleteMenteesCommand}"
-                            Style="{StaticResource BottomMenuButtonStyle}">
-                        Mentees löschen
-                    </Button>
+                            Style="{StaticResource BottomMenuButtonStyle}" Content="Mentees löschen" />
                 </Grid>
                 <!-- Tabelle Region Ende -->
             </Grid>

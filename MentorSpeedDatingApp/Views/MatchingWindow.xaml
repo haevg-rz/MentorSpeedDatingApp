@@ -7,8 +7,11 @@
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:MentorSpeedDatingApp.ViewModel"
         xmlns:rsc="clr-namespace:MentorSpeedDatingApp.Resources"
+        xmlns:converter="clr-namespace:MentorSpeedDatingApp.Converter"
         xmlns:userControls="clr-namespace:MentorSpeedDatingApp.Views.UserControls"
-        Title="Mentor-Speed-Dating Matching-Ergebnisse">
+        Title="Mentor-Speed-Dating Matching-Ergebnisse"
+        Height="600"
+        Width="800">
     <Window.DataContext>
         <vm:MatchingViewModel />
     </Window.DataContext>
@@ -19,39 +22,67 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+    
 
-    <Grid>
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
-                <Grid>
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Style="{StaticResource DataTemplateTimeHeaderTextBlockStyle}"
-                               Text="Uhrzeit" />
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding DateTimes}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <StackPanel Style="{StaticResource DataTemplateTimeStackPanelStyle}">
-                                        <TextBlock Style="{StaticResource DataTemplateTimeTextboxStyle}"
-                                                   Text="{Binding TimeSlot.Time.TimeOfDay.Hours}" />
-                                        <TextBlock Style="{StaticResource DataTemplateTimeTextboxStyle}" Text=" : " />
-                                        <TextBlock Style="{StaticResource DataTemplateTimeTextboxStyle}"
-                                                   Text="{Binding TimeSlot.Time.TimeOfDay.Minutes, Converter={StaticResource TimeOfDayMinutesConverter}}" />
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Grid>
+                <TextBlock Grid.Row="0" Text="Uhrzeit" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding DateTimes}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate >
+                            <TextBox Text="{Binding TimeSlot.Time, ConverterCulture=de-DE, StringFormat=t}" Style="{StaticResource DataTemplateDateTimeTextBlockStyle}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </Grid>
-        <Grid Row="0" Column="1">
-            <userControls:MatchingsUserControl />
+        <Grid Column="1" Margin="10,0,0,0">
+            <ItemsControl ItemsSource="{Binding Matchings}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Style="{StaticResource DataTemplateMatchingGridStyle}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <TextBox Grid.Row="0" Style="{StaticResource DataTemplateMentorTextBoxStyle}">
+                                <TextBox.Text>
+                                    <MultiBinding Converter="{StaticResource NameConverter}">
+                                        <Binding Path="Mentor.Titel" />
+                                        <Binding Path="Mentor.Name" />
+                                    </MultiBinding>
+                                </TextBox.Text>
+                            </TextBox>
+
+                            <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Dates}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBox Style="{StaticResource DataTemplateMenteeTextBoxStyle}"
+                                                     Text="{Binding Mentee}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </Grid>
 </Window>

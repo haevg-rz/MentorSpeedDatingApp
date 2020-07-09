@@ -18,6 +18,7 @@ using System.Windows.Xps.Packaging;
 using System.Xml;
 using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.WindowManagement;
+using Microsoft.Win32;
 using Formatting = Newtonsoft.Json.Formatting;
 
 [assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
@@ -225,11 +226,15 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var saveConfirmation = MessageBox.Show("Speichern?", button: MessageBoxButton.OKCancel, caption:"Speichern");
-            if (saveConfirmation == MessageBoxResult.Yes)
+            var sfd = new SaveFileDialog
+            {
+            InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory, Filter = "JSON Files(*.json) | *.json", DefaultExt = ".json"
+            };
+            bool? result = sfd.ShowDialog();
+            if (result == true)
             {
                 var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
-                File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
+                File.WriteAllText(sfd.FileName, jsonData);
             }
         }
 

@@ -8,53 +8,53 @@
   "Mentors": [
     {
       "Titel": "Dr.",
-      "Name": "Natalie",
-      "Vorname": "Portman"
+      "Name": "Portman",
+      "Vorname": "Natalie"
     },
     {
       "Titel": "Dr. Dr. ",
-      "Name": "Anne",
-      "Vorname": "Hathaway"
+      "Name": "Hathaway",
+      "Vorname": "Anne"
     },
     {
       "Titel": "Prof.",
-      "Name": "Talia",
-      "Vorname": "Shire"
+      "Name": "Shire",
+      "Vorname": "Talia"
     },
     {
       "Titel": "",
-      "Name": "Diane",
-      "Vorname": "Keaton"
+      "Name": "Keaton",
+      "Vorname": "Diane"
     },
     {
       "Titel": "Prof. Dr.",
-      "Name": "Keira",
-      "Vorname": "Knightley"
+      "Name": "Knightley",
+      "Vorname": "Keira"
     }
   ],
   "Mentees": [
     {
       "Titel": "Dipl. Ing.",
-      "Name": "Uma",
-      "Vorname": "Thurman",
+      "Name": "Thurman",
+      "Vorname": "Uma",
       "IsFiller": false
     },
     {
       "Titel": "Dr. ",
-      "Name": "Jennifer",
-      "Vorname": "Lawrence",
+      "Name": "Lawrence",
+      "Vorname": "Jennifer",
       "IsFiller": false
     },
     {
       "Titel": "",
-      "Name": "Julianne",
-      "Vorname": "Moore",
+      "Name": "Moore",
+      "Vorname": "Julianne",
       "IsFiller": false
     },
     {
       "Titel": "Bsc.",
-      "Name": "Marion",
-      "Vorname": "Cotillard",
+      "Name": "Cotillard",
+      "Vorname": "Marion",
       "IsFiller": false
     }
   ]
