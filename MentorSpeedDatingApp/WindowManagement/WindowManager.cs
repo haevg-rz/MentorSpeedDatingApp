@@ -12,7 +12,7 @@ namespace MentorSpeedDatingApp.WindowManagement
             //TESTDATETIME DATA:
             DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 7, 0,0);
             DateTime endTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0,0);
-            var window = new MatchingWindow() {DataContext = new MatchingViewModel(mVm.Headline, mVm.Mentors, mVm.Mentees, startTime, endTime)};
+            var window = new MatchingWindow() {DataContext = new MatchingViewModel(mVm.Mentors, mVm.Mentees, startTime, endTime)};
             window.Show();
         }
     }

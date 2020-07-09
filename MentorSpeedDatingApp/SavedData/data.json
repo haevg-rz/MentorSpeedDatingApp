@@ -1,67 +1,61 @@
 {
-  "Headline": "Mentor Speed Dating 2020",
-  "Date": "2020-03-20T00:00:00",
-  "StartTimeHours": "11",
-  "StartTimeMinutes": "45",
-  "EndTimeHours": "18",
-  "EndTimeMinutes": "30",
+  "Headline": "",
+  "Date": "2020-07-03T15:15:52.374053+02:00",
+  "StartTimeHours": "",
+  "StartTimeMinutes": "",
+  "EndTimeHours": "",
+  "EndTimeMinutes": "",
   "Mentors": [
     {
       "Titel": "Dr.",
-      "Name": "Portman",
-      "Vorname": "Natalie"
+      "Name": "Natalie",
+      "Vorname": "Portman"
     },
     {
-      "Titel": "",
-      "Name": "Streep",
-      "Vorname": "Meryl"
-    },
-    {
-      "Titel": "Dr. Dr.",
-      "Name": "Jolie",
-      "Vorname": "Angelina"
-    },
-    {
-      "Titel": "",
-      "Name": "Theron",
-      "Vorname": "Charlize"
+      "Titel": "Dr. Dr. ",
+      "Name": "Anne",
+      "Vorname": "Hathaway"
     },
     {
       "Titel": "Prof.",
-      "Name": "Watson",
-      "Vorname": "Emma"
+      "Name": "Talia",
+      "Vorname": "Shire"
     },
     {
-      "Titel": "Dr.",
-      "Name": "Stone",
-      "Vorname": "Emma"
+      "Titel": "",
+      "Name": "Diane",
+      "Vorname": "Keaton"
+    },
+    {
+      "Titel": "Prof. Dr.",
+      "Name": "Keira",
+      "Vorname": "Knightley"
     }
   ],
   "Mentees": [
     {
-      "Titel": "Dr.",
-      "Name": "Johansson",
-      "Vorname": "Scarlett"
+      "Titel": "Dipl. Ing.",
+      "Name": "Uma",
+      "Vorname": "Thurman",
+      "IsFiller": false
     },
     {
-      "Titel": "Prof.",
-      "Name": "Lawrence",
-      "Vorname": "Jennifer"
-    },
-    {
-      "Titel": "Dr. med.",
-      "Name": "Roberts",
-      "Vorname": "Julia"
-    },
-    {
-      "Titel": "Prof. Dr.",
-      "Name": "Aniston",
-      "Vorname": "Jennifer"
+      "Titel": "Dr. ",
+      "Name": "Jennifer",
+      "Vorname": "Lawrence",
+      "IsFiller": false
     },
     {
       "Titel": "",
-      "Name": "Bullock",
-      "Vorname": "Sandra"
+      "Name": "Julianne",
+      "Vorname": "Moore",
+      "IsFiller": false
+    },
+    {
+      "Titel": "Bsc.",
+      "Name": "Marion",
+      "Vorname": "Cotillard",
+      "IsFiller": false
     }
   ]
 }

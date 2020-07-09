@@ -19,4 +19,22 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Telerik.Windows.Controls">
+      <HintPath>..\..\..\DevProdukte\VVZOperator\Presentation\Libs\Telerik.Windows.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.GridView">
+      <HintPath>..\..\..\DevProdukte\VVZOperator\Presentation\Libs\Telerik.Windows.Controls.GridView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Input">
+      <HintPath>..\..\..\DevProdukte\VVZOperator\Presentation\Libs\Telerik.Windows.Controls.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Navigation">
+      <HintPath>..\..\..\DevProdukte\VVZOperator\Presentation\Libs\Telerik.Windows.Controls.Navigation.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Data">
+      <HintPath>..\..\..\DevProdukte\VVZOperator\Presentation\Libs\Telerik.Windows.Data.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

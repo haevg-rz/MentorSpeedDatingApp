@@ -6,52 +6,52 @@
         xmlns:local="clr-namespace:MentorSpeedDatingApp.Views"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:MentorSpeedDatingApp.ViewModel"
-        Title="MatchingWindow" Height="800" Width="600">
+        xmlns:rsc="clr-namespace:MentorSpeedDatingApp.Resources"
+        xmlns:userControls="clr-namespace:MentorSpeedDatingApp.Views.UserControls"
+        Title="Mentor-Speed-Dating Matching-Ergebnisse">
     <Window.DataContext>
         <vm:MatchingViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <HeaderedItemsControl Margin="15" ItemsSource="{Binding Times}" Header="Zeiten">
-                <HeaderedItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding TimeOfDay}" Height="25"/>
-                    </DataTemplate>
-                </HeaderedItemsControl.ItemTemplate>
-            </HeaderedItemsControl>
-            <ItemsControl Grid.Column="1" ItemsSource="{Binding Matchings}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Background="Beige">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="{Binding Mentor.Name}" FontWeight="Bold" Margin="10"/>
-                            <ItemsControl Grid.Row="1" ItemsSource="{Binding Dates}" Margin="10">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="{Binding TimeSlot.TimeOfDay.Hours}" />
-                                            <TextBlock Text="{Binding Mentee.Name}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+                <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Style="{StaticResource DataTemplateTimeHeaderTextBlockStyle}"
+                               Text="Uhrzeit" />
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding DateTimes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel Style="{StaticResource DataTemplateTimeStackPanelStyle}">
+                                        <TextBlock Style="{StaticResource DataTemplateTimeTextboxStyle}"
+                                                   Text="{Binding TimeSlot.Time.TimeOfDay.Hours}" />
+                                        <TextBlock Style="{StaticResource DataTemplateTimeTextboxStyle}" Text=" : " />
+                                        <TextBlock Style="{StaticResource DataTemplateTimeTextboxStyle}"
+                                                   Text="{Binding TimeSlot.Time.TimeOfDay.Minutes, Converter={StaticResource TimeOfDayMinutesConverter}}" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+        </Grid>
+        <Grid Row="0" Column="1">
+            <userControls:MatchingsUserControl />
         </Grid>
     </Grid>
 </Window>

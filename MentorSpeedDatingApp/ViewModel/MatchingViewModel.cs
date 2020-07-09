@@ -18,24 +18,16 @@ namespace MentorSpeedDatingApp.ViewModel
     {
         #region Properties
 
-        public List<Matching> Matchings
+        public DateTime StartTime
         {
-            get => this.matchings;
-            set
-            {
-                base.Set(ref this.matchings, value);
-                base.RaisePropertyChanged();
-            }
+            get => this.startTime;
+            set => base.Set(ref this.startTime, value);
         }
 
-        public List<DateTime> Times
+        public DateTime EndTime
         {
-            get => this.times;
-            set
-            {
-                base.Set(ref this.times, value);
-                base.RaisePropertyChanged();
-            }
+            get => this.endTime;
+            set => base.Set(ref this.endTime, value);
         }
 
         public List<Mentor> Mentors
@@ -50,36 +42,27 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.mentees, value);
         }
 
-        public DateTime Date
+        public List<Matching> Matchings
         {
-            get => this.date;
-            set => base.Set(ref this.date, value);
+            get => this.matchings;
+            set
+            {
+                base.Set(ref this.matchings, value);
+                base.RaisePropertyChanged();
+            }
         }
 
-        public ObservableCollection<Mentor> Mentors
-        {
-            get => this.mentors;
-            set => base.Set(ref this.mentors, value);
-        }
+        public List<IDate> DateTimes { get => this.dateTimes; set => base.Set(ref this.dateTimes, value); }
 
-        public List<DateTime> TimeSlots
-        {
-            get => this.timeSlots;
-            set => base.Set(ref this.timeSlots, value);
-        }
-
-        public ObservableCollection<Mentee> Mentees
-        {
-            get => this.mentees;
-            set => base.Set(ref this.mentees, value);
-        }
 
         #region Backing Fields
 
+        private DateTime startTime;
+        private DateTime endTime;
         private List<Mentor> mentors;
         private List<Mentee> mentees;
         private List<Matching> matchings;
-        private List<DateTime> times;
+        private List<IDate> dateTimes;
 
         #endregion
 
@@ -87,67 +70,167 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public MatchingViewModel()
         {
-            if (this.IsInDesignMode)
+            if (IsInDesignMode)
             {
-                this.Mentors = new List<Mentor>()
-                {
-                    new Mentor() {Name = "TestMentor1", Vorname = "TestMentor1Vorname", Titel = "TestTitel1"},
-                    new Mentor() {Name = "TestMentor2", Vorname = "TestMentor2Vorname", Titel = "TestTitel2"},
-                    new Mentor() {Name = "TestMentor3", Vorname = "TestMentor3Vorname", Titel = "TestTitel3"},
-                    new Mentor() {Name = "TestMentor4", Vorname = "TestMentor4Vorname", Titel = "TestTitel4"},
-                    new Mentor() {Name = "TestMentor5", Vorname = "TestMentor5Vorname", Titel = "TestTitel5"},
-                };
-                this.Mentees = new List<Mentee>()
-                {
-                    new Mentee() {Name = "TestMentee1", Vorname = "TestMentee1Vorname", Titel = "TestTitel1"},
-                    new Mentee() {Name = "TestMentee2", Vorname = "TestMentee2Vorname", Titel = "TestTitel2"},
-                    new Mentee() {Name = "TestMentee3", Vorname = "TestMentee3Vorname", Titel = "TestTitel3"},
-                    new Mentee() {Name = "TestMentee4", Vorname = "TestMentee4Vorname", Titel = "TestTitel4"},
-                    new Mentee() {Name = "TestMentee5", Vorname = "TestMentee5Vorname", Titel = "TestTitel5"},
-                    new Mentee() {Name = "TestMentee6", Vorname = "TestMentee6Vorname", Titel = "TestTitel6"}
-                };
-                this.Times = new List<DateTime>();
-                var startTime = DateTime.Today;
-                for (int i = 0; i < 8; i++)
-                {
-                    this.Times.Add(startTime.AddHours(i));
-                }
-                this.Matchings = new List<Matching>();
-                foreach (var mentor in this.Mentors)
-                {
-                    this.Matchings.Add(new Matching()
-                    {
-                        Mentor = mentor,
-                        Dates = this.GenerateTestDates()
-                    });
-                }
+                this.GenerateTestData();
             }
         }
 
-        public MatchingViewModel(string headline, ObservableCollection<Mentor> mentorsList,
+        public MatchingViewModel(ObservableCollection<Mentor> mentorsList,
             ObservableCollection<Mentee> menteeList, DateTime startTime, DateTime endTime)
         {
-            this.Headline = headline;
-            this.Mentors = mentorsList;
-            this.Mentees = menteeList;
-            this.Mentors = mentorsList;
+            this.StartTime = startTime;
+            this.EndTime = endTime;
+            this.Mentors = mentorsList.ToList();
+            this.Mentees = menteeList.ToList();
+            this.Initiate();
+        }
+
+        private void Initiate()
+        {
+            MatchingCalculator matchingCalculator =
+                new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees);
+            this.Matchings = matchingCalculator.Matchings;
+            this.DateTimes = this.GenerateTestDateTimes();
+        }
+
+        #region TestGenerators
+
+        private void GenerateTestData()
+        {
+            this.Mentors = GenerateTestMentors();
+            this.Mentees = GenerateTestMentees();
+            this.StartTime = new DateTime(2020, 7, 21, 9, 0, 0);
+            this.EndTime = new DateTime(2020, 7, 21, 16, 0, 0);
+            this.Matchings = this.GenerateTestMatchings();
+            this.DateTimes = this.GenerateTestDateTimes();
+        }
+
+        private List<IDate> GenerateTestDateTimes()
+        {
+            var testDateTimes = new List<IDate>()
+            {
+                new Date()
+                {
+                    Mentee = "", TimeSlot = new TimeSlot()
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 9,0,0)},                    
+
+                },
+                new Date()
+                {
+                    Mentee = "", TimeSlot = new TimeSlot()
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 10,0,0)},
+
+                },
+                new Date()
+                {
+                    Mentee = "", TimeSlot = new TimeSlot()
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21,11,0,0)},
+
+                },
+                new Date()
+                {
+                    Mentee = "", TimeSlot = new TimeSlot()
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 12,0,0)},
+
+                },
+                new Date()
+                {
+                    Mentee = "", TimeSlot = new TimeSlot()
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 13,0,0)}
+
+                },
+                new Date()
+                {
+                    Mentee = "", TimeSlot = new TimeSlot()
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 14,0,0)}
+
+                },
+                new Date()
+                {
+                    Mentee = "", TimeSlot = new TimeSlot()
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 15,0,0)}
+
+                },
+                new Date()
+                {
+                    Mentee = "", TimeSlot = new TimeSlot()
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 16,0,0)}
+
+                },
+
+            };
+            
+            return testDateTimes;
+        }
+
+        private List<Matching> GenerateTestMatchings()
+        {
+            var testMatchings = new List<Matching>();
+            foreach (var testMentor in GenerateTestMentors())
+            {
+                var testMatch = new Matching()
+                {
+                    Dates = this.GenerateTestDates(),
+                    Mentor = testMentor
+                };
+                testMatchings.Add(testMatch);
+            }
+
+            return testMatchings;
         }
 
         private List<IDate> GenerateTestDates()
         {
-            List<IDate> dates = new List<IDate>();
-            foreach (var mentee in this.Mentees)
+            var testDates = new List<IDate>();
+            foreach (var testMentee in GenerateTestMentees())
             {
-                var ts = DateTime.Now;
-                var addHours = ts.AddHours(1);
-                dates.Add(new Date()
+                var date = new Date()
                 {
-                    Mentee = mentee,
-                    TimeSlot = new TimeSlot() { IsBreak = false, Time = addHours}
-                });
+                    Mentee = testMentee,
+                    TimeSlot = new TimeSlot()
+                    {
+                        IsBreak = false,
+                        Time = new DateTime(2020, 7, 21, 8, 30, 0).AddMinutes(30)
+                    }
+                };
+                testDates.Add(date);
             }
 
-            return dates;
+            return testDates;
         }
+
+        private static List<Mentee> GenerateTestMentees()
+        {
+            var testMentees = new List<Mentee>()
+            {
+                new Mentee()
+                    {Name = "TestMentee1", Titel = "TestTitel1", Vorname = "TestVorname1", IsFiller = false},
+                new Mentee()
+                    {Name = "TestMentee2", Titel = "TestTitel2", Vorname = "TestVorname2", IsFiller = false},
+                new Mentee()
+                    {Name = "TestMentee3", Titel = "TestTitel3", Vorname = "TestVorname3", IsFiller = false},
+                new Mentee()
+                    {Name = "TestMentee4", Titel = "TestTitel4", Vorname = "TestVorname4", IsFiller = false},
+                new Mentee()
+                    {Name = "TestMentee5", Titel = "TestTitel5", Vorname = "TestVorname5", IsFiller = false}
+            };
+            return testMentees;
+        }
+
+        private static List<Mentor> GenerateTestMentors()
+        {
+            var testMentors = new List<Mentor>()
+            {
+                new Mentor() {Name = "TestMentor1", Titel = "TestTitel1", Vorname = "TestVorname1"},
+                new Mentor() {Name = "TestMentor2", Titel = "TestTitel2", Vorname = "TestVorname2"},
+                new Mentor() {Name = "TestMentor3", Titel = "TestTitel3", Vorname = "TestVorname3"},
+                new Mentor() {Name = "TestMentor4", Titel = "TestTitel4", Vorname = "TestVorname4"},
+                new Mentor() {Name = "TestMentor5", Titel = "TestTitel5", Vorname = "TestVorname5"}
+            };
+            return testMentors;
+        }
+
+        #endregion
     }
 }

@@ -14,8 +14,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Xps.Packaging;
+using System.Xml;
 using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.WindowManagement;
+using Formatting = Newtonsoft.Json.Formatting;
 
 [assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
 
@@ -135,6 +138,8 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
         public RelayCommand DeleteAllDataCommand { get; set; }
+        public RelayCommand PrintCommand { get; set; }
+        public RelayCommand ShowInfoCommand { get; set; }
 
         #endregion
 
@@ -151,6 +156,8 @@ namespace MentorSpeedDatingApp.ViewModel
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
+            this.PrintCommand = new RelayCommand(this.PrintCommandHandling);
+            this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
 
             this.OnLoadCommandHandling();
 
@@ -218,9 +225,12 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
-
-            File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
+            var saveConfirmation = MessageBox.Show("Speichern?", button: MessageBoxButton.OKCancel, caption:"Speichern");
+            if (saveConfirmation == MessageBoxResult.Yes)
+            {
+                var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
+                File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
+            }
         }
 
         private void OnLoadCommandHandling()
@@ -261,6 +271,29 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 this.Mentees.Add(mentee);
             }
+        }
+
+        private void PrintCommandHandling()
+        {
+            PrintDialog pDialog = new PrintDialog();
+            pDialog.PageRangeSelection = PageRangeSelection.AllPages;
+            pDialog.UserPageRangeEnabled = true;
+
+            //DruckerName ist unzulässig Exception
+            bool? print = pDialog.ShowDialog();
+            if (print == true)
+            {
+                XpsDocument xps = new XpsDocument("C:\\FixedDocumentSequence.xps", FileAccess.ReadWrite);
+                FixedDocumentSequence fixedDocSeq = xps.GetFixedDocumentSequence();
+                pDialog.PrintDocument(fixedDocSeq.DocumentPaginator, "Test print job");
+            }
+        }
+
+        private void ShowInfoCommandHandling()
+        {
+            MessageBox.Show(
+                messageBoxText:
+                "Version 0.1.0 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp", caption:"App-Informationen");
         }
 
         #endregion

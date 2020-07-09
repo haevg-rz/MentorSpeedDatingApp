@@ -16,9 +16,17 @@ namespace MentorSpeedDatingApp.Models
 
     public class Mentee : IPerson
     {
+        public Mentee()
+        {
+            this.Titel = "";
+            this.Name = "";
+            this.Vorname = "";
+        }
+
         public string Titel { get; set; }
         public string Name { get; set; }
         public string Vorname { get; set; }
+        public bool IsFiller { get; set; }
 
         public override string ToString()
         {
@@ -34,6 +42,13 @@ namespace MentorSpeedDatingApp.Models
 
     public class Mentor : IPerson
     {
+
+        public Mentor()
+        {
+            this.Titel = "";
+            this.Name = "";
+            this.Vorname = "";
+        }
         public string Titel { get; set; }
         public string Name { get; set; }
         public string Vorname { get; set; }
