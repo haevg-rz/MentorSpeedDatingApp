@@ -1,0 +1,340 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converter="clr-namespace:MentorSpeedDatingApp.Converter"
+                    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation">
+
+    <converter:TimeOfDayMinutesConverter x:Key="TimeOfDayMinutesConverter" />
+    <converter:NavMenuOverlapConverter x:Key="NavMenuOverlapConverter" />
+    <converter:MultiBindingNameConverter x:Key="NameConverter" />
+
+    <!-- Colors Begin -->
+    <Color x:Key="HealthCareGreenDarkBackground">#65BC4A</Color>
+    <Color x:Key="HealthCareGreenBrightBackground">#CFE7C3</Color>
+    <Color x:Key="HealthCareTealAkzent">#56C3BE</Color>
+    <Color x:Key="HealthCareGreenFieldDark">#67B432</Color>
+    <Color x:Key="HealthCareGray">#808080</Color>
+    <Color x:Key="HealthCareWhite">GhostWhite</Color>
+    <SolidColorBrush x:Key="HealthCareGreenDarkBackgroundBrush" Color="#65BC4A" />
+    <SolidColorBrush x:Key="HealthCareGreenBrightBackgroundBrush" Color="#CFE7C3" />
+    <SolidColorBrush x:Key="HealthCareTealAkzentBrush" Color="#56C3BE" />
+    <SolidColorBrush x:Key="HealthCareGreenFieldDarkBrush" Color="#67B432" />
+    <SolidColorBrush x:Key="HealthCareGrayBrush" Color="#808080" />
+    <SolidColorBrush x:Key="HealthCareWhiteBrush" Color="GhostWhite" />
+    <!-- Colors End -->
+    <!-- Grid Styles Begin -->
+    <Style TargetType="Grid" x:Key="DataTemplateGridStyle">
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Background" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
+    </Style>
+    <Style TargetType="Grid" x:Key="DataTemplateMatchingGridStyle" />
+    <!-- Grid Styles End -->
+
+    <!-- Begin Button Styles -->
+    <Style TargetType="Button" x:Key="SideMenuButtonStyle">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="50" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Width" Value="80" />
+        <Setter Property="MinWidth" Value="60" />
+        <Setter Property="Margin" Value="0,10,0,10" />
+        <Setter Property="Foreground" Value="{StaticResource HealthCareGreenFieldDarkBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Name="Border" Background="WhiteSmoke"
+                            BorderThickness="1" BorderBrush="{StaticResource HealthCareGreenFieldDarkBrush}">
+                        <ContentPresenter Margin="2"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7"
+                                                         Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Border" Property="Background"
+                                    Value="{StaticResource HealthCareGreenBrightBackgroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="Button" x:Key="MatchingButtonStyle">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="100" />
+        <Setter Property="MinHeight" Value="80" />
+        <Setter Property="Width" Value="160" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="Margin" Value="0,10,0,10" />
+        <Setter Property="Foreground" Value="{StaticResource HealthCareGreenFieldDarkBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Name="Border" Background="WhiteSmoke"
+                            BorderThickness="1" BorderBrush="{StaticResource HealthCareGreenFieldDarkBrush}">
+                        <ContentPresenter Margin="2"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border"
+                                    Property="Background" Value="{StaticResource HealthCareGrayBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource HealthCareWhiteBrush}" />
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7"
+                                                         Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Border" Property="Background"
+                                    Value="{StaticResource HealthCareGreenBrightBackgroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>    <Style TargetType="Button" x:Key="MatchingWindowButtonStyle">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="MaxHeight" Value="40" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Margin" Value="0,10,0,10" />
+        <Setter Property="Foreground" Value="{StaticResource HealthCareGreenFieldDarkBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Name="Border" Background="WhiteSmoke"
+                            BorderThickness="1" BorderBrush="{StaticResource HealthCareGreenFieldDarkBrush}">
+                        <ContentPresenter Margin="2"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border"
+                                    Property="Background" Value="{StaticResource HealthCareGrayBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource HealthCareWhiteBrush}" />
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7"
+                                                         Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Border" Property="Background"
+                                    Value="{StaticResource HealthCareGreenBrightBackgroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="Button" x:Key="BottomMenuButtonStyle">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource HealthCareGreenFieldDarkBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Name="Border" Background="WhiteSmoke"
+                            BorderThickness="1" BorderBrush="{StaticResource HealthCareGreenFieldDarkBrush}">
+                        <ContentPresenter Margin="2"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border"
+                                    Property="Background" Value="WhiteSmoke" />
+                            <Setter Property="Foreground" Value="{StaticResource HealthCareGreenFieldDarkBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7"
+                                                         Duration="0:0:0.1" />
+                                        <ColorAnimation
+                                            Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)" To="Red"
+                                            Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
+                                        <ColorAnimation
+                                            Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)"
+                                            To="{StaticResource HealthCareGreenFieldDark}" Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Border" Property="Background"
+                                    Value="{StaticResource HealthCareGreenBrightBackgroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- End Button Styles -->
+
+    <!-- ItemsControl Style Begin -->
+    <Style TargetType="ItemsControl" x:Key="MatchingItemsControlStyle">
+        <Setter Property="Background" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
+    </Style>
+    <!-- ItemsControl Style End -->
+    <!-- StackPanel Styles Begin -->
+    <Style TargetType="StackPanel" x:Key="DataTemplateTimeStackPanelStyle">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Orientation" Value="Horizontal" />
+    </Style>
+    <Style TargetType="StackPanel" x:Key="DataTemplateMatchingStackPanelStyle">
+        <Setter Property="Background" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
+    </Style>
+    <!-- StackPanel Styles End -->
+    <!-- TextBlock Styles Begin -->
+    <Style TargetType="TextBox" x:Key="DataTemplateDateTimeTextBlockStyle">
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <!-- TextBlock Styles End -->
+    <!-- TextBox Styles Begin -->
+    <Style TargetType="TextBox" x:Key="DataTemplateMenteeTextBoxStyle">
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Width" Value="120" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                    <Border BorderBrush="{StaticResource HealthCareGreenDarkBackgroundBrush}" BorderThickness="1">
+                        <Border.Background>
+                            <SolidColorBrush Color="{StaticResource HealthCareGreenBrightBackground}" />
+                        </Border.Background>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="IsDisabled">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                                      Storyboard.TargetProperty="(Panel.Background).
+                    (SolidColorBrush.Color)">
+                                            <EasingColorKeyFrame KeyTime="0"
+                                                                 Value="{StaticResource HealthCareGray}" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="ReadOnly">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                                      Storyboard.TargetProperty="(Panel.Background).
+                    (SolidColorBrush.Color)">
+                                            <EasingColorKeyFrame KeyTime="0"
+                                                                 Value="{StaticResource HealthCareGray}" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="MouseOver" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ScrollViewer Margin="0"
+                                      x:Name="PART_ContentHost" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="TextBox" x:Key="DataTemplateMentorTextBoxStyle">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Width" Value="120" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Foreground" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <!-- TextBox Styles End -->
+    <!-- Rectangle Styles Begin -->
+    <Style TargetType="Rectangle" x:Key="HorizontalRectangleStyle">
+        <Setter Property="Fill" Value="Black" />
+        <Setter Property="Height" Value="2" />
+    </Style>
+    <Style TargetType="Rectangle" x:Key="VerticalRectangleStyle">
+        <Setter Property="Fill" Value="Black" />
+        <Setter Property="Width" Value="1" />
+    </Style>
+    <!-- Rectangle Styles End -->
+    <!-- ItemContainer Styles Begin -->
+    <Style TargetType="ListBoxItem" x:Key="MatchingItemContainerStyle">
+        <Setter Property="Background" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="Black" />
+    </Style>
+    <!-- ItemContainer Styles End -->
+
+</ResourceDictionary>

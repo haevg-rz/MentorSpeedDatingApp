@@ -1,0 +1,61 @@
+{
+  "Headline": "",
+  "Date": "2020-07-03T15:15:52.374053+02:00",
+  "StartTimeHours": "",
+  "StartTimeMinutes": "",
+  "EndTimeHours": "",
+  "EndTimeMinutes": "",
+  "Mentors": [
+    {
+      "Titel": "Dr.",
+      "Name": "Portman",
+      "Vorname": "Natalie"
+    },
+    {
+      "Titel": "Dr. Dr. ",
+      "Name": "Hathaway",
+      "Vorname": "Anne"
+    },
+    {
+      "Titel": "Prof.",
+      "Name": "Shire",
+      "Vorname": "Talia"
+    },
+    {
+      "Titel": "",
+      "Name": "Keaton",
+      "Vorname": "Diane"
+    },
+    {
+      "Titel": "Prof. Dr.",
+      "Name": "Knightley",
+      "Vorname": "Keira"
+    }
+  ],
+  "Mentees": [
+    {
+      "Titel": "Dipl. Ing.",
+      "Name": "Thurman",
+      "Vorname": "Uma",
+      "IsFiller": false
+    },
+    {
+      "Titel": "Dr. ",
+      "Name": "Lawrence",
+      "Vorname": "Jennifer",
+      "IsFiller": false
+    },
+    {
+      "Titel": "",
+      "Name": "Moore",
+      "Vorname": "Julianne",
+      "IsFiller": false
+    },
+    {
+      "Titel": "Bsc.",
+      "Name": "Cotillard",
+      "Vorname": "Marion",
+      "IsFiller": false
+    }
+  ]
+}
