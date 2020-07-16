@@ -226,22 +226,36 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
+            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "MSDAPP");
+            if (!Directory.Exists(combinedPath))
+            {
+                Directory.CreateDirectory(combinedPath);
+            }
+            
             var sfd = new SaveFileDialog
             {
-                InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory, Filter = "JSON Files(*.json) | *.json", DefaultExt = ".json"
+                InitialDirectory = combinedPath, 
+                Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*", 
+                DefaultExt = "JSON Files (*.json) | .json",
+                FileName = "savedData.json"
             };
-            bool? result = sfd.ShowDialog();
-            if (result == true)
+            
+            if (sfd.ShowDialog() == true)
             {
                 var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
-                File.WriteAllText(sfd.FileName, jsonData);
+                File.WriteAllText(combinedPath, jsonData);
             }
         }
 
         private void OnLoadCommandHandling()
         {
-            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
+            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "MSDAPP");
+            if (!File.Exists(Path.Combine(combinedPath, "savedData.json")))
             {
+                Directory.CreateDirectory(combinedPath);
+                File.Create(Path.Combine(combinedPath, "savedData.json"));
                 return;
             }
 
@@ -256,7 +270,7 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentees = new List<Mentee>(),
                 Mentors = new List<Mentor>()
             };
-            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var jsonData = File.ReadAllText(Path.Combine(combinedPath, "savedData.json"));
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
 
             this.Headline = deserializedJson.HeadLine;
