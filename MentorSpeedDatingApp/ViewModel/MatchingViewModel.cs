@@ -91,7 +91,7 @@ namespace MentorSpeedDatingApp.ViewModel
             MatchingCalculator matchingCalculator =
                 new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees);
             this.Matchings = matchingCalculator.Matchings;
-            this.DateTimes = this.GenerateTestDateTimes();
+            this.DateTimes = matchingCalculator.MatchingDates;
         }
 
         #region TestGenerators
@@ -139,25 +139,7 @@ namespace MentorSpeedDatingApp.ViewModel
                     Mentee = "", TimeSlot = new TimeSlot()
                         {IsBreak = false, Time = new DateTime(2020, 7, 21, 13,0,0)}
 
-                },
-                new Date()
-                {
-                    Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 14,0,0)}
-
-                },
-                new Date()
-                {
-                    Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 15,0,0)}
-
-                },
-                new Date()
-                {
-                    Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 16,0,0)}
-
-                },
+                }
 
             };
             

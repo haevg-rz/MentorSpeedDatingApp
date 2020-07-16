@@ -228,7 +228,7 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             var sfd = new SaveFileDialog
             {
-            InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory, Filter = "JSON Files(*.json) | *.json", DefaultExt = ".json"
+                InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory, Filter = "JSON Files(*.json) | *.json", DefaultExt = ".json"
             };
             bool? result = sfd.ShowDialog();
             if (result == true)

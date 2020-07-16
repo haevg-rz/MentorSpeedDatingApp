@@ -18,6 +18,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         private List<TimeSlot> timeSlots;
         private double amountOfDates;
         public List<Matching> Matchings { get; set; }
+        public List<IDate> MatchingDates { get; set; }
         private int mentorIndex;
 
         public MatchingCalculator(DateTime startTime, DateTime endTime, List<Mentor> mentors, List<Mentee> mentees)
@@ -39,7 +40,8 @@ namespace MentorSpeedDatingApp.ExtraFunctions
 
             this.timeSlots = this.CalculateTimeSlots();
             this.Matchings = this.CalculateMatchings();
-            this.Matchings = TrimMatchings(this.Matchings);
+            this.Matchings = this.TrimMatchings(this.Matchings);
+            this.MatchingDates = this.RetrieveDates(this.Matchings);
         }
 
         public List<Matching> CalculateMatchings()
@@ -250,6 +252,22 @@ namespace MentorSpeedDatingApp.ExtraFunctions
 
             return matchings;
         }
+
+        private List<IDate> RetrieveDates(List<Matching> matchings)
+        {
+            var count = 0;
+            var longestDates = new List<IDate>();
+            foreach (var matching in matchings)
+            {
+                if (matching.Dates.Count >= count)
+                {
+                    count = matching.Dates.Count;
+                    longestDates = matching.Dates;
+                }
+            }
+            return longestDates;
+        }
+
         #endregion
     }
 

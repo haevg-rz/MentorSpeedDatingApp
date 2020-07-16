@@ -9,9 +9,10 @@
         xmlns:rsc="clr-namespace:MentorSpeedDatingApp.Resources"
         xmlns:converter="clr-namespace:MentorSpeedDatingApp.Converter"
         xmlns:userControls="clr-namespace:MentorSpeedDatingApp.Views.UserControls"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         Title="Mentor-Speed-Dating Matching-Ergebnisse"
-        Height="600"
-        Width="800">
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize">
     <Window.DataContext>
         <vm:MatchingViewModel />
     </Window.DataContext>
@@ -29,7 +30,11 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="0" Grid.Row="0">
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -45,7 +50,7 @@
                 </ItemsControl>
             </Grid>
         </Grid>
-        <Grid Column="1" Margin="10,0,0,0">
+        <Grid Column="1" Margin="10,0,0,0" Grid.Row="0">
             <ItemsControl ItemsSource="{Binding Matchings}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -83,6 +88,14 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <telerik:RadButton Style="{StaticResource MatchingWindowButtonStyle}" Grid.Column="0" Content="Exportieren"></telerik:RadButton>
+            <telerik:RadButton Style="{StaticResource MatchingWindowButtonStyle}" Grid.Column="1" Content="Drucken"></telerik:RadButton>
         </Grid>
     </Grid>
 </Window>
