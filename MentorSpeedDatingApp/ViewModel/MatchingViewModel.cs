@@ -4,18 +4,34 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.DirectoryServices;
 using System.Linq;
+using System.Printing;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Navigation;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.ExtraFunctions;
+using Telerik.Windows.Controls.Animation;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
     public class MatchingViewModel : ViewModelBase
     {
+        #region Fields
+
+        private DateTime startTime;
+        private DateTime endTime;
+        private List<Mentor> mentors;
+        private List<Mentee> mentees;
+        private List<Matching> matchings;
+        private List<IDate> dateTimes;
+
+        #endregion
+
         #region Properties
 
         public DateTime StartTime
@@ -52,25 +68,23 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        public List<IDate> DateTimes { get => this.dateTimes; set => base.Set(ref this.dateTimes, value); }
-
-
-        #region Backing Fields
-
-        private DateTime startTime;
-        private DateTime endTime;
-        private List<Mentor> mentors;
-        private List<Mentee> mentees;
-        private List<Matching> matchings;
-        private List<IDate> dateTimes;
+        public List<IDate> DateTimes
+        {
+            get => this.dateTimes;
+            set => base.Set(ref this.dateTimes, value);
+        }
 
         #endregion
+
+        #region RelayCommands
+
+        public RelayCommand<Visual> PrintCommand { get; set; }
 
         #endregion
 
         public MatchingViewModel()
         {
-            if (IsInDesignMode)
+            if (this.IsInDesignMode)
             {
                 this.GenerateTestData();
             }
@@ -83,16 +97,52 @@ namespace MentorSpeedDatingApp.ViewModel
             this.EndTime = endTime;
             this.Mentors = mentorsList.ToList();
             this.Mentees = menteeList.ToList();
+            this.PrintCommand = new RelayCommand<Visual>(PrintCommandHandling);
             this.Initiate();
         }
 
         private void Initiate()
         {
-            MatchingCalculator matchingCalculator =
+            var matchingCalculator =
                 new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees);
             this.Matchings = matchingCalculator.Matchings;
             this.DateTimes = matchingCalculator.MatchingDates;
         }
+
+        #region CommandHandlings
+
+        private void PrintCommandHandling(Visual v)
+        {
+            FrameworkElement e = v as FrameworkElement;
+            if (e == null)
+            {
+                return;
+            }
+
+            var printDialog = new PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                printDialog.PrintTicket.PageOrientation = PageOrientation.Landscape;
+                var originalScale = e.LayoutTransform;
+                PrintCapabilities capabilities =
+                    printDialog.PrintQueue.GetPrintCapabilities(printDialog.PrintTicket);
+                var scaleX = capabilities.PageImageableArea.ExtentWidth / e.ActualWidth;
+                var scaleY = capabilities.PageImageableArea.ExtentHeight/ e.ActualHeight;
+//                var scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / e.ActualWidth,
+//                    capabilities.PageImageableArea.ExtentHeight / e.ActualHeight);
+                e.LayoutTransform = new ScaleTransform(scaleX, scaleY);
+                var availableSize = new Size(capabilities.PageImageableArea.ExtentWidth,
+                    capabilities.PageImageableArea.ExtentHeight);
+                e.Measure(availableSize);
+                e.Arrange(new Rect(
+                    new Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight),
+                    availableSize));
+                printDialog.PrintVisual(e, "MentorSpeedDating_" + DateTime.Now.Date.ToShortDateString());
+                e.LayoutTransform = originalScale;
+            }
+        }
+
+        #endregion
 
         #region TestGenerators
 
@@ -113,36 +163,30 @@ namespace MentorSpeedDatingApp.ViewModel
                 new Date()
                 {
                     Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 9,0,0)},                    
-
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 9, 0, 0)},
                 },
                 new Date()
                 {
                     Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 10,0,0)},
-
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 10, 0, 0)},
                 },
                 new Date()
                 {
                     Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21,11,0,0)},
-
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 11, 0, 0)},
                 },
                 new Date()
                 {
                     Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 12,0,0)},
-
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 12, 0, 0)},
                 },
                 new Date()
                 {
                     Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 13,0,0)}
-
+                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 13, 0, 0)}
                 }
-
             };
-            
+
             return testDateTimes;
         }
 

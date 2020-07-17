@@ -48,16 +48,16 @@
                                 <telerik:RadGlyph Glyph="&#xe10c;" FontSize="20" />
                             </telerik:RadNavigationViewItem.Icon>
                         </telerik:RadNavigationViewItem>
-                        <telerik:RadNavigationViewItem Content="Speichern" Command="{Binding SaveCommand}"
+                        <telerik:RadNavigationViewItem Content="Speichern Unter" Command="{Binding SaveCommand}"
                                                        Background="White">
                             <telerik:RadNavigationViewItem.Icon>
                                 <telerik:RadGlyph Glyph="&#xe109;" FontSize="20" />
                             </telerik:RadNavigationViewItem.Icon>
                         </telerik:RadNavigationViewItem>
-                        <telerik:RadNavigationViewItem Content="Drucken" Command="{Binding PrintCommand}"
+                        <telerik:RadNavigationViewItem Content="Exportieren" Command="{Binding ExportCommand}"
                                                        Background="White">
                             <telerik:RadNavigationViewItem.Icon>
-                                <telerik:RadGlyph Glyph="&#xe10a;" FontSize="20" />
+                                <telerik:RadGlyph Glyph="&#xe90a;" FontSize="20" />
                             </telerik:RadNavigationViewItem.Icon>
                         </telerik:RadNavigationViewItem>
                         <telerik:RadNavigationViewItem Content="Infos" Command="{Binding ShowInfoCommand}"

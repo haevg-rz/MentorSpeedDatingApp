@@ -22,10 +22,6 @@
     <SolidColorBrush x:Key="HealthCareWhiteBrush" Color="GhostWhite" />
     <!-- Colors End -->
     <!-- Grid Styles Begin -->
-    <Style TargetType="Grid" x:Key="DataTemplateGridStyle">
-        <Setter Property="Height" Value="30" />
-        <Setter Property="Background" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
-    </Style>
     <Style TargetType="Grid" x:Key="DataTemplateMatchingGridStyle" />
     <!-- Grid Styles End -->
 
@@ -238,38 +234,32 @@
     </Style>
     <!-- End Button Styles -->
 
-    <!-- ItemsControl Style Begin -->
-    <Style TargetType="ItemsControl" x:Key="MatchingItemsControlStyle">
-        <Setter Property="Background" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
-    </Style>
-    <!-- ItemsControl Style End -->
     <!-- StackPanel Styles Begin -->
     <Style TargetType="StackPanel" x:Key="DataTemplateTimeStackPanelStyle">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Orientation" Value="Horizontal" />
     </Style>
-    <Style TargetType="StackPanel" x:Key="DataTemplateMatchingStackPanelStyle">
-        <Setter Property="Background" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
-    </Style>
     <!-- StackPanel Styles End -->
+
     <!-- TextBlock Styles Begin -->
     <Style TargetType="TextBox" x:Key="DataTemplateDateTimeTextBlockStyle">
-        <Setter Property="Height" Value="40" />
+        <Setter Property="MinHeight" Value="40" />
         <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
     <!-- TextBlock Styles End -->
+
     <!-- TextBox Styles Begin -->
     <Style TargetType="TextBox" x:Key="DataTemplateMenteeTextBoxStyle">
         <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="Width" Value="120" />
-        <Setter Property="Height" Value="40" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinHeight" Value="40" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
@@ -314,27 +304,11 @@
     <Style TargetType="TextBox" x:Key="DataTemplateMentorTextBoxStyle">
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="Width" Value="120" />
-        <Setter Property="Height" Value="20" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinHeight" Value="20" />
         <Setter Property="Foreground" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
     <!-- TextBox Styles End -->
-    <!-- Rectangle Styles Begin -->
-    <Style TargetType="Rectangle" x:Key="HorizontalRectangleStyle">
-        <Setter Property="Fill" Value="Black" />
-        <Setter Property="Height" Value="2" />
-    </Style>
-    <Style TargetType="Rectangle" x:Key="VerticalRectangleStyle">
-        <Setter Property="Fill" Value="Black" />
-        <Setter Property="Width" Value="1" />
-    </Style>
-    <!-- Rectangle Styles End -->
-    <!-- ItemContainer Styles Begin -->
-    <Style TargetType="ListBoxItem" x:Key="MatchingItemContainerStyle">
-        <Setter Property="Background" Value="{StaticResource HealthCareGreenDarkBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="Black" />
-    </Style>
-    <!-- ItemContainer Styles End -->
 
 </ResourceDictionary>

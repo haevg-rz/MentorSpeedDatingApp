@@ -137,12 +137,11 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
 
-        public RelayCommand<Visual> PrintMatchingCommand { get;  }
+        public RelayCommand ExportCommand { get;  }
 
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
         public RelayCommand DeleteAllDataCommand { get; set; }
-        public RelayCommand PrintCommand { get; set; }
         public RelayCommand ShowInfoCommand { get; set; }
 
         #endregion
@@ -160,7 +159,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
-            this.PrintCommand = new RelayCommand(this.PrintCommandHandling);
+            this.ExportCommand = new RelayCommand(this.ExportCommandHandling);
             this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
 
             this.OnLoadCommandHandling();
@@ -191,9 +190,6 @@ namespace MentorSpeedDatingApp.ViewModel
                 };
             }
         }
-
-
-
 
         #region CommandHandlings
 
@@ -228,20 +224,6 @@ namespace MentorSpeedDatingApp.ViewModel
         private bool CanExecuteGenerateMatchingCommandHandling()
         {
             return this.Mentors.Any() && this.Mentees.Any() && !this.ValidationRulesHasError;
-        }
-
-
-        private void PrintMatchingCommandHandling(Visual v)
-        {
-            var printDialog = new PrintDialog
-            {
-                PageRangeSelection = PageRangeSelection.AllPages, UserPageRangeEnabled = true
-            };
-
-            if (printDialog.ShowDialog() == true)
-            {
-                printDialog.PrintVisual(v, "Testdruck");
-            }
         }
 
         private void SaveCommandHandling()
@@ -312,20 +294,9 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        private void PrintCommandHandling()
+        private void ExportCommandHandling()
         {
-            PrintDialog pDialog = new PrintDialog();
-            pDialog.PageRangeSelection = PageRangeSelection.AllPages;
-            pDialog.UserPageRangeEnabled = true;
 
-            //DruckerName ist unzulässig Exception
-            bool? print = pDialog.ShowDialog();
-            if (print == true)
-            {
-                XpsDocument xps = new XpsDocument("C:\\FixedDocumentSequence.xps", FileAccess.ReadWrite);
-                FixedDocumentSequence fixedDocSeq = xps.GetFixedDocumentSequence();
-                pDialog.PrintDocument(fixedDocSeq.DocumentPaginator, "Test print job");
-            }
         }
 
         private void ShowInfoCommandHandling()
