@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MentorSpeedDatingApp", "MentorSpeedDatingApp\MentorSpeedDatingApp.csproj", "{58931173-1F0D-48DB-A5E8-2046F9C576DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MentorSpeedDatingAppTest", "MentorSpeedDatingAppTest\MentorSpeedDatingAppTest.csproj", "{939C68F2-8F64-41E9-8224-FE2F0703B97D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MentorSpeedDatingAppTest", "MentorSpeedDatingAppTest\MentorSpeedDatingAppTest.csproj", "{939C68F2-8F64-41E9-8224-FE2F0703B97D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

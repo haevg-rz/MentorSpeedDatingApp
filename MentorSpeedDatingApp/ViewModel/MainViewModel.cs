@@ -8,17 +8,21 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Printing;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
-using System.Windows.Annotations;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows.Threading;
 using System.Windows.Xps.Packaging;
+using System.Xml;
 using GalaSoft.MvvmLight.Ioc;
-using MentorSpeedDatingApp.Validators;
+using MentorSpeedDatingApp.WindowManagement;
+using Microsoft.Win32;
+using Formatting = Newtonsoft.Json.Formatting;
+
+[assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
+
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -30,7 +34,6 @@ namespace MentorSpeedDatingApp.ViewModel
         #region Properties
 
         private string headline;
-
         [DataMember]
         public string Headline
         {
@@ -39,7 +42,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private DateTime date;
-
         [DataMember]
         public DateTime Date
         {
@@ -49,9 +51,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Time Properties
 
-
         private string startTimeHours;
-
         [DataMember]
         public string StartTimeHours
         {
@@ -60,7 +60,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool startTimeHoursHasErrors;
-
         public bool StartTimeHoursHasErrors
         {
             get => this.startTimeHoursHasErrors;
@@ -68,7 +67,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string startTimeMinutes;
-
         [DataMember]
         public string StartTimeMinutes
         {
@@ -77,7 +75,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool startTimeMinutesHasErrors;
-
         public bool StartTimeMinutessHasErrors
         {
             get => this.startTimeMinutesHasErrors;
@@ -85,7 +82,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeHours;
-
         [DataMember]
         public string EndTimeHours
         {
@@ -94,7 +90,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool endTimeHoursHasErrors;
-
         public bool EndTimeHoursHasErrors
         {
             get => this.endTimeHoursHasErrors;
@@ -102,7 +97,6 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeMinutes;
-
         [DataMember]
         public string EndTimeMinutes
         {
@@ -111,16 +105,23 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool endTimeMinutesHasErrors;
-
         public bool EndTimeMinutesHasErrors
         {
             get => this.endTimeMinutesHasErrors;
             set => base.Set(ref this.endTimeMinutesHasErrors, value);
         }
 
+        private List<DateTime> timeSlots;
+        public List<DateTime> TimeSlots
+        {
+            get => this.timeSlots;
+            set => base.Set(ref this.timeSlots, value);
+        }
+
         #endregion
 
-        public bool ValidationRulesHasError => this.startTimeHoursHasErrors || this.startTimeMinutesHasErrors || this.endTimeHoursHasErrors || this.endTimeMinutesHasErrors;
+        public bool ValidationRulesHasError => this.startTimeHoursHasErrors || this.startTimeMinutesHasErrors ||
+                                               this.endTimeHoursHasErrors || this.endTimeMinutesHasErrors;
 
         #endregion
 
@@ -141,6 +142,8 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
         public RelayCommand DeleteAllDataCommand { get; set; }
+        public RelayCommand PrintCommand { get; set; }
+        public RelayCommand ShowInfoCommand { get; set; }
 
         #endregion
 
@@ -148,17 +151,17 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public MainViewModel()
         {
-
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
 
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
             this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling,
-                this.CanExecuteGenerateMatchingCommandHandling);           
-            this.PrintMatchingCommand = new RelayCommand<Visual>(this.PrintMatchingCommandHandling);
+                this.CanExecuteGenerateMatchingCommandHandling);
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
+            this.PrintCommand = new RelayCommand(this.PrintCommandHandling);
+            this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
 
             this.OnLoadCommandHandling();
 
@@ -218,7 +221,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void GenerateMatchingCommandHandling()
         {
-            throw new NotImplementedException();
+            MainViewModel mvm = this;
+            WindowManager.ShowMatchingWindow(mvm);
         }
 
         private bool CanExecuteGenerateMatchingCommandHandling()
@@ -242,15 +246,36 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
-
-            File.WriteAllText(@"..\..\..\..\SavedData\data.json", jsonData);
+            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "MSDAPP");
+            if (!Directory.Exists(combinedPath))
+            {
+                Directory.CreateDirectory(combinedPath);
+            }
+            
+            var sfd = new SaveFileDialog
+            {
+                InitialDirectory = combinedPath, 
+                Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*", 
+                DefaultExt = "JSON Files (*.json) | .json",
+                FileName = "savedData.json"
+            };
+            
+            if (sfd.ShowDialog() == true)
+            {
+                var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
+                File.WriteAllText(combinedPath, jsonData);
+            }
         }
 
         private void OnLoadCommandHandling()
         {
-            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
+            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "MSDAPP");
+            if (!File.Exists(Path.Combine(combinedPath, "savedData.json")))
             {
+                Directory.CreateDirectory(combinedPath);
+                File.Create(Path.Combine(combinedPath, "savedData.json"));
                 return;
             }
 
@@ -265,7 +290,7 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentees = new List<Mentee>(),
                 Mentors = new List<Mentor>()
             };
-            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var jsonData = File.ReadAllText(Path.Combine(combinedPath, "savedData.json"));
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
 
             this.Headline = deserializedJson.HeadLine;
@@ -285,6 +310,29 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 this.Mentees.Add(mentee);
             }
+        }
+
+        private void PrintCommandHandling()
+        {
+            PrintDialog pDialog = new PrintDialog();
+            pDialog.PageRangeSelection = PageRangeSelection.AllPages;
+            pDialog.UserPageRangeEnabled = true;
+
+            //DruckerName ist unzulässig Exception
+            bool? print = pDialog.ShowDialog();
+            if (print == true)
+            {
+                XpsDocument xps = new XpsDocument("C:\\FixedDocumentSequence.xps", FileAccess.ReadWrite);
+                FixedDocumentSequence fixedDocSeq = xps.GetFixedDocumentSequence();
+                pDialog.PrintDocument(fixedDocSeq.DocumentPaginator, "Test print job");
+            }
+        }
+
+        private void ShowInfoCommandHandling()
+        {
+            MessageBox.Show(
+                messageBoxText:
+                "Version 0.1.0 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp", caption:"App-Informationen");
         }
 
         #endregion

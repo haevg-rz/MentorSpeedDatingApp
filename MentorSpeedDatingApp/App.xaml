@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MentorSpeedDatingApp"
              xmlns:viewModel="clr-namespace:MentorSpeedDatingApp.ViewModel"
-             StartupUri="MainWindow.xaml">
+             StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <viewModel:ViewModelLocator x:Key="Locator" xmlns:vm="clr-namespace:MentorSpeedDatingApp.ViewModel" />
+            <viewModel:ViewModelLocator x:Key="Locator" xmlns:vm="clr-namespace:MentorSpeedDatingApp.ViewModel"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
