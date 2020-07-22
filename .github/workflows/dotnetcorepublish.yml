@@ -17,6 +17,11 @@ jobs:
         dotnet-version: 3.1.101
     - name: Publish with dotnet
       run: dotnet publish -r win-x64 -c Release --self-contained true /p:useapphost=true
+    - name: PowerShell script
+      uses: Amadevus/pwsh-script@v1.0.0
+      with:
+        # PowerShell script to execute in Actions-hydrated context
+        script: gci -Recurse -Include MentorSpeedDatingApp* | Select Fullname
     - name: Upload Artifact .exe
       uses: actions/upload-artifact@v1
       with: 
