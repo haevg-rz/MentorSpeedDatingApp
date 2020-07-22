@@ -21,4 +21,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with: 
         name: MentorSpeedDatingApp Executable
-        path: bin\Release\netcoreapp3.1\win-x64\MentorSpeedDatingApp.exe
+        path: bin\Release\netcoreapp3.1\win-x64\publish\MentorSpeedDatingApp.exe
