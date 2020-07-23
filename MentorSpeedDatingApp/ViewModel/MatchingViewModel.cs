@@ -126,11 +126,9 @@ namespace MentorSpeedDatingApp.ViewModel
                 var originalScale = e.LayoutTransform;
                 PrintCapabilities capabilities =
                     printDialog.PrintQueue.GetPrintCapabilities(printDialog.PrintTicket);
-                var scaleX = capabilities.PageImageableArea.ExtentWidth / e.ActualWidth;
-                var scaleY = capabilities.PageImageableArea.ExtentHeight/ e.ActualHeight;
-//                var scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / e.ActualWidth,
-//                    capabilities.PageImageableArea.ExtentHeight / e.ActualHeight);
-                e.LayoutTransform = new ScaleTransform(scaleX, scaleY);
+                var scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / e.ActualWidth,
+                    capabilities.PageImageableArea.ExtentHeight / e.ActualHeight);
+                e.LayoutTransform = new ScaleTransform(scale-0.05, scale-0.05);
                 var availableSize = new Size(capabilities.PageImageableArea.ExtentWidth,
                     capabilities.PageImageableArea.ExtentHeight);
                 e.Measure(availableSize);
