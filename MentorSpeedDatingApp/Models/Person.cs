@@ -31,8 +31,11 @@ namespace MentorSpeedDatingApp.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(this.Titel);
-            sb.Append(" ");
+            if (!String.IsNullOrWhiteSpace(this.Titel))
+            {
+                sb.Append(this.Titel);
+                sb.Append(" ");
+            }
             sb.Append(this.Name);
             sb.Append(", ");
             sb.Append(this.Vorname);

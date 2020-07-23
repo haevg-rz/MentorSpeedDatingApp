@@ -10,7 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Page Remove="MainWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="Views\UserControls\" />
   </ItemGroup>
 
   <ItemGroup>
