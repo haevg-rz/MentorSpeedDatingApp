@@ -111,6 +111,9 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.endTimeMinutesHasErrors, value);
         }
 
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+
         private List<DateTime> timeSlots;
         public List<DateTime> TimeSlots
         {
@@ -152,6 +155,8 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
+            this.StartTime = new DateTime();
+            this.EndTime = new DateTime();
 
             this.SaveCommand = new RelayCommand(this.SaveCommandHandling);
             this.GenerateMatchingCommand = new RelayCommand(this.GenerateMatchingCommandHandling,
@@ -217,6 +222,27 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void GenerateMatchingCommandHandling()
         {
+            if (String.IsNullOrEmpty(this.StartTimeHours) || String.IsNullOrEmpty(this.StartTimeMinutes))
+            {
+                this.StartTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, 7,
+                    0, 00);
+            }
+            else
+            {
+                this.StartTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, Convert.ToInt32(this.StartTimeHours),
+                    Convert.ToInt32(this.StartTimeMinutes), 00);
+            }
+            if (String.IsNullOrEmpty(this.EndTimeHours) || String.IsNullOrEmpty(this.EndTimeMinutes))
+            {
+                this.EndTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, 13,
+                    0, 00);
+            }
+            else
+            {
+                this.EndTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, Convert.ToInt32(this.EndTimeHours),
+                    Convert.ToInt32(this.EndTimeMinutes), 00);
+            }
+
             MainViewModel mvm = this;
             WindowManager.ShowMatchingWindow(mvm);
         }
