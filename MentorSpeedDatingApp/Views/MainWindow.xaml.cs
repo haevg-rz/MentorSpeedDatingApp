@@ -26,7 +26,7 @@ namespace MentorSpeedDatingApp.Views
             FluentPalette.Palette.MarkerInvertedColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
             FluentPalette.Palette.MarkerMouseOverColor = (Color)ColorConverter.ConvertFromString("#FF000000");
             FluentPalette.Palette.MouseOverColor = (Color)ColorConverter.ConvertFromString("#9AEDAB");
-            FluentPalette.Palette.PressedColor = (Color)ColorConverter.ConvertFromString("#4C000000");
+            FluentPalette.Palette.PressedColor = (Color)ColorConverter.ConvertFromString("#afccab");
             FluentPalette.Palette.PrimaryBackgroundColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
             FluentPalette.Palette.PrimaryColor = (Color)ColorConverter.ConvertFromString("#66FFFFFF");
             FluentPalette.Palette.PrimaryMouseOverColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");

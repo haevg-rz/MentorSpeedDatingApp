@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Controls.Ribbon.Primitives;
 using System.Windows.Documents;
+using System.Windows.Documents.DocumentStructures;
 using MentorSpeedDatingApp.Models;
 
 namespace MentorSpeedDatingApp.ExtraFunctions
@@ -182,6 +183,20 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         }
 
         #region static helper methods
+
+        private static List<Matching> ReplaceNoGoDatesWithBreaks(List<Matching> matchings, List<(Mentor, Mentee)> noGoDates)
+        {
+            foreach (var matching in matchings)
+            {
+                var dates = matching.Dates;
+                //noGoDates.Any(m => m.Item1 == matching.Mentor)
+                //var noGoDate = noGoDates.Select(n => (n.Item1, n.Item2)).Where());
+                //noGoDates.Any(m => m.Item1 == matching.Mentor)
+                //var noGomentee = dates.Where(d => d.Mentee==);
+            }
+
+            return matchings;
+        }
 
         private static double CalculateAmountOfDates(int mentorCount, int menteeCount)
         {
