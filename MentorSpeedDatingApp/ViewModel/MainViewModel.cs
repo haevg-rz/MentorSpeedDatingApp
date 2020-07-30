@@ -341,6 +341,8 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 this.Mentees.Add(mentee);
             }
+
+            #endregion
         }
 
         private void ShowInfoCommandHandling()
@@ -350,8 +352,6 @@ namespace MentorSpeedDatingApp.ViewModel
                 "Version 0.1.0 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp",
                 caption: "App-Informationen");
         }
-
-        #endregion
 
         #region Helpermethods
 
