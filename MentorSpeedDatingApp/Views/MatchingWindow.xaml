@@ -177,7 +177,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <telerik:RadButton Grid.Column="0" Height="40"
+            <telerik:RadButton Command="{Binding ExportCommand}" Grid.Column="0" Height="40"
                                Content="Exportieren" />
             <telerik:RadButton Command="{Binding PrintCommand}" CommandParameter="{Binding ElementName=PrintGrid}"
                                Height="40"
