@@ -6,6 +6,7 @@
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         xmlns:validators="clr-namespace:MentorSpeedDatingApp.Validators"
         xmlns:converters="clr-namespace:MentorSpeedDatingApp.Converter"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="Mentor Speed Dating Matching"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
@@ -19,6 +20,12 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Grid>
         <Grid>

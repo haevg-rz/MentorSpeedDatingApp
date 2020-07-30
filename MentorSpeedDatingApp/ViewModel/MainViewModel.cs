@@ -10,12 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
-using System.Windows.Xps.Packaging;
-using System.Xml;
+using System.Windows.Markup;
+using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.WindowManagement;
 using Microsoft.Win32;
@@ -33,7 +31,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Properties
 
-        private string headline;
+        private string headline = "";
         [DataMember]
         public string Headline
         {
@@ -41,7 +39,7 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.headline, value);
         }
 
-        private DateTime date;
+        private DateTime date = DateTime.Now;
         [DataMember]
         public DateTime Date
         {
@@ -51,7 +49,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Time Properties
 
-        private string startTimeHours;
+        private string startTimeHours = "";
         [DataMember]
         public string StartTimeHours
         {
@@ -59,14 +57,14 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.startTimeHours, value);
         }
 
-        private bool startTimeHoursHasErrors;
+        private bool startTimeHoursHasErrors = false;
         public bool StartTimeHoursHasErrors
         {
             get => this.startTimeHoursHasErrors;
             set => base.Set(ref this.startTimeHoursHasErrors, value);
         }
 
-        private string startTimeMinutes;
+        private string startTimeMinutes = "";
         [DataMember]
         public string StartTimeMinutes
         {
@@ -74,14 +72,14 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.startTimeMinutes, value);
         }
 
-        private bool startTimeMinutesHasErrors;
+        private bool startTimeMinutesHasErrors = false;
         public bool StartTimeMinutessHasErrors
         {
             get => this.startTimeMinutesHasErrors;
             set => base.Set(ref this.startTimeMinutesHasErrors, value);
         }
 
-        private string endTimeHours;
+        private string endTimeHours = "";
         [DataMember]
         public string EndTimeHours
         {
@@ -89,14 +87,14 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.endTimeHours, value);
         }
 
-        private bool endTimeHoursHasErrors;
+        private bool endTimeHoursHasErrors = false;
         public bool EndTimeHoursHasErrors
         {
             get => this.endTimeHoursHasErrors;
             set => base.Set(ref this.endTimeHoursHasErrors, value);
         }
 
-        private string endTimeMinutes;
+        private string endTimeMinutes = "";
         [DataMember]
         public string EndTimeMinutes
         {
@@ -104,7 +102,7 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.endTimeMinutes, value);
         }
 
-        private bool endTimeMinutesHasErrors;
+        private bool endTimeMinutesHasErrors = false;
         public bool EndTimeMinutesHasErrors
         {
             get => this.endTimeMinutesHasErrors;
@@ -114,7 +112,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
-        private List<DateTime> timeSlots;
+        private List<DateTime> timeSlots = new List<DateTime>();
         public List<DateTime> TimeSlots
         {
             get => this.timeSlots;
@@ -147,6 +145,8 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand DeleteAllDataCommand { get; set; }
         public RelayCommand ShowInfoCommand { get; set; }
 
+        public RelayCommand OnLoadedCommand { get; set; }
+
         #endregion
 
         #endregion
@@ -167,7 +167,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.ExportCommand = new RelayCommand(this.ExportCommandHandling);
             this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
 
-            this.OnLoadCommandHandling();
+            this.OnLoadedCommand = new RelayCommand(this.OnLoadedCommandHandling);
 
             if (base.IsInDesignMode || this.IsInDesignMode)
             {
@@ -254,7 +254,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "MSDAPP");
             if (!Directory.Exists(combinedPath))
             {
@@ -263,8 +263,8 @@ namespace MentorSpeedDatingApp.ViewModel
             
             var sfd = new SaveFileDialog
             {
-                InitialDirectory = combinedPath, 
-                Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*", 
+                InitialDirectory = combinedPath,
+                Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*",
                 DefaultExt = "JSON Files (*.json) | .json",
                 FileName = "savedData.json"
             };
@@ -276,13 +276,17 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        private void OnLoadCommandHandling()
+        private void OnLoadedCommandHandling()
         {
-            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "MSDAPP");
-            if (!File.Exists(Path.Combine(combinedPath, "savedData.json")))
+            Thread.Sleep(1000);
+            if (!Directory.Exists(combinedPath))
             {
                 Directory.CreateDirectory(combinedPath);
+            }
+            if (!File.Exists(Path.Combine(combinedPath, "savedData.json")))
+            {
                 File.Create(Path.Combine(combinedPath, "savedData.json"));
                 return;
             }
@@ -298,8 +302,12 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentees = new List<Mentee>(),
                 Mentors = new List<Mentor>()
             };
+
             var jsonData = File.ReadAllText(Path.Combine(combinedPath, "savedData.json"));
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
+
+            if (deserializedJson == null)
+                return;
 
             this.Headline = deserializedJson.HeadLine;
             this.Date = deserializedJson.Date;
@@ -307,8 +315,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.StartTimeMinutes = deserializedJson.StartTimeMinutes;
             this.EndTimeHours = deserializedJson.EndTimeHours;
             this.EndTimeMinutes = deserializedJson.EndTimeMinutes;
-            this.Mentors.Clear();
-            this.Mentees.Clear();
+
             foreach (var mentor in deserializedJson.Mentors)
             {
                 this.Mentors.Add(mentor);
