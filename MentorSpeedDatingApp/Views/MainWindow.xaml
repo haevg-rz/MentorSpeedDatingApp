@@ -61,12 +61,6 @@
                                 <telerik:RadGlyph Glyph="&#xe109;" FontSize="20" />
                             </telerik:RadNavigationViewItem.Icon>
                         </telerik:RadNavigationViewItem>
-                        <telerik:RadNavigationViewItem Content="Exportieren" Command="{Binding ExportCommand}"
-                                                       Background="White">
-                            <telerik:RadNavigationViewItem.Icon>
-                                <telerik:RadGlyph Glyph="&#xe90a;" FontSize="20" />
-                            </telerik:RadNavigationViewItem.Icon>
-                        </telerik:RadNavigationViewItem>
                         <telerik:RadNavigationViewItem Content="Infos" Command="{Binding ShowInfoCommand}"
                                                        Background="White">
                             <telerik:RadNavigationViewItem.Icon>

@@ -1,21 +1,19 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using MentorSpeedDatingApp.ExtraFunctions;
+using MentorSpeedDatingApp.Models;
+using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.DirectoryServices;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Printing;
-using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Navigation;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using MentorSpeedDatingApp.Models;
-using MentorSpeedDatingApp.ExtraFunctions;
-using Telerik.Windows.Controls.Animation;
+using Point = System.Windows.Point;
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -29,6 +27,7 @@ namespace MentorSpeedDatingApp.ViewModel
         private List<Mentee> mentees;
         private List<Matching> matchings;
         private List<IDate> dateTimes;
+        private string headline;
 
         #endregion
 
@@ -74,11 +73,18 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.dateTimes, value);
         }
 
+        public String Headline
+        {
+            get => this.headline;
+            set => base.Set(ref this.headline, value);
+        }
+
         #endregion
 
         #region RelayCommands
 
         public RelayCommand<Visual> PrintCommand { get; set; }
+        public GalaSoft.MvvmLight.CommandWpf.RelayCommand ExportCommand { get; }
 
         #endregion
 
@@ -91,13 +97,15 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         public MatchingViewModel(ObservableCollection<Mentor> mentorsList,
-            ObservableCollection<Mentee> menteeList, DateTime startTime, DateTime endTime)
+            ObservableCollection<Mentee> menteeList, DateTime startTime, DateTime endTime, String headline)
         {
             this.StartTime = startTime;
             this.EndTime = endTime;
             this.Mentors = mentorsList.ToList();
             this.Mentees = menteeList.ToList();
+            this.Headline = headline;
             this.PrintCommand = new RelayCommand<Visual>(PrintCommandHandling);
+            this.ExportCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(this.ExportCommandHandling);
             this.Initiate();
         }
 
@@ -128,7 +136,7 @@ namespace MentorSpeedDatingApp.ViewModel
                     printDialog.PrintQueue.GetPrintCapabilities(printDialog.PrintTicket);
                 var scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / e.ActualWidth,
                     capabilities.PageImageableArea.ExtentHeight / e.ActualHeight);
-                e.LayoutTransform = new ScaleTransform(scale-0.05, scale-0.05);
+                e.LayoutTransform = new ScaleTransform(scale - 0.05, scale - 0.05);
                 var availableSize = new Size(capabilities.PageImageableArea.ExtentWidth,
                     capabilities.PageImageableArea.ExtentHeight);
                 e.Measure(availableSize);
@@ -137,6 +145,62 @@ namespace MentorSpeedDatingApp.ViewModel
                     availableSize));
                 printDialog.PrintVisual(e, "MentorSpeedDating_" + DateTime.Now.Date.ToShortDateString());
                 e.LayoutTransform = originalScale;
+            }
+        }
+
+        private void ExportCommandHandling()
+        {
+            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application
+            {
+                DisplayAlerts = false
+            };
+            Workbook workBook = excel.Workbooks.Add("");
+
+            _Worksheet sheet = (_Worksheet) workBook.ActiveSheet;
+            try
+            {
+                sheet.Cells[1, 1] = this.headline;
+                sheet.Cells[2, 1] = "Uhrzeit";
+                int i = 2;
+                foreach (Matching matching in this.matchings)
+                {
+                    sheet.Cells[2, i] = matching.Mentor.ToString();
+                    int j = 3;
+                    foreach (var date in matching.Dates)
+                    {
+                        sheet.Cells[j, 1] = date.TimeSlot.Time.TimeOfDay.ToString();
+
+                        sheet.Cells[j, i] = date.Mentee.ToString();
+
+                        j++;
+                    }
+
+                    i++;
+                }
+
+                sheet.get_Range("A1", "Z2").EntireRow.Font.Bold = true;
+                sheet.get_Range("A1", "Z2").EntireRow.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                sheet.get_Range("A1", "A9").EntireColumn.Font.Bold = true;
+                sheet.get_Range("A1", "A9").EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                sheet.get_Range("A1", "Z2").EntireColumn.AutoFit();
+               // sheet.get_Range("A1", "A2").EntireColumn.NumberFormat = "HH:MM";
+                var title = this.headline + ".xlsx";
+                var OutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    "MSDAPP", title);
+
+                workBook.SaveAs(OutputPath,
+                    XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, false,
+                    false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing,
+                    Type.Missing, Type.Missing,
+                    Type.Missing);
+            }
+            finally
+            {
+                workBook.Close();
+                excel.Quit();
+                Process.Start("explorer.exe", Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    "MSDAPP"));
             }
         }
 
