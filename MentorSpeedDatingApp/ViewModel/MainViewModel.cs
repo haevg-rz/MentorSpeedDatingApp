@@ -1,7 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
+using MentorSpeedDatingApp.WindowManagement;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,15 +16,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Media.Imaging;
-using GalaSoft.MvvmLight.Ioc;
-using MentorSpeedDatingApp.WindowManagement;
-using Microsoft.Win32;
 using Formatting = Newtonsoft.Json.Formatting;
 
 [assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
-
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -152,8 +149,6 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
 
-        public RelayCommand ExportCommand { get; }
-
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
         public RelayCommand DeleteAllDataCommand { get; set; }
@@ -178,7 +173,6 @@ namespace MentorSpeedDatingApp.ViewModel
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
-            this.ExportCommand = new RelayCommand(this.ExportCommandHandling);
             this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
 
             this.OnLoadedCommand = new RelayCommand(this.OnLoadedCommandHandling);
@@ -375,13 +369,6 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 this.Mentees.Add(mentee);
             }
-
-            #endregion
-
-        }
-
-        private void ExportCommandHandling()
-        {
         }
 
         private void ShowInfoCommandHandling()
