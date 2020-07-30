@@ -37,8 +37,8 @@
             </Border.Effect>
             <Grid x:Name="PrintGrid">
                 <Grid.RowDefinitions>
-                    <RowDefinition SharedSizeGroup="RowOuterSize" />
-                    <RowDefinition />
+                    <RowDefinition SharedSizeGroup="RowOuterSize" Height="Auto " />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -185,7 +185,8 @@
             <telerik:RadButton Grid.Column="2" Content="Speichern"
                                IsEnabled="False" Height="40" />
             <telerik:RadToggleButton Grid.Column="3" Name="CheckBoxReadOnly"
-                                     CornerRadius="5" Width="40" Height="40" IsChecked="True" ToolTip="Anklicken zum Bearbeiten der Tabelle.">
+                                     CornerRadius="5" Width="40" Height="40" IsChecked="True"
+                                     ToolTip="Anklicken zum Bearbeiten der Tabelle.">
                 <telerik:RadToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}">
                         <Style.Triggers>

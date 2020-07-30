@@ -247,12 +247,12 @@
                                                         DataMemberBinding="{Binding Titel}"
                                                         IsReadOnly="False"
                                                         MinWidth="50" />
-                            <telerik:GridViewDataColumn Header="Name"
+                            <telerik:GridViewDataColumn Header="Vorname"
                                                         SortMemberPath="Name"
                                                         DataMemberBinding="{Binding Vorname}"
                                                         IsReadOnly="False"
                                                         MinWidth="100" />
-                            <telerik:GridViewDataColumn Header="Vorname"
+                            <telerik:GridViewDataColumn Header="Name"
                                                         SortMemberPath="Name"
                                                         DataMemberBinding="{Binding Name}"
                                                         IsReadOnly="False"
