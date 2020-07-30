@@ -271,14 +271,12 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-
             var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "MSDAPP");
             if (!Directory.Exists(combinedPath))
             {
                 Directory.CreateDirectory(combinedPath);
             }
-
 
             var sfd = new SaveFileDialog
             {
@@ -288,12 +286,11 @@ namespace MentorSpeedDatingApp.ViewModel
                 FileName = "savedData.json"
             };
 
-            if (sfd.ShowDialog() == true)
-            {
-                var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
-                File.WriteAllText(combinedPath, jsonData);
-            }
+            if (sfd.ShowDialog() != true)
+                return;
 
+            var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(Path.Combine(combinedPath, sfd.FileName), jsonData);
         }
 
         private void OnLoadedCommandHandling()
