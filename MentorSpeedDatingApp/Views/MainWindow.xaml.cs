@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
+using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.ViewModel;
 using Telerik.Windows.Controls;
 // ReSharper disable PossibleNullReferenceException
@@ -43,7 +44,7 @@ namespace MentorSpeedDatingApp.Views
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
-            var userDecision = MainViewModel.OnCloseCommand();
+            var userDecision = SimpleIoc.Default.GetInstance<MainViewModel>().OnCloseCommand();
 
             if (userDecision == MessageBoxResult.Cancel)
             {
