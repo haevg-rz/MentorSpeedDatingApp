@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
@@ -29,18 +30,12 @@ namespace MentorSpeedDatingApp.ViewModel
     {
         #region ClassMembers
 
-        #region Fields
-
-        //private string appSaveFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-        //   "MSDAPP");
-
-        //private string appSaveFileName = "savedData.json";
-
-        #endregion
-
         #region Properties
 
+        public Config AppSaveConfig { get; set; } = new Config();
+
         private string headline = "";
+
         [DataMember]
         public string Headline
         {
@@ -49,6 +44,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private DateTime date = DateTime.Now;
+
         [DataMember]
         public DateTime Date
         {
@@ -59,6 +55,7 @@ namespace MentorSpeedDatingApp.ViewModel
         #region Time Properties
 
         private string startTimeHours = "";
+
         [DataMember]
         public string StartTimeHours
         {
@@ -67,6 +64,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool startTimeHoursHasErrors = false;
+
         public bool StartTimeHoursHasErrors
         {
             get => this.startTimeHoursHasErrors;
@@ -74,6 +72,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string startTimeMinutes = "";
+
         [DataMember]
         public string StartTimeMinutes
         {
@@ -82,6 +81,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool startTimeMinutesHasErrors = false;
+
         public bool StartTimeMinutessHasErrors
         {
             get => this.startTimeMinutesHasErrors;
@@ -89,6 +89,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeHours = "";
+
         [DataMember]
         public string EndTimeHours
         {
@@ -97,6 +98,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool endTimeHoursHasErrors = false;
+
         public bool EndTimeHoursHasErrors
         {
             get => this.endTimeHoursHasErrors;
@@ -104,6 +106,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeMinutes = "";
+
         [DataMember]
         public string EndTimeMinutes
         {
@@ -112,6 +115,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool endTimeMinutesHasErrors = false;
+
         public bool EndTimeMinutesHasErrors
         {
             get => this.endTimeMinutesHasErrors;
@@ -122,6 +126,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public DateTime EndTime { get; set; }
 
         private List<DateTime> timeSlots = new List<DateTime>();
+
         public List<DateTime> TimeSlots
         {
             get => this.timeSlots;
@@ -147,7 +152,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
 
-        public RelayCommand ExportCommand { get;  }
+        public RelayCommand ExportCommand { get; }
 
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
@@ -238,9 +243,11 @@ namespace MentorSpeedDatingApp.ViewModel
             }
             else
             {
-                this.StartTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, Convert.ToInt32(this.StartTimeHours),
+                this.StartTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day,
+                    Convert.ToInt32(this.StartTimeHours),
                     Convert.ToInt32(this.StartTimeMinutes), 00);
             }
+
             if (String.IsNullOrEmpty(this.EndTimeHours) || String.IsNullOrEmpty(this.EndTimeMinutes))
             {
                 this.EndTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, 13,
@@ -248,7 +255,8 @@ namespace MentorSpeedDatingApp.ViewModel
             }
             else
             {
-                this.EndTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, Convert.ToInt32(this.EndTimeHours),
+                this.EndTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day,
+                    Convert.ToInt32(this.EndTimeHours),
                     Convert.ToInt32(this.EndTimeMinutes), 00);
             }
 
@@ -263,37 +271,75 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
+            var combinedPath = this.AppSaveConfig.AppSaveFileFolder;
 
             var sfd = new SaveFileDialog
             {
-                InitialDirectory = combinedPath,
+                InitialDirectory = this.AppSaveConfig.AppSaveFileFolder,
+                FileName = this.AppSaveConfig.AppSaveFileName,
                 Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*",
-                DefaultExt = "JSON Files (*.json) | .json",
-                FileName = "savedData.json"
+                DefaultExt = "JSON Files (*.json) | .json"
             };
 
-            if (sfd.ShowDialog() != true) 
+            if (sfd.ShowDialog() != true)
                 return;
-            
+
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
-            File.WriteAllText(Path.Combine(combinedPath, sfd.FileName), jsonData);
+            this.AppSaveConfig.AppSaveFileName = sfd.FileName;
+            this.AppSaveConfig.AppSaveFileFolder = Path.GetDirectoryName(sfd.FileName);
+            File.WriteAllText( Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName), jsonData);
         }
 
         private void OnLoadedCommandHandling()
         {
-            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
-            if (!Directory.Exists(combinedPath))
+            #region Config/Default erstellen
+
+            if (!Directory.Exists(this.AppSaveConfig.AppDefaultFolder))
             {
-                Directory.CreateDirectory(combinedPath);
-            }
-            if (!File.Exists(Path.Combine(combinedPath, "savedData.json")))
-            {
-                File.Create(Path.Combine(combinedPath, "savedData.json"));
-                return;
+                Directory.CreateDirectory(this.AppSaveConfig.AppDefaultFolder);
             }
 
-            var definition = new
+            if (!File.Exists(this.AppSaveConfig.AppConfigPath))
+            {
+                File.Create(this.AppSaveConfig.AppConfigPath).Close();
+                var defaultConfig = new
+                    { Folder = this.AppSaveConfig.AppDefaultFolder, FileName = this.AppSaveConfig.AppDefaultFileName};
+                var jsonConfig = JsonConvert.SerializeObject(defaultConfig, Formatting.Indented);
+                File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
+            }
+
+            var fileContent = File.ReadAllText(this.AppSaveConfig.AppConfigPath);
+            if (String.IsNullOrEmpty(fileContent))
+            {
+                var defaultConfig = new
+                    { Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName };
+                var jsonConfig = JsonConvert.SerializeObject(defaultConfig, Formatting.Indented);
+                File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
+            }
+            
+            #endregion
+
+            #region Config laden
+
+            var configDefinition= new {Folder = "", FileName = ""};
+
+            var savedConfig = File.ReadAllText(this.AppSaveConfig.AppConfigPath);
+            var savedConfigDeserialzed = JsonConvert.DeserializeAnonymousType(savedConfig, configDefinition);
+
+            if (savedConfigDeserialzed==null)
+                return;
+            this.AppSaveConfig.AppSaveFileFolder = savedConfigDeserialzed.Folder;
+            this.AppSaveConfig.AppSaveFileName = savedConfigDeserialzed.FileName;
+            if (!File.Exists(this.AppSaveConfig.CombineAppPaths()))
+            {
+                this.AppSaveConfig.ResetToDefault();
+            }
+
+            #endregion
+
+            #region Speicherdaten laden
+
+            var saveDataDefinition = new
             {
                 HeadLine = "",
                 Date = DateTime.Now,
@@ -305,8 +351,10 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentors = new List<Mentor>()
             };
 
-            var jsonData = File.ReadAllText(Path.Combine(combinedPath, "savedData.json"));
-            var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
+            if (!File.Exists(this.AppSaveConfig.CombineAppPaths()))
+                return;
+            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
+            var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, saveDataDefinition);
 
             if (deserializedJson == null)
                 return;
@@ -327,18 +375,21 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 this.Mentees.Add(mentee);
             }
+
+            #endregion
+
         }
 
         private void ExportCommandHandling()
         {
-
         }
 
         private void ShowInfoCommandHandling()
         {
             MessageBox.Show(
                 messageBoxText:
-                "Version 0.1.0 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp", caption:"App-Informationen");
+                "Version 0.1.0 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp",
+                caption: "App-Informationen");
         }
 
         #endregion
@@ -357,6 +408,15 @@ namespace MentorSpeedDatingApp.ViewModel
                     "Warnung", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             }
 
+            #region Config überschreiben
+
+            var newConfig = new
+                { Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName };
+            var jsonConfig = JsonConvert.SerializeObject(newConfig, Formatting.Indented);
+            File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
+
+            #endregion
+
             return userDecision;
         }
 
@@ -374,9 +434,10 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentors = new List<Mentor>()
             };
 
-            //TODO create Global path variable!
-            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
+            if (deserializedJson == null && jsonData == "")
+                return false;
 
             return !this.Mentors.CompareCollectionsOnEqualContent(deserializedJson.Mentors,
                        (mVM, mSerialized) => mVM.Name == mSerialized.Name
