@@ -26,6 +26,15 @@ namespace MentorSpeedDatingApp.ViewModel
     {
         #region ClassMembers
 
+        #region Fields
+
+        //private string appSaveFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+        //   "MSDAPP");
+
+        //private string appSaveFileName = "savedData.json";
+
+        #endregion
+
         #region Properties
 
         private string headline = "";
@@ -262,12 +271,14 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
+
             var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "MSDAPP");
             if (!Directory.Exists(combinedPath))
             {
                 Directory.CreateDirectory(combinedPath);
             }
+
 
             var sfd = new SaveFileDialog
             {
@@ -282,13 +293,12 @@ namespace MentorSpeedDatingApp.ViewModel
                 var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
                 File.WriteAllText(combinedPath, jsonData);
             }
+
         }
 
         private void OnLoadedCommandHandling()
         {
-            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "MSDAPP");
-            Thread.Sleep(1000);
+            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
             if (!Directory.Exists(combinedPath))
             {
                 Directory.CreateDirectory(combinedPath);
@@ -348,16 +358,11 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Helpermethods
 
-        public static MessageBoxResult OnCloseCommand()
+        public MessageBoxResult OnCloseCommand()
         {
             var userDecision = new MessageBoxResult();
 
-            if (!File.Exists(@"..\..\..\..\SavedData\data.json"))
-            {
-                return userDecision;
-            }
-
-            if (SimpleIoc.Default.GetInstance<MainViewModel>().OnClosingDetectUnsavedChanges())
+            if (this.OnClosingDetectUnsavedChanges())
             {
                 userDecision = MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!\n" +
                                                "Drücken Sie \"OK\" zum verwerfen, oder\n" +
@@ -381,6 +386,8 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentees = new List<Mentee>(),
                 Mentors = new List<Mentor>()
             };
+
+            //TODO create Global path variable!
             var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
 
