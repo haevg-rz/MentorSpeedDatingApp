@@ -381,6 +381,8 @@ namespace MentorSpeedDatingApp.ViewModel
                 caption: "App-Informationen");
         }
 
+        #endregion
+
         #region Helpermethods
 
         public MessageBoxResult OnCloseCommand()
