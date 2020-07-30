@@ -79,26 +79,23 @@ namespace MentorSpeedDatingApp.ExtraFunctions
                         TimeSlot = timeSlot
                     };
                     Mentee fillerMentee = (Mentee)potentialBreakDate.Mentee;
-                    if (fillerMentee != null && fillerMentee.IsFiller)
+
+                    if (timeSlot.IsBreak)
+                    {
+                        var breakDate = new BreakDate { Mentee = "-", TimeSlot = timeSlot };
+                        dates.Add(breakDate);
+                    }else if (fillerMentee != null && fillerMentee.IsFiller)
                     {
                         var breakDate = new BreakDate { Mentee = "-", TimeSlot = timeSlot };
                         dates.Add(breakDate);
                         timeSlotIndex++;
                     }
-                    else
+                    else if (!timeSlot.IsBreak)
                     {
-                        if (timeSlot.IsBreak)
-                        {
-                            var breakDate = new BreakDate { Mentee = "-", TimeSlot = timeSlot };
-                            dates.Add(breakDate);
-                        }
-                        else if (!timeSlot.IsBreak)
-                        {
-                            var date = new Date
+                        var date = new Date
                             { Mentee = this.SelectMentee(this.mentorIndex, timeSlotIndex), TimeSlot = timeSlot };
-                            dates.Add(date);
-                            timeSlotIndex++;
-                        }
+                        dates.Add(date);
+                        timeSlotIndex++;
                     }
                 }
             }

@@ -36,7 +36,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
 
         public void ResetToDefault()
         {
-            this.AppSaveFileFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            this.AppSaveFileFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
             this.AppSaveFileName = "savedData.json";
         }
 
