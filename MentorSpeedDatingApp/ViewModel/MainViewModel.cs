@@ -2,6 +2,8 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
+using MentorSpeedDatingApp.WindowManagement;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,13 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Media.Imaging;
-using GalaSoft.MvvmLight.Ioc;
-using MentorSpeedDatingApp.WindowManagement;
-using Microsoft.Win32;
 using Formatting = Newtonsoft.Json.Formatting;
 
 [assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
@@ -41,6 +37,7 @@ namespace MentorSpeedDatingApp.ViewModel
         #region Properties
 
         private string headline = "";
+
         [DataMember]
         public string Headline
         {
@@ -49,6 +46,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private DateTime date = DateTime.Now;
+
         [DataMember]
         public DateTime Date
         {
@@ -59,6 +57,7 @@ namespace MentorSpeedDatingApp.ViewModel
         #region Time Properties
 
         private string startTimeHours = "";
+
         [DataMember]
         public string StartTimeHours
         {
@@ -67,6 +66,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool startTimeHoursHasErrors = false;
+
         public bool StartTimeHoursHasErrors
         {
             get => this.startTimeHoursHasErrors;
@@ -74,6 +74,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string startTimeMinutes = "";
+
         [DataMember]
         public string StartTimeMinutes
         {
@@ -82,6 +83,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool startTimeMinutesHasErrors = false;
+
         public bool StartTimeMinutessHasErrors
         {
             get => this.startTimeMinutesHasErrors;
@@ -89,6 +91,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeHours = "";
+
         [DataMember]
         public string EndTimeHours
         {
@@ -97,6 +100,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool endTimeHoursHasErrors = false;
+
         public bool EndTimeHoursHasErrors
         {
             get => this.endTimeHoursHasErrors;
@@ -104,6 +108,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private string endTimeMinutes = "";
+
         [DataMember]
         public string EndTimeMinutes
         {
@@ -112,6 +117,7 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         private bool endTimeMinutesHasErrors = false;
+
         public bool EndTimeMinutesHasErrors
         {
             get => this.endTimeMinutesHasErrors;
@@ -122,6 +128,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public DateTime EndTime { get; set; }
 
         private List<DateTime> timeSlots = new List<DateTime>();
+
         public List<DateTime> TimeSlots
         {
             get => this.timeSlots;
@@ -147,7 +154,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
 
-        public RelayCommand ExportCommand { get;  }
+        public RelayCommand ExportCommand { get; }
 
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
@@ -238,9 +245,11 @@ namespace MentorSpeedDatingApp.ViewModel
             }
             else
             {
-                this.StartTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, Convert.ToInt32(this.StartTimeHours),
+                this.StartTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day,
+                    Convert.ToInt32(this.StartTimeHours),
                     Convert.ToInt32(this.StartTimeMinutes), 00);
             }
+
             if (String.IsNullOrEmpty(this.EndTimeHours) || String.IsNullOrEmpty(this.EndTimeMinutes))
             {
                 this.EndTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, 13,
@@ -248,12 +257,12 @@ namespace MentorSpeedDatingApp.ViewModel
             }
             else
             {
-                this.EndTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, Convert.ToInt32(this.EndTimeHours),
+                this.EndTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day,
+                    Convert.ToInt32(this.EndTimeHours),
                     Convert.ToInt32(this.EndTimeMinutes), 00);
             }
 
-            MainViewModel mvm = this;
-            WindowManager.ShowMatchingWindow(mvm);
+            WindowManager.ShowMatchingWindow(this);
         }
 
         private bool CanExecuteGenerateMatchingCommandHandling()
@@ -273,9 +282,9 @@ namespace MentorSpeedDatingApp.ViewModel
                 FileName = "savedData.json"
             };
 
-            if (sfd.ShowDialog() != true) 
+            if (sfd.ShowDialog() != true)
                 return;
-            
+
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(Path.Combine(combinedPath, sfd.FileName), jsonData);
         }
@@ -287,6 +296,7 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 Directory.CreateDirectory(combinedPath);
             }
+
             if (!File.Exists(Path.Combine(combinedPath, "savedData.json")))
             {
                 File.Create(Path.Combine(combinedPath, "savedData.json"));
@@ -331,14 +341,14 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void ExportCommandHandling()
         {
-
         }
 
         private void ShowInfoCommandHandling()
         {
             MessageBox.Show(
                 messageBoxText:
-                "Version 0.1.0 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp", caption:"App-Informationen");
+                "Version 0.1.0 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp",
+                caption: "App-Informationen");
         }
 
         #endregion

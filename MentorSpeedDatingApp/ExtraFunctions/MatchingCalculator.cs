@@ -1,12 +1,7 @@
-﻿using System;
+﻿using MentorSpeedDatingApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using System.Windows.Controls.Ribbon.Primitives;
-using System.Windows.Documents;
-using System.Windows.Documents.DocumentStructures;
-using MentorSpeedDatingApp.Models;
 
 namespace MentorSpeedDatingApp.ExtraFunctions
 {
@@ -20,6 +15,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         private double amountOfDates;
         public List<Matching> Matchings { get; set; }
         public List<IDate> MatchingDates { get; set; }
+        public double DateDuration { get; set; }
         private int mentorIndex;
 
         public MatchingCalculator(DateTime startTime, DateTime endTime, List<Mentor> mentors, List<Mentee> mentees)
@@ -50,7 +46,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             var matchings = new List<Matching>();
             foreach (var mentor in this.mentors)
             {
-                var match = new Matching { Mentor = mentor, Dates = this.CalculateDates() };
+                var match = new Matching {Mentor = mentor, Dates = this.CalculateDates()};
                 matchings.Add(match);
                 this.mentorIndex++;
             }
@@ -69,7 +65,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             {
                 if (timeSlotIndex > this.mentees.Count - 1)
                 {
-                    dates.Add(new BreakDate() { Mentee = "-", TimeSlot = timeSlot });
+                    dates.Add(new BreakDate() {Mentee = "-", TimeSlot = timeSlot});
                 }
                 else
                 {
@@ -78,27 +74,25 @@ namespace MentorSpeedDatingApp.ExtraFunctions
                         Mentee = this.SelectMentee(this.mentorIndex, timeSlotIndex),
                         TimeSlot = timeSlot
                     };
-                    Mentee fillerMentee = (Mentee)potentialBreakDate.Mentee;
-                    if (fillerMentee != null && fillerMentee.IsFiller)
+                    Mentee fillerMentee = (Mentee) potentialBreakDate.Mentee;
+
+                    if (timeSlot.IsBreak)
                     {
-                        var breakDate = new BreakDate { Mentee = "-", TimeSlot = timeSlot };
+                        var breakDate = new BreakDate {Mentee = "-", TimeSlot = timeSlot};
+                        dates.Add(breakDate);
+                    }
+                    else if (fillerMentee != null && fillerMentee.IsFiller)
+                    {
+                        var breakDate = new BreakDate {Mentee = "-", TimeSlot = timeSlot};
                         dates.Add(breakDate);
                         timeSlotIndex++;
                     }
-                    else
+                    else if (!timeSlot.IsBreak)
                     {
-                        if (timeSlot.IsBreak)
-                        {
-                            var breakDate = new BreakDate { Mentee = "-", TimeSlot = timeSlot };
-                            dates.Add(breakDate);
-                        }
-                        else if (!timeSlot.IsBreak)
-                        {
-                            var date = new Date
-                            { Mentee = this.SelectMentee(this.mentorIndex, timeSlotIndex), TimeSlot = timeSlot };
-                            dates.Add(date);
-                            timeSlotIndex++;
-                        }
+                        var date = new Date
+                            {Mentee = this.SelectMentee(this.mentorIndex, timeSlotIndex), TimeSlot = timeSlot};
+                        dates.Add(date);
+                        timeSlotIndex++;
                     }
                 }
             }
@@ -146,6 +140,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             var (dateDuration, amountOfTimeSlots) = CalculateDateDurationAndAmountOfTimeSlots(
                 this.startTime.TimeOfDay.TotalMinutes, this.endTime.TimeOfDay.TotalMinutes, this.amountOfDates,
                 breakDuration);
+            this.DateDuration = dateDuration;
             DateTime timeSlotStartTime = this.startTime;
             DateTime nextDateTime = this.startTime;
             DateTime lastBreakTime = this.startTime;
@@ -154,7 +149,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             {
                 if (i == 0)
                 {
-                    var firstDateTimeSlot = new TimeSlot { IsBreak = false, Time = this.startTime };
+                    var firstDateTimeSlot = new TimeSlot {IsBreak = false, Time = this.startTime};
                     timeSlots.Add(firstDateTimeSlot);
                     nextDateTime = this.startTime.AddMinutes(dateDuration);
                     timeSlotStartTime = nextDateTime;
@@ -163,7 +158,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
                 {
                     if (nextDateTime.TimeOfDay.TotalMinutes - lastBreakTime.TimeOfDay.TotalMinutes >= 120)
                     {
-                        var breakTimeSlot = new TimeSlot { IsBreak = true, Time = timeSlotStartTime };
+                        var breakTimeSlot = new TimeSlot {IsBreak = true, Time = timeSlotStartTime};
                         timeSlots.Add(breakTimeSlot);
                         lastBreakTime = breakTimeSlot.Time;
                         nextDateTime = timeSlotStartTime.AddMinutes(breakDuration);
@@ -171,7 +166,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
                     }
                     else
                     {
-                        var dateTimeSlot = new TimeSlot { IsBreak = false, Time = timeSlotStartTime };
+                        var dateTimeSlot = new TimeSlot {IsBreak = false, Time = timeSlotStartTime};
                         timeSlots.Add(dateTimeSlot);
                         nextDateTime = timeSlotStartTime.AddMinutes(dateDuration);
                         timeSlotStartTime = nextDateTime;
@@ -184,7 +179,8 @@ namespace MentorSpeedDatingApp.ExtraFunctions
 
         #region static helper methods
 
-        private static List<Matching> ReplaceNoGoDatesWithBreaks(List<Matching> matchings, List<(Mentor, Mentee)> noGoDates)
+        private static List<Matching> ReplaceNoGoDatesWithBreaks(List<Matching> matchings,
+            List<(Mentor, Mentee)> noGoDates)
         {
             foreach (var matching in matchings)
             {
@@ -241,7 +237,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             var missingNo = this.mentors.Count - mentees.Count;
             for (int i = 0; i < missingNo; i++)
             {
-                var breakMentee = new Mentee() { IsFiller = true };
+                var breakMentee = new Mentee() {IsFiller = true};
                 newMentees.Add(breakMentee);
             }
 
@@ -280,10 +276,10 @@ namespace MentorSpeedDatingApp.ExtraFunctions
                     longestDates = matching.Dates;
                 }
             }
+
             return longestDates;
         }
 
         #endregion
     }
-
 }
