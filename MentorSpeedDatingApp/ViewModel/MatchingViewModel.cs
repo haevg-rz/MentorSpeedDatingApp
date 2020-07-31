@@ -153,13 +153,16 @@ namespace MentorSpeedDatingApp.ViewModel
             var minLength = this.Matchings.Min(m => m.Dates.Count);
             var maxLength = this.Matchings.Max(m => m.Dates.Count);
 
-            if (minLength != maxLength)
+            while (minLength != maxLength)
             {
-                var toshortMatchings = this.Matchings.Where(m => m.Dates.Count == minLength);
-                foreach (var matching in toshortMatchings)
+                var toShortMatchings = this.Matchings.Where(m => m.Dates.Count != maxLength);
+                foreach (var matching in toShortMatchings)
                 {
-                    matching.Dates.Add(new BreakDate {Mentee = "-"});
+                    matching.Dates.Add(new BreakDate { Mentee = "-" });
                 }
+
+                minLength = this.Matchings.Min(m => m.Dates.Count);
+                maxLength = this.Matchings.Max(m => m.Dates.Count);
             }
 
             foreach (var matching in this.Matchings)

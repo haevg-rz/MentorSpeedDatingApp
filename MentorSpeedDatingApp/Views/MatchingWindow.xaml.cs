@@ -52,5 +52,10 @@ namespace MentorSpeedDatingApp.Views
         {
             this.InitializeComponent();
         }
+
+        private void MatchingItemsControl_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.Rectangle.Margin = new Thickness(-this.MatchingItemsControl.ActualWidth + 220.5, 5,0, 5);
+        }
     }
 }

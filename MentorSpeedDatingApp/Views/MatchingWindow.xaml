@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Mentor-Speed-Dating Matching-Ergebnisse"
         SizeToContent="WidthAndHeight"
-        ResizeMode="CanResize">
+        ResizeMode="NoResize">
     <Window.DataContext>
         <vm:MatchingViewModel />
     </Window.DataContext>
@@ -37,7 +37,8 @@
                                  FontWeight="{Binding IsMentor, Converter={StaticResource FontWeightConverter}}"
                                  BorderThickness="0,0,0,1"
                                  BorderBrush="Black"
-                                 Margin="5">
+                                 Margin="5"
+                                 IsReadOnly="{Binding ElementName=CheckBoxReadOnly, Path=IsChecked}">
                             <TextBox.Effect>
                                 <DropShadowEffect Color="{StaticResource HealthCareGray}" ShadowDepth="2"
                                                   BlurRadius="5" Opacity="0.4" Direction="270" />
@@ -45,7 +46,7 @@
                         </TextBox>
                     </DataTemplate>
                     <DataTemplate x:Key="DataTemplate_Level1">
-                        <ItemsControl Margin="10,0,5,0"  ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">
+                        <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal" />
@@ -209,9 +210,16 @@
                 </Grid>
             </Grid>
         </Border>
-            <Grid>
-                <ItemsControl ItemsSource="{Binding Path=MatchingList}" ItemTemplate="{DynamicResource DataTemplate_Level1}" Background="{StaticResource HealthCareWhiteBrush}"></ItemsControl>
-            </Grid>
+            <Border BorderBrush="Transparent" Padding="10" BorderThickness="2" Grid.Row="0"
+                    Background="{StaticResource HealthCareWhiteBrush}">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="4" Color="DarkOliveGreen" Direction="0" Opacity="0.5" BlurRadius="20" />
+                </Border.Effect>
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding Path=MatchingList}" ItemTemplate="{DynamicResource DataTemplate_Level1}" Background="{StaticResource HealthCareWhiteBrush}" Name="MatchingItemsControl" SizeChanged="MatchingItemsControl_OnSizeChanged"/>
+                    <Rectangle Width="4" Fill="#FF08D94B" Height="Auto" Name="Rectangle"/>
+                </Grid>
+            </Border>
         </StackPanel>
         <Grid Grid.Row="1" Margin="10">
             <Grid.ColumnDefinitions>
