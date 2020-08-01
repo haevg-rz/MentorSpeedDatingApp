@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Runtime.CompilerServices;
+﻿using MentorSpeedDatingApp.ViewModel;
 using MentorSpeedDatingApp.Views;
 using MentorSpeedDatingApp.ViewModel;
 using Telerik.Windows.Controls.Wizard;

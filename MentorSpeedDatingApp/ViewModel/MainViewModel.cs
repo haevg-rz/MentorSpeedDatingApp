@@ -254,8 +254,7 @@ namespace MentorSpeedDatingApp.ViewModel
                     Convert.ToInt32(this.EndTimeMinutes), 00);
             }
 
-            MainViewModel mvm = this;
-            WindowManager.ShowMatchingWindow(mvm);
+            WindowManager.ShowMatchingWindow(this);
         }
 
         private bool CanExecuteGenerateMatchingCommandHandling()

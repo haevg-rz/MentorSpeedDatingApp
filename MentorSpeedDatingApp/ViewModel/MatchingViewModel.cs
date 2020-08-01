@@ -26,7 +26,8 @@ namespace MentorSpeedDatingApp.ViewModel
         private List<Mentor> mentors;
         private List<Mentee> mentees;
         private List<Matching> matchings;
-        private List<IDate> dateTimes;
+        private List<DateSpan> dateTimes;
+        private MatchingCalculator matchingCalculator;
         private string headline;
 
         #endregion
@@ -67,11 +68,20 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        public List<IDate> DateTimes
+        public List<DateSpan> DateTimes
         {
             get => this.dateTimes;
             set => base.Set(ref this.dateTimes, value);
         }
+
+        public class TableElement
+        {
+            public string Content { get; set; }
+            public bool IsMentor { get; set; }
+            public bool IsTime { get; set; }
+        }
+
+        public List<List<TableElement>> MatchingList { get; set; }
 
         public String Headline
         {
@@ -93,6 +103,30 @@ namespace MentorSpeedDatingApp.ViewModel
             if (this.IsInDesignMode)
             {
                 this.GenerateTestData();
+                this.MatchingList = new List<List<TableElement>>
+                {
+                    new List<TableElement>
+                    {
+                        new TableElement {Content = "Uhrzeit", IsTime = true, IsMentor = true},
+                        new TableElement {Content = "Dr. Lana Grey", IsMentor = true},
+                        new TableElement {Content = "Dr. Franziska Hirsch", IsMentor = true},
+                        new TableElement {Content = "Prof. Dr. med. Elizabeth von Stuttenhausen", IsMentor = true}
+                    },
+                    new List<TableElement>
+                    {
+                        new TableElement {Content = "08:00 - 08:30", IsTime = true},
+                        new TableElement {Content = "Lisa Su"},
+                        new TableElement {Content = "Dora Beng"},
+                        new TableElement {Content = "Nora Ellingdottir"}
+                    },
+                    new List<TableElement>
+                    {
+                        new TableElement {Content = "08:30 - 09:00", IsTime = true},
+                        new TableElement {Content = "Manuella Beckenbauer-Hülsenman"},
+                        new TableElement {Content = "Katharina Lindenborn"},
+                        new TableElement {Content = "Siglinde Skjége"}
+                    }
+                };
             }
         }
 
@@ -111,21 +145,83 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void Initiate()
         {
-            var matchingCalculator =
+            this.matchingCalculator =
                 new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees);
-            this.Matchings = matchingCalculator.Matchings;
-            this.DateTimes = matchingCalculator.MatchingDates;
+            this.Matchings = this.matchingCalculator.Matchings;
+            this.DateTimes = this.FormatDateTimeList(this.matchingCalculator.MatchingDates);
+
+            this.MatchingList = new List<List<TableElement>> {new List<TableElement>()};
+            this.MatchingList[0].Add(new TableElement {Content = "Uhrzeit", IsMentor = true, IsTime = true});
+
+            foreach (var matching in this.Matchings)
+            {
+                this.MatchingList[0].Add(new TableElement {Content = matching.Mentor.ToString(), IsMentor = true});
+            }
+
+            for (var i = 0; i < this.DateTimes.Count; i++)
+            {
+                this.MatchingList.Add(new List<TableElement>());
+                this.MatchingList[i + 1].Add(new TableElement {Content = this.DateTimes[i].Time, IsTime = true});
+            }
+
+            var minLength = this.Matchings.Min(m => m.Dates.Count);
+            var maxLength = this.Matchings.Max(m => m.Dates.Count);
+
+            while (minLength != maxLength)
+            {
+                var toShortMatchings = this.Matchings.Where(m => m.Dates.Count != maxLength);
+                foreach (var matching in toShortMatchings)
+                {
+                    matching.Dates.Add(new BreakDate { Mentee = "-" });
+                }
+
+                minLength = this.Matchings.Min(m => m.Dates.Count);
+                maxLength = this.Matchings.Max(m => m.Dates.Count);
+            }
+
+            foreach (var matching in this.Matchings)
+            {
+                var k = 0;
+                foreach (var date in matching.Dates)
+                {
+                    this.MatchingList[1 + k].Add(new TableElement {Content = date.Mentee.ToString()});
+                    k++;
+                }
+            }
+        }
+
+        private List<DateSpan> FormatDateTimeList(List<IDate> source)
+        {
+            var formattedDatesList = new List<DateSpan>();
+
+            if (source.Count > 1)
+            {
+                for (var i = 0; i < source.Count() - 1; i++)
+                {
+                    formattedDatesList.Add(new DateSpan
+                    {
+                        Time =
+                            $"{source[i].TimeSlot.Time:HH:mm} - {source[i + 1].TimeSlot.Time:HH:mm}"
+                    });
+                }
+            }
+
+            formattedDatesList.Add(
+                new DateSpan
+                {
+                    Time =
+                        $"{source.Last().TimeSlot.Time:HH:mm} - {source.Last().TimeSlot.Time.AddMinutes(this.matchingCalculator.DateDuration):HH:mm}"
+                });
+
+            return formattedDatesList;
         }
 
         #region CommandHandlings
 
         private void PrintCommandHandling(Visual v)
         {
-            FrameworkElement e = v as FrameworkElement;
-            if (e == null)
-            {
+            if (!(v is FrameworkElement e))
                 return;
-            }
 
             var printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
@@ -218,38 +314,16 @@ namespace MentorSpeedDatingApp.ViewModel
             this.DateTimes = this.GenerateTestDateTimes();
         }
 
-        private List<IDate> GenerateTestDateTimes()
+        private List<DateSpan> GenerateTestDateTimes()
         {
-            var testDateTimes = new List<IDate>()
+            return new List<DateSpan>
             {
-                new Date()
-                {
-                    Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 9, 0, 0)},
-                },
-                new Date()
-                {
-                    Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 10, 0, 0)},
-                },
-                new Date()
-                {
-                    Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 11, 0, 0)},
-                },
-                new Date()
-                {
-                    Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 12, 0, 0)},
-                },
-                new Date()
-                {
-                    Mentee = "", TimeSlot = new TimeSlot()
-                        {IsBreak = false, Time = new DateTime(2020, 7, 21, 13, 0, 0)}
-                }
+                new DateSpan {Time = "09:00 - 09:45"},
+                new DateSpan {Time = "09:00 - 09:45"},
+                new DateSpan {Time = "09:00 - 09:45"},
+                new DateSpan {Time = "09:00 - 09:45"},
+                new DateSpan {Time = "09:00 - 09:45"}
             };
-
-            return testDateTimes;
         }
 
         private List<Matching> GenerateTestMatchings()

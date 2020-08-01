@@ -25,4 +25,9 @@ namespace MentorSpeedDatingApp.Models
         public bool IsBreak { get; set; }
         public DateTime Time { get; set; }
     }
+
+    public class DateSpan
+    {
+        public string Time { get; set; }
+    }
 }

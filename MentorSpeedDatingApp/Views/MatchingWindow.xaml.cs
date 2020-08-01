@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using MentorSpeedDatingApp.Models;
 using Telerik.Windows.Controls;
@@ -50,6 +51,11 @@ namespace MentorSpeedDatingApp.Views
         public MatchingWindow(List<Mentor> mentorList)
         {
             this.InitializeComponent();
+        }
+
+        private void MatchingItemsControl_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.Rectangle.Margin = new Thickness(-this.MatchingItemsControl.ActualWidth + 220.5, 5,0, 5);
         }
     }
 }

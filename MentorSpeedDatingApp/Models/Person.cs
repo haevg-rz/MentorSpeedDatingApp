@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace MentorSpeedDatingApp.Models
@@ -36,6 +33,7 @@ namespace MentorSpeedDatingApp.Models
                 sb.Append(this.Titel);
                 sb.Append(" ");
             }
+
             sb.Append(this.Name);
             sb.Append(", ");
             sb.Append(this.Vorname);
@@ -45,13 +43,13 @@ namespace MentorSpeedDatingApp.Models
 
     public class Mentor : IPerson
     {
-
         public Mentor()
         {
             this.Titel = "";
             this.Name = "";
             this.Vorname = "";
         }
+
         public string Titel { get; set; }
         public string Name { get; set; }
         public string Vorname { get; set; }
