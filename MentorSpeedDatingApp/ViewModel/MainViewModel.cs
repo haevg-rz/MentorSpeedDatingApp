@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.WindowManagement;
@@ -12,11 +13,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Text;
+using System.Threading;
 using System.Windows;
 using Formatting = Newtonsoft.Json.Formatting;
 
 [assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
-
 
 namespace MentorSpeedDatingApp.ViewModel
 {
@@ -25,16 +27,9 @@ namespace MentorSpeedDatingApp.ViewModel
     {
         #region ClassMembers
 
-        #region Fields
-
-        //private string appSaveFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-        //   "MSDAPP");
-
-        //private string appSaveFileName = "savedData.json";
-
-        #endregion
-
         #region Properties
+
+        public Config AppSaveConfig { get; set; } = new Config();
 
         private string headline = "";
 
@@ -154,8 +149,6 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand GenerateMatchingCommand { get; set; }
 
-        public RelayCommand ExportCommand { get; }
-
         public RelayCommand DeleteMentorsCommand { get; set; }
         public RelayCommand DeleteMenteesCommand { get; set; }
         public RelayCommand DeleteAllDataCommand { get; set; }
@@ -180,7 +173,6 @@ namespace MentorSpeedDatingApp.ViewModel
             this.DeleteMentorsCommand = new RelayCommand(this.DeleteMentorsCommandHandling);
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
-            this.ExportCommand = new RelayCommand(this.ExportCommandHandling);
             this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
 
             this.OnLoadedCommand = new RelayCommand(this.OnLoadedCommandHandling);
@@ -272,38 +264,75 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
+            var combinedPath = this.AppSaveConfig.AppSaveFileFolder;
 
             var sfd = new SaveFileDialog
             {
-                InitialDirectory = combinedPath,
+                InitialDirectory = this.AppSaveConfig.AppSaveFileFolder,
+                FileName = this.AppSaveConfig.AppSaveFileName,
                 Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*",
-                DefaultExt = "JSON Files (*.json) | .json",
-                FileName = "savedData.json"
+                DefaultExt = "JSON Files (*.json) | .json"
             };
 
             if (sfd.ShowDialog() != true)
                 return;
 
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
-            File.WriteAllText(Path.Combine(combinedPath, sfd.FileName), jsonData);
+            this.AppSaveConfig.AppSaveFileName = sfd.FileName;
+            this.AppSaveConfig.AppSaveFileFolder = Path.GetDirectoryName(sfd.FileName);
+            File.WriteAllText( Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName), jsonData);
         }
 
         private void OnLoadedCommandHandling()
         {
-            var combinedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
-            if (!Directory.Exists(combinedPath))
+            #region Config/Default erstellen
+
+            if (!Directory.Exists(this.AppSaveConfig.AppDefaultFolder))
             {
-                Directory.CreateDirectory(combinedPath);
+                Directory.CreateDirectory(this.AppSaveConfig.AppDefaultFolder);
             }
 
-            if (!File.Exists(Path.Combine(combinedPath, "savedData.json")))
+            if (!File.Exists(this.AppSaveConfig.AppConfigPath))
             {
-                File.Create(Path.Combine(combinedPath, "savedData.json"));
+                File.Create(this.AppSaveConfig.AppConfigPath).Close();
+                var defaultConfig = new
+                    { Folder = this.AppSaveConfig.AppDefaultFolder, FileName = this.AppSaveConfig.AppDefaultFileName};
+                var jsonConfig = JsonConvert.SerializeObject(defaultConfig, Formatting.Indented);
+                File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
+            }
+
+            var fileContent = File.ReadAllText(this.AppSaveConfig.AppConfigPath);
+            if (String.IsNullOrEmpty(fileContent))
+            {
+                var defaultConfig = new
+                    { Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName };
+                var jsonConfig = JsonConvert.SerializeObject(defaultConfig, Formatting.Indented);
+                File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
+            }
+            
+            #endregion
+
+            #region Config laden
+
+            var configDefinition= new {Folder = "", FileName = ""};
+
+            var savedConfig = File.ReadAllText(this.AppSaveConfig.AppConfigPath);
+            var savedConfigDeserialzed = JsonConvert.DeserializeAnonymousType(savedConfig, configDefinition);
+
+            if (savedConfigDeserialzed==null)
                 return;
+            this.AppSaveConfig.AppSaveFileFolder = savedConfigDeserialzed.Folder;
+            this.AppSaveConfig.AppSaveFileName = savedConfigDeserialzed.FileName;
+            if (!File.Exists(this.AppSaveConfig.CombineAppPaths()))
+            {
+                this.AppSaveConfig.ResetToDefault();
             }
 
-            var definition = new
+            #endregion
+
+            #region Speicherdaten laden
+
+            var saveDataDefinition = new
             {
                 HeadLine = "",
                 Date = DateTime.Now,
@@ -315,8 +344,10 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentors = new List<Mentor>()
             };
 
-            var jsonData = File.ReadAllText(Path.Combine(combinedPath, "savedData.json"));
-            var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
+            if (!File.Exists(this.AppSaveConfig.CombineAppPaths()))
+                return;
+            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
+            var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, saveDataDefinition);
 
             if (deserializedJson == null)
                 return;
@@ -337,10 +368,8 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 this.Mentees.Add(mentee);
             }
-        }
 
-        private void ExportCommandHandling()
-        {
+            #endregion
         }
 
         private void ShowInfoCommandHandling()
@@ -367,6 +396,15 @@ namespace MentorSpeedDatingApp.ViewModel
                     "Warnung", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             }
 
+            #region Config überschreiben
+
+            var newConfig = new
+                { Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName };
+            var jsonConfig = JsonConvert.SerializeObject(newConfig, Formatting.Indented);
+            File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
+
+            #endregion
+
             return userDecision;
         }
 
@@ -384,9 +422,10 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentors = new List<Mentor>()
             };
 
-            //TODO create Global path variable!
-            var jsonData = File.ReadAllText(@"..\..\..\..\SavedData\data.json");
+            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
+            if (deserializedJson == null && jsonData == "")
+                return false;
 
             return !this.Mentors.CompareCollectionsOnEqualContent(deserializedJson.Mentors,
                        (mVM, mSerialized) => mVM.Name == mSerialized.Name
