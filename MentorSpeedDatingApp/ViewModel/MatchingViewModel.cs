@@ -28,6 +28,7 @@ namespace MentorSpeedDatingApp.ViewModel
         private List<Matching> matchings;
         private List<DateSpan> dateTimes;
         private MatchingCalculator matchingCalculator;
+        private string headline;
 
         #endregion
 
