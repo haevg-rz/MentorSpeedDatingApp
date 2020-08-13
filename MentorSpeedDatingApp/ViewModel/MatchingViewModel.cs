@@ -230,15 +230,23 @@ namespace MentorSpeedDatingApp.ViewModel
                 var originalScale = e.LayoutTransform;
                 PrintCapabilities capabilities =
                     printDialog.PrintQueue.GetPrintCapabilities(printDialog.PrintTicket);
-                var scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / e.ActualWidth,
-                    capabilities.PageImageableArea.ExtentHeight / e.ActualHeight);
-                e.LayoutTransform = new ScaleTransform(scale - 0.05, scale - 0.05);
-                var availableSize = new Size(capabilities.PageImageableArea.ExtentWidth,
-                    capabilities.PageImageableArea.ExtentHeight);
-                e.Measure(availableSize);
-                e.Arrange(new Rect(
-                    new Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight),
-                    availableSize));
+                if (capabilities.PageImageableArea != null)
+                {
+                    var scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / e.ActualWidth,
+                        capabilities.PageImageableArea.ExtentHeight / e.ActualHeight);
+                    e.LayoutTransform = new ScaleTransform(scale - 0.05, scale - 0.05);
+                }
+
+                if (capabilities.PageImageableArea != null)
+                {
+                    var availableSize = new Size(capabilities.PageImageableArea.ExtentWidth,
+                        capabilities.PageImageableArea.ExtentHeight);
+                    e.Measure(availableSize);
+                    e.Arrange(new Rect(
+                        new Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight),
+                        availableSize));
+                }
+
                 printDialog.PrintVisual(e, "MentorSpeedDating_" + DateTime.Now.Date.ToShortDateString());
                 e.LayoutTransform = originalScale;
             }
@@ -252,6 +260,8 @@ namespace MentorSpeedDatingApp.ViewModel
             };
             Workbook workBook = excel.Workbooks.Add("");
 
+            var lenghOfTimeSlot = Matchings[0].Dates[1].TimeSlot.Time.Minute - Matchings[0].Dates[0].TimeSlot.Time.Minute;
+
             _Worksheet sheet = (_Worksheet) workBook.ActiveSheet;
             try
             {
@@ -264,7 +274,7 @@ namespace MentorSpeedDatingApp.ViewModel
                     int j = 3;
                     foreach (var date in matching.Dates)
                     {
-                        sheet.Cells[j, 1] = date.TimeSlot.Time.TimeOfDay.ToString();
+                        sheet.Cells[j, 1] = date.TimeSlot.Time.TimeOfDay.ToString("hh\\:mm") + " - " + date.TimeSlot.Time.AddMinutes(lenghOfTimeSlot).TimeOfDay.ToString("hh\\:mm");
 
                         sheet.Cells[j, i] = date.Mentee.ToString();
 
@@ -274,17 +284,17 @@ namespace MentorSpeedDatingApp.ViewModel
                     i++;
                 }
 
-                sheet.get_Range("A1", "Z2").EntireRow.Font.Bold = true;
-                sheet.get_Range("A1", "Z2").EntireRow.VerticalAlignment = XlVAlign.xlVAlignCenter;
-                sheet.get_Range("A1", "A9").EntireColumn.Font.Bold = true;
-                sheet.get_Range("A1", "A9").EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
-                sheet.get_Range("A1", "Z2").EntireColumn.AutoFit();
-               // sheet.get_Range("A1", "A2").EntireColumn.NumberFormat = "HH:MM";
-                var title = this.headline + ".xlsx";
-                var OutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                sheet.Range["A1", "Z2"].EntireRow.Font.Bold = true;
+                sheet.Range["A1", "Z2"].EntireRow.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                sheet.Range["A1", "A9"].EntireColumn.Font.Bold = true;
+                sheet.Range["A1", "A9"].EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                sheet.Range["A1", "Z2"].EntireColumn.AutoFit();
+
+                var title = string.IsNullOrWhiteSpace( this.headline) ? "SpeedDateMatching.xlsx" : this.headline + ".xlsx";
+                var outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                     "MSDAPP", title);
 
-                workBook.SaveAs(OutputPath,
+                workBook.SaveAs(outputPath,
                     XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, false,
                     false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing,
                     Type.Missing, Type.Missing,

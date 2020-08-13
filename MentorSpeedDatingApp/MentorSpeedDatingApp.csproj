@@ -28,8 +28,9 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Excel">
-      <HintPath>..\..\..\..\..\..\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Excel\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <HintPath>Resources\Libs\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>true</EmbedInteropTypes>
+      <Private>true</Private>
     </Reference>
     <Reference Include="Telerik.Windows.Controls">
       <HintPath>..\..\..\DevProdukte\VVZOperator\Presentation\Libs\Telerik.Windows.Controls.dll</HintPath>
