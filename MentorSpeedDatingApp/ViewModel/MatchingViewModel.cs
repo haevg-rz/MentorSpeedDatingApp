@@ -172,7 +172,7 @@ namespace MentorSpeedDatingApp.ViewModel
                 var toShortMatchings = this.Matchings.Where(m => m.Dates.Count != maxLength);
                 foreach (var matching in toShortMatchings)
                 {
-                    matching.Dates.Add(new BreakDate { Mentee = "-" });
+                    matching.Dates.Add(new BreakDate {Mentee = "-"});
                 }
 
                 minLength = this.Matchings.Min(m => m.Dates.Count);
@@ -246,22 +246,22 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void ExportCommandHandling()
         {
-            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application
+            var excel = new Microsoft.Office.Interop.Excel.Application
             {
                 DisplayAlerts = false
             };
-            Workbook workBook = excel.Workbooks.Add("");
+            var workBook = excel.Workbooks.Add("");
 
-            _Worksheet sheet = (_Worksheet) workBook.ActiveSheet;
+            var sheet = (_Worksheet) workBook.ActiveSheet;
             try
             {
                 sheet.Cells[1, 1] = this.headline;
                 sheet.Cells[2, 1] = "Uhrzeit";
-                int i = 2;
+                var i = 2;
                 foreach (Matching matching in this.matchings)
                 {
                     sheet.Cells[2, i] = matching.Mentor.ToString();
-                    int j = 3;
+                    var j = 3;
                     foreach (var date in matching.Dates)
                     {
                         sheet.Cells[j, 1] = date.TimeSlot.Time.TimeOfDay.ToString();
@@ -274,12 +274,12 @@ namespace MentorSpeedDatingApp.ViewModel
                     i++;
                 }
 
-                sheet.get_Range("A1", "Z2").EntireRow.Font.Bold = true;
-                sheet.get_Range("A1", "Z2").EntireRow.VerticalAlignment = XlVAlign.xlVAlignCenter;
-                sheet.get_Range("A1", "A9").EntireColumn.Font.Bold = true;
-                sheet.get_Range("A1", "A9").EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
-                sheet.get_Range("A1", "Z2").EntireColumn.AutoFit();
-               // sheet.get_Range("A1", "A2").EntireColumn.NumberFormat = "HH:MM";
+                sheet.Range["A1", "Z2"].EntireRow.Font.Bold = true;
+                sheet.Range["A1", "Z2"].EntireRow.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                sheet.Range["A1", "A9"].EntireColumn.Font.Bold = true;
+                sheet.Range["A1", "A9"].EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                sheet.Range["A1", "Z2"].EntireColumn.AutoFit();
+                // sheet.get_Range("A1", "A2").EntireColumn.NumberFormat = "HH:MM";
                 var title = this.headline + ".xlsx";
                 var OutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                     "MSDAPP", title);
