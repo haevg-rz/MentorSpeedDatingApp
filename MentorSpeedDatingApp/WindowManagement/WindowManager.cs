@@ -9,7 +9,7 @@ namespace MentorSpeedDatingApp.WindowManagement
         {
             var window = new MatchingWindow();
             window.DataContext =
-                new MatchingViewModel(mVm.Mentors, mVm.Mentees, mVm.StartTime, mVm.EndTime, mVm.Headline);
+                new MatchingViewModel(mVm.Mentors, mVm.Mentees, mVm.StartTime, mVm.EndTime, mVm.Headline, mVm.NoGoDates);
             window.Show();
         }
     }
