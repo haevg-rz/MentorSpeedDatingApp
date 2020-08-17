@@ -59,99 +59,120 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <!-- Begin Control Region upper -->
-            <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <TabControl>
+                <TabItem Header="     " IsSelected="True">
+                    <Grid Grid.Row="0" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Überschrift: " HorizontalAlignment="Left" />
-                <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=Headline}"
-                         ToolTip="Bitte die Überschrift eingeben." Width="300"
-                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                         HorizontalAlignment="Left" Margin="0,0,0,5"
-                         Name="HeadlineTextBox" Height="30" SelectionBrush="#FF08D94B"
-                         Style="{StaticResource WaterMarkTextBoxStyle}" />
-                <TextBlock Grid.Row="1" Grid.Column="0" IsHitTestVisible="False" Text="Mentor Speed-Dating"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center" Margin="0,0,0,5" Foreground="DarkGray" FontStyle="Italic"
-                           Style="{StaticResource WaterMarkTextBlockStyle}" />
+                        <TextBlock Text="Überschrift: " HorizontalAlignment="Left" />
+                        <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=Headline}"
+                             ToolTip="Bitte die Überschrift eingeben." Width="300"
+                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                             HorizontalAlignment="Left" Margin="0,0,0,5"
+                             Name="HeadlineTextBox" Height="30" SelectionBrush="#FF08D94B"
+                             Style="{StaticResource WaterMarkTextBoxStyle}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" IsHitTestVisible="False" Text="Mentor Speed-Dating"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" Margin="0,0,0,5" Foreground="DarkGray" FontStyle="Italic"
+                               Style="{StaticResource WaterMarkTextBlockStyle}" />
 
-                <DatePicker Template="{DynamicResource DatePickerTemplate1}" Grid.Row="2" Grid.Column="0"
-                            Height="30" VerticalContentAlignment="Center"
-                            BorderBrush="Transparent"
-                            ToolTip="Bitte das Datum auswählen" Margin="0,5,0,5" SelectedDate="{Binding Path=Date}"
-                            HorizontalAlignment="Left" SelectedDateFormat="Short" Language="de"
-                            Style="{StaticResource DatePickerStyle}"
-                            Resources="{StaticResource DatePickerTextBoxStyle}" />
+                        <DatePicker Template="{DynamicResource DatePickerTemplate1}" Grid.Row="2" Grid.Column="0"
+                                Height="30" VerticalContentAlignment="Center"
+                                BorderBrush="Transparent"
+                                ToolTip="Bitte das Datum auswählen" Margin="0,5,0,5" SelectedDate="{Binding Path=Date}"
+                                HorizontalAlignment="Left" SelectedDateFormat="Short" Language="de"
+                                Style="{StaticResource DatePickerStyle}"
+                                Resources="{StaticResource DatePickerTextBoxStyle}" />
 
-                <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" Margin="0,5,0,5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" MinWidth="50" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" MinWidth="50" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Start-Uhrzeit" HorizontalAlignment="Right"
-                               Margin="0,5,5,0" />
+                        <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" Margin="0,5,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" MinWidth="50" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" MinWidth="50" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="Start-Uhrzeit" HorizontalAlignment="Right"
+                                   Margin="0,5,5,0" />
 
-                    <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="1" Grid.Row="0" Width="45"
-                              Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                              HorizontalAlignment="Right"
-                              BorderBrush="LightGray" BorderThickness="1"
-                              SelectedItem="{Binding Path=StartTimeHours}"
-                              ItemContainerStyle="{StaticResource ComboBoxItem}"
-                              ItemsSource="{Binding AllowedHourValues}" />
+                            <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="1" Grid.Row="0" Width="45"
+                                  Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="LightGray" BorderThickness="1"
+                                  SelectedItem="{Binding Path=StartTimeHours}"
+                                  ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                  ItemsSource="{Binding AllowedHourValues}" />
 
-                    <TextBlock Grid.Column="2" Grid.Row="0" Margin="5,5,5,0" Text=":" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Margin="5,5,5,0" Text=":" />
 
-                    <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="3" Grid.Row="0" Width="45"
-                              Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                              HorizontalAlignment="Left"
-                              BorderBrush="LightGray" BorderThickness="1"
-                              SelectedItem="{Binding Path=StartTimeMinutes}"
-                              ItemContainerStyle="{StaticResource ComboBoxItem}"
-                              ItemsSource="{Binding AllowedMinuteValues}" />
+                            <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="3" Grid.Row="0" Width="45"
+                                  Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  BorderBrush="LightGray" BorderThickness="1"
+                                  SelectedItem="{Binding Path=StartTimeMinutes}"
+                                  ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                  ItemsSource="{Binding AllowedMinuteValues}" />
 
-                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Ende-Uhrzeit" HorizontalAlignment="Right"
-                               Margin="0,5,5,0" />
+                            <TextBlock Grid.Column="0" Grid.Row="1" Text="Ende-Uhrzeit" HorizontalAlignment="Right"
+                                   Margin="0,5,5,0" />
 
-                    <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="1" Grid.Row="1" Width="45"
-                              Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                              HorizontalAlignment="Right"
-                              BorderBrush="LightGray" BorderThickness="1"
-                              SelectedItem="{Binding Path=EndTimeHours}"
-                              ItemContainerStyle="{StaticResource ComboBoxItem}"
-                              ItemsSource="{Binding AllowedHourValues}" />
+                            <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="1" Grid.Row="1" Width="45"
+                                  Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="LightGray" BorderThickness="1"
+                                  SelectedItem="{Binding Path=EndTimeHours}"
+                                  ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                  ItemsSource="{Binding AllowedHourValues}" />
 
-                    <TextBlock Grid.Column="2" Grid.Row="1" Margin="5,5,5,0">:</TextBlock>
+                            <TextBlock Grid.Column="2" Grid.Row="1" Margin="5,5,5,0">:</TextBlock>
 
-                    <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="3" Grid.Row="1" Width="45"
-                              Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                              HorizontalAlignment="Left"
-                              BorderBrush="LightGray" BorderThickness="1"
-                              SelectedItem="{Binding Path=EndTimeMinutes}"
-                              ItemContainerStyle="{StaticResource ComboBoxItem}"
-                              ItemsSource="{Binding AllowedMinuteValues}" />
+                            <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="3" Grid.Row="1" Width="45"
+                                  Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  BorderBrush="LightGray" BorderThickness="1"
+                                  SelectedItem="{Binding Path=EndTimeMinutes}"
+                                  ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                  ItemsSource="{Binding AllowedMinuteValues}" />
 
-                </Grid>
-                <Grid Grid.Row="0" RowSpan="4" Column="1">
-                    <Button Command="{Binding GenerateMatchingCommand}" HorizontalAlignment="Center"
-                            FontWeight="Bold" Background="#e5e5e5" BorderBrush="#e5e5e5"
-                            VerticalAlignment="Center" MinWidth="160" MinHeight="100" Content="Matchen!"
-                            Template="{DynamicResource ButtonTemplate}" />
-                </Grid>
-            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="0" RowSpan="4" Column="1">
+                            <Button Command="{Binding GenerateMatchingCommand}" HorizontalAlignment="Center"
+                                FontWeight="Bold" Background="#67B432" BorderBrush="#e5e5e5" Foreground="White" Opacity="0.8"
+                                VerticalAlignment="Center" MinWidth="160" MinHeight="100" Content="Matchen!"
+                                Template="{DynamicResource ButtonTemplate}" />
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="NoGo-Dates">
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <ComboBox Template="{DynamicResource ComboBoxTemplate}" ItemsSource="{Binding Mentors}" SelectedItem="{Binding NoGoMentor}" Grid.Column="0" Grid.Row="0"/>
+                        <ComboBox Template="{DynamicResource ComboBoxTemplate}" ItemsSource="{Binding Mentees}" SelectedItem="{Binding NoGoMentee}" Grid.Column="1" Grid.Row="0"/>
+                        <Button Template="{DynamicResource ButtonTemplate}" Content="NoGo-Date erzeugen" Command="{Binding AddNoGoDateCommand}" Grid.Column="0" Grid.Row="1"/>
+                        <Button Template="{DynamicResource ButtonTemplate}" Content="NoGo-Dates ansehen" Command="{Binding ShowNoGoDatesCommand}" Grid.Column="1" Grid.Row="1"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+
             <!-- End Control Region upper -->
 
             <!-- Begin Tabellen Region  -->

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
@@ -171,6 +172,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand DeleteMenteesCommand { get; set; }
         public RelayCommand DeleteAllDataCommand { get; set; }
         public RelayCommand ShowInfoCommand { get; set; }
+        public RelayCommand ShowNoGoDatesCommand { get; set; }
 
         public RelayCommand OnLoadedCommand { get; set; }
 
@@ -195,6 +197,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.DeleteMenteesCommand = new RelayCommand(this.DeleteMenteesCommandHandling);
             this.DeleteAllDataCommand = new RelayCommand(this.DeleteAllDataCommandHandling);
             this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
+            this.ShowNoGoDatesCommand = new RelayCommand(this.ShowNoGoDatesCommandHandling);
 
             this.OnLoadedCommand = new RelayCommand(this.OnLoadedCommandHandling);
 
@@ -229,8 +232,21 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region CommandHandlings
 
+        private void ShowNoGoDatesCommandHandling()
+        {
+            if (this.NoGoDates != null)
+            {
+                WindowManager.ShowNoGoDatesWindow(this.NoGoDates);
+            }
+        }
+
         private void AddNoGoDateCommandHanding()
         {
+            if (this.NoGoMentor == null || this.NoGoMentee == null)
+            {
+                MessageBox.Show("Bitte eine Teilnehmerin auswählen.");
+                return;
+            }
             if (String.IsNullOrEmpty(this.NoGoMentor.ToString()) || String.IsNullOrEmpty(this.NoGoMentee.ToString()))
                 return;
             var text = this.NoGoMentor + " - " + this.NoGoMentor;
