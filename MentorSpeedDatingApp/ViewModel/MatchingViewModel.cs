@@ -138,7 +138,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Mentors = mentorsList.ToList();
             this.Mentees = menteeList.ToList();
             this.Headline = headline;
-            this.PrintCommand = new RelayCommand<Visual>(PrintCommandHandling);
+            this.PrintCommand = new RelayCommand<Visual>(this.PrintCommandHandling);
             this.ExportCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(this.ExportCommandHandling);
             this.Initiate();
         }

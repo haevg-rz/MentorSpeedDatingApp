@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.WindowManagement;
@@ -9,11 +8,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Windows;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -271,7 +270,7 @@ namespace MentorSpeedDatingApp.ViewModel
             WindowManager.ShowMatchingWindow(this);
         }
 
-        private void ValidateMentorAndMenteeLists()
+        internal void ValidateMentorAndMenteeLists()
         {
             for (var i = this.Mentees.Count - 1; i >= 0; i--)
             {

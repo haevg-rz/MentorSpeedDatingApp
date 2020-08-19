@@ -5,7 +5,6 @@
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
     <converter:TimeOfDayMinutesConverter x:Key="TimeOfDayMinutesConverter" />
-    <converter:NavMenuOverlapConverter x:Key="NavMenuOverlapConverter" />
     <converter:MultiBindingNameConverter x:Key="NameConverter" />
 
     <!-- Colors Begin -->
@@ -850,6 +849,9 @@
     <!--DataGridCell Style Start-->
     <Style x:Key="DataGridCellStyle" TargetType="DataGridCell">
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="DimGray" />
+            </Trigger>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="#afccab" />
                 <Setter Property="BorderBrush" Value="#afccab" />
@@ -974,7 +976,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="SelectionBrush" Value="#FF08D94B" />
-        <Setter Property="TextWrapping" Value="Wrap"></Setter>
+        <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
@@ -987,10 +989,6 @@
                                       VerticalScrollBarVisibility="Hidden" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="Black" TargetName="border" />
-                            <Setter Property="BorderThickness" Value="1.5" TargetName="border" />
-                        </Trigger>
                         <Trigger Property="IsFocused" Value="true">
                             <Setter Property="BorderBrush"
                                     TargetName="border"
@@ -1004,6 +1002,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"></Setter>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <!--DataGridTextBox Style End-->
 
@@ -1048,7 +1051,7 @@
                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                       Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     <Rectangle Width="15" Height="3" Fill="Black" Margin="0,11,0,1" />
                     <Rectangle Width="15" Height="3" Fill="Black" Margin="1" />
                     <Rectangle Width="15" Height="3" Fill="Black" Margin="1" />
@@ -1097,14 +1100,14 @@
                 BorderBrush="{TemplateBinding BorderBrush}"
                 SnapsToDevicePixels="true">
             <StackPanel Orientation="Horizontal">
-            <StackPanel VerticalAlignment="Center" Width="34" Height="34">
-                <ContentPresenter x:Name="borderContentPresenter" Focusable="False"
-                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
-                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                <Path Stroke="Black" Fill="Black"
-                      Data="
+                <StackPanel VerticalAlignment="Center" Width="34" Height="34">
+                    <ContentPresenter x:Name="borderContentPresenter" Focusable="False"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Path Stroke="Black" Fill="Black"
+                          Data="
                                           M 11.5, 22     L 21.5, 22 
                                           M 21.5, 22     L 21.5, 10 
                                           M 11.5, 22     L 11.5, 10
@@ -1115,7 +1118,7 @@
                                           M 16.5, 20     L 16.5, 8.5 
                                           M 19,   20     L 19,   6 
                                           M 14,   6.5    L 19,   6.5" />
-            </StackPanel>
+                </StackPanel>
                 <TextBox Text="Alles löschen!" Style="{StaticResource MenuTextboxStyle}" />
             </StackPanel>
         </Border>
@@ -1160,14 +1163,14 @@
                 BorderBrush="{TemplateBinding BorderBrush}"
                 SnapsToDevicePixels="true">
             <StackPanel Orientation="Horizontal">
-            <StackPanel VerticalAlignment="Center" Height="34" Width="34">
-                <ContentPresenter x:Name="borderContentPresenter" Focusable="False"
-                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
-                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                <Path Stroke="Black" Fill="Black"
-                      Data="
+                <StackPanel VerticalAlignment="Center" Height="34" Width="34">
+                    <ContentPresenter x:Name="borderContentPresenter" Focusable="False"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Path Stroke="Black" Fill="Black"
+                          Data="
                                           M 8,  24.5  L 25, 24.5
                                           M 8,  24.7  L 8,  7.3
                                           M 7.8,7.5  L 21.2, 7.5
@@ -1182,7 +1185,7 @@
                                           M 14, 7.5  L 14, 14
                                           M 15, 7.5  L 15, 14
                                           M 16, 7.5  L 16, 14" />
-            </StackPanel>
+                </StackPanel>
                 <TextBox Text="Speichern unter" Style="{StaticResource MenuTextboxStyle}" />
             </StackPanel>
         </Border>
@@ -1228,17 +1231,17 @@
                 SnapsToDevicePixels="true">
             <StackPanel Orientation="Horizontal">
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="34" Height="34">
-                <ContentPresenter x:Name="borderContentPresenter" Focusable="False"
-                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
-                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                <Ellipse Width="15" Height="15" Stroke="Black" />
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"
-                           FontFamily="Sylfaen">
-                    i
-                </TextBlock>
-            </Grid>
+                    <ContentPresenter x:Name="borderContentPresenter" Focusable="False"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Ellipse Width="15" Height="15" Stroke="Black" />
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"
+                               FontFamily="Sylfaen">
+                        i
+                    </TextBlock>
+                </Grid>
                 <TextBox Text="Info" Style="{StaticResource MenuTextboxStyle}" />
             </StackPanel>
         </Border>
@@ -1291,63 +1294,63 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="CalendarDayButton">
                                             <Border x:Name="buttonBorder"
-                                                                        Background="{TemplateBinding Background}"
-                                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                        SnapsToDevicePixels="true">
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    SnapsToDevicePixels="true">
                                                 <ContentPresenter
-                                                                        x:Name="borderContentPresenter"
-                                                                        Focusable="False"
-                                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                        Margin="{TemplateBinding Padding}"
-                                                                        RecognizesAccessKey="True"
-                                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                    x:Name="borderContentPresenter"
+                                                    Focusable="False"
+                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    Margin="{TemplateBinding Padding}"
+                                                    RecognizesAccessKey="True"
+                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="Button.IsDefaulted"
-                                                                             Value="true">
+                                                         Value="true">
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                                                 </Trigger>
                                                 <Trigger Property="IsMouseOver" Value="true">
                                                     <Setter Property="Background"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.MouseOver.Background}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.MouseOver.Background}" />
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.MouseOver.Border}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.MouseOver.Border}" />
                                                 </Trigger>
                                                 <Trigger Property="IsPressed" Value="true">
                                                     <Setter Property="Background"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.Pressed.Background}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.Pressed.Background}" />
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.Pressed.Border}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.Pressed.Border}" />
                                                 </Trigger>
                                                 <Trigger Property="IsEnabled" Value="false">
                                                     <Setter Property="Background"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.Disabled.Background}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.Disabled.Background}" />
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.Disabled.Border}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.Disabled.Border}" />
                                                     <Setter Property="TextElement.Foreground"
-                                                                                TargetName="borderContentPresenter"
-                                                                                Value="{StaticResource Button.Disabled.Foreground}" />
+                                                            TargetName="borderContentPresenter"
+                                                            Value="{StaticResource Button.Disabled.Foreground}" />
                                                 </Trigger>
                                                 <Trigger Property="IsFocused" Value="True">
                                                     <Setter Property="Background"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="#FF08D94B" />
+                                                            TargetName="buttonBorder"
+                                                            Value="#FF08D94B" />
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="#FF08D94B" />
+                                                            TargetName="buttonBorder"
+                                                            Value="#FF08D94B" />
                                                     <Setter Property="BorderThickness"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="1.5" />
+                                                            TargetName="buttonBorder"
+                                                            Value="1.5" />
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
@@ -1368,63 +1371,63 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="CalendarButton">
                                             <Border x:Name="buttonBorder"
-                                                                        Background="{TemplateBinding Background}"
-                                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                        SnapsToDevicePixels="true">
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    SnapsToDevicePixels="true">
                                                 <ContentPresenter
-                                                                        x:Name="borderContentPresenter"
-                                                                        Focusable="False"
-                                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                        Margin="{TemplateBinding Padding}"
-                                                                        RecognizesAccessKey="True"
-                                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                    x:Name="borderContentPresenter"
+                                                    Focusable="False"
+                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    Margin="{TemplateBinding Padding}"
+                                                    RecognizesAccessKey="True"
+                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="Button.IsDefaulted"
-                                                                             Value="true">
+                                                         Value="true">
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                                                 </Trigger>
                                                 <Trigger Property="IsMouseOver" Value="true">
                                                     <Setter Property="Background"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.MouseOver.Background}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.MouseOver.Background}" />
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.MouseOver.Border}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.MouseOver.Border}" />
                                                 </Trigger>
                                                 <Trigger Property="IsPressed" Value="true">
                                                     <Setter Property="Background"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.Pressed.Background}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.Pressed.Background}" />
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.Pressed.Border}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.Pressed.Border}" />
                                                 </Trigger>
                                                 <Trigger Property="IsEnabled" Value="false">
                                                     <Setter Property="Background"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.Disabled.Background}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.Disabled.Background}" />
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="{StaticResource Button.Disabled.Border}" />
+                                                            TargetName="buttonBorder"
+                                                            Value="{StaticResource Button.Disabled.Border}" />
                                                     <Setter Property="TextElement.Foreground"
-                                                                                TargetName="borderContentPresenter"
-                                                                                Value="{StaticResource Button.Disabled.Foreground}" />
+                                                            TargetName="borderContentPresenter"
+                                                            Value="{StaticResource Button.Disabled.Foreground}" />
                                                 </Trigger>
                                                 <Trigger Property="IsFocused" Value="True">
                                                     <Setter Property="Background"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="#FF08D94B" />
+                                                            TargetName="buttonBorder"
+                                                            Value="#FF08D94B" />
                                                     <Setter Property="BorderBrush"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="#FF08D94B" />
+                                                            TargetName="buttonBorder"
+                                                            Value="#FF08D94B" />
                                                     <Setter Property="BorderThickness"
-                                                                                TargetName="buttonBorder"
-                                                                                Value="1.5" />
+                                                            TargetName="buttonBorder"
+                                                            Value="1.5" />
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
@@ -1438,29 +1441,29 @@
                             <ControlTemplate TargetType="Calendar">
                                 <Viewbox Width="300" Height="350">
                                     <CalendarItem x:Name="PART_CalendarItem"
-                                                                      BorderBrush="DarkGray" BorderThickness="1"
-                                                                      Background="White">
+                                                  BorderBrush="DarkGray" BorderThickness="1"
+                                                  Background="White">
                                         <CalendarItem.Template>
                                             <ControlTemplate TargetType="CalendarItem">
                                                 <ControlTemplate.Resources>
                                                     <!-- Start: Data template for header button -->
                                                     <DataTemplate x:Key="DayTitleTemplate">
                                                         <TextBlock
-                                                                                FontWeight="Bold"
-                                                                                FontFamily="Verdana"
-                                                                                FontSize="9.5"
-                                                                                Foreground="#FF333333"
-                                                                                HorizontalAlignment="Center"
-                                                                                Text="{Binding}"
-                                                                                Margin="0,6,0,6"
-                                                                                VerticalAlignment="Center" />
+                                                            FontWeight="Bold"
+                                                            FontFamily="Verdana"
+                                                            FontSize="9.5"
+                                                            Foreground="#FF333333"
+                                                            HorizontalAlignment="Center"
+                                                            Text="{Binding}"
+                                                            Margin="0,6,0,6"
+                                                            VerticalAlignment="Center" />
                                                     </DataTemplate>
                                                     <!-- End: Data template for header button -->
                                                 </ControlTemplate.Resources>
                                                 <Grid Name="PART_Root">
                                                     <Grid.Resources>
                                                         <SolidColorBrush x:Key="DisabledColor"
-                                                                                             Color="#A5FFFFFF" />
+                                                                         Color="#A5FFFFFF" />
                                                     </Grid.Resources>
                                                     <VisualStateManager.VisualStateGroups>
                                                         <VisualStateGroup x:Name="CommonStates">
@@ -1468,101 +1471,101 @@
                                                             <VisualState x:Name="Disabled">
                                                                 <Storyboard>
                                                                     <DoubleAnimation
-                                                                                            Storyboard.TargetName="PART_DisabledVisual"
-                                                                                            Storyboard.TargetProperty="Opacity"
-                                                                                            To="1" Duration="0" />
+                                                                        Storyboard.TargetName="PART_DisabledVisual"
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="1" Duration="0" />
                                                                 </Storyboard>
                                                             </VisualState>
                                                         </VisualStateGroup>
                                                     </VisualStateManager.VisualStateGroups>
 
                                                     <Border
-                                                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                                                            CornerRadius="1">
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="1">
 
                                                         <!-- This Brush is new -->
                                                         <Border.Background>
                                                             <LinearGradientBrush
-                                                                                    StartPoint="0 0"
-                                                                                    EndPoint="0 1">
+                                                                StartPoint="0 0"
+                                                                EndPoint="0 1">
                                                                 <GradientStop Offset="0"
-                                                                                                  Color="White" />
+                                                                              Color="White" />
                                                                 <GradientStop Offset="0.5"
-                                                                                                  Color="White" />
+                                                                              Color="White" />
                                                                 <GradientStop Offset="1"
-                                                                                                  Color="White" />
+                                                                              Color="White" />
                                                             </LinearGradientBrush>
                                                         </Border.Background>
 
                                                         <Border CornerRadius="1"
-                                                                                    BorderBrush="#FFFFFFFF"
-                                                                                    BorderThickness="2">
+                                                                BorderBrush="#FFFFFFFF"
+                                                                BorderThickness="2">
                                                             <Grid>
                                                                 <Grid.RowDefinitions>
                                                                     <RowDefinition
-                                                                                            Height="Auto" />
+                                                                        Height="Auto" />
                                                                     <RowDefinition Height="*" />
                                                                 </Grid.RowDefinitions>
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition
-                                                                                            Width="Auto" />
+                                                                        Width="Auto" />
                                                                     <ColumnDefinition
-                                                                                            Width="Auto" />
+                                                                        Width="Auto" />
                                                                     <ColumnDefinition
-                                                                                            Width="Auto" />
+                                                                        Width="Auto" />
                                                                 </Grid.ColumnDefinitions>
 
                                                                 <Grid.Resources>
                                                                     <!-- Start: Previous button template -->
                                                                     <ControlTemplate
-                                                                                            x:Key="PreviousButtonTemplate"
-                                                                                            TargetType="Button">
+                                                                        x:Key="PreviousButtonTemplate"
+                                                                        TargetType="Button">
                                                                         <Grid Cursor="Hand">
                                                                             <VisualStateManager.VisualStateGroups>
                                                                                 <VisualStateGroup
-                                                                                                        x:Name="CommonStates">
+                                                                                    x:Name="CommonStates">
                                                                                     <VisualState
-                                                                                                            x:Name="Normal" />
+                                                                                        x:Name="Normal" />
                                                                                     <VisualState
-                                                                                                            x:Name="MouseOver">
+                                                                                        x:Name="MouseOver">
                                                                                         <Storyboard>
                                                                                             <ColorAnimation
-                                                                                                                    Storyboard.TargetName="TextColor"
-                                                                                                                    Storyboard.TargetProperty="Color"
-                                                                                                                    To="#9AEDAB"
-                                                                                                                    Duration="0" />
+                                                                                                Storyboard.TargetName="TextColor"
+                                                                                                Storyboard.TargetProperty="Color"
+                                                                                                To="#9AEDAB"
+                                                                                                Duration="0" />
                                                                                         </Storyboard>
                                                                                     </VisualState>
                                                                                     <VisualState
-                                                                                                            x:Name="Disabled">
+                                                                                        x:Name="Disabled">
                                                                                         <Storyboard>
                                                                                             <DoubleAnimation
-                                                                                                                    Storyboard.TargetName="TextColor"
-                                                                                                                    Storyboard.TargetProperty="Opacity"
-                                                                                                                    To=".5"
-                                                                                                                    Duration="0" />
+                                                                                                Storyboard.TargetName="TextColor"
+                                                                                                Storyboard.TargetProperty="Opacity"
+                                                                                                To=".5"
+                                                                                                Duration="0" />
                                                                                         </Storyboard>
                                                                                     </VisualState>
                                                                                 </VisualStateGroup>
                                                                             </VisualStateManager.VisualStateGroups>
                                                                             <Rectangle
-                                                                                                    Fill="#11E5EBF1"
-                                                                                                    Stretch="Fill"
-                                                                                                    Opacity="1" />
+                                                                                Fill="#11E5EBF1"
+                                                                                Stretch="Fill"
+                                                                                Opacity="1" />
                                                                             <Grid>
                                                                                 <Path
-                                                                                                        Margin="14,-6,0,0"
-                                                                                                        Height="10"
-                                                                                                        Width="6"
-                                                                                                        VerticalAlignment="Center"
-                                                                                                        HorizontalAlignment="Left"
-                                                                                                        Stretch="Fill"
-                                                                                                        Data="M288.75,232.25 L288.75,240.625 L283,236.625 z">
+                                                                                    Margin="14,-6,0,0"
+                                                                                    Height="10"
+                                                                                    Width="6"
+                                                                                    VerticalAlignment="Center"
+                                                                                    HorizontalAlignment="Left"
+                                                                                    Stretch="Fill"
+                                                                                    Data="M288.75,232.25 L288.75,240.625 L283,236.625 z">
                                                                                     <Path.Fill>
                                                                                         <SolidColorBrush
-                                                                                                                x:Name="TextColor"
-                                                                                                                Color="#FF333333" />
+                                                                                            x:Name="TextColor"
+                                                                                            Color="#FF333333" />
                                                                                     </Path.Fill>
                                                                                 </Path>
                                                                             </Grid>
@@ -1573,53 +1576,53 @@
 
                                                                     <!-- Start: Next button template -->
                                                                     <ControlTemplate
-                                                                                            x:Key="NextButtonTemplate"
-                                                                                            TargetType="Button">
+                                                                        x:Key="NextButtonTemplate"
+                                                                        TargetType="Button">
                                                                         <Grid Cursor="Hand">
                                                                             <VisualStateManager.VisualStateGroups>
                                                                                 <VisualStateGroup
-                                                                                                        x:Name="CommonStates">
+                                                                                    x:Name="CommonStates">
                                                                                     <VisualState
-                                                                                                            x:Name="Normal" />
+                                                                                        x:Name="Normal" />
                                                                                     <VisualState
-                                                                                                            x:Name="MouseOver">
+                                                                                        x:Name="MouseOver">
                                                                                         <Storyboard>
                                                                                             <ColorAnimation
-                                                                                                                    Storyboard.TargetName="TextColor"
-                                                                                                                    Storyboard.TargetProperty="Color"
-                                                                                                                    To="#9AEDAB"
-                                                                                                                    Duration="0" />
+                                                                                                Storyboard.TargetName="TextColor"
+                                                                                                Storyboard.TargetProperty="Color"
+                                                                                                To="#9AEDAB"
+                                                                                                Duration="0" />
                                                                                         </Storyboard>
                                                                                     </VisualState>
                                                                                     <VisualState
-                                                                                                            x:Name="Disabled">
+                                                                                        x:Name="Disabled">
                                                                                         <Storyboard>
                                                                                             <DoubleAnimation
-                                                                                                                    Storyboard.TargetName="TextColor"
-                                                                                                                    Storyboard.TargetProperty="Opacity"
-                                                                                                                    To=".5"
-                                                                                                                    Duration="0" />
+                                                                                                Storyboard.TargetName="TextColor"
+                                                                                                Storyboard.TargetProperty="Opacity"
+                                                                                                To=".5"
+                                                                                                Duration="0" />
                                                                                         </Storyboard>
                                                                                     </VisualState>
                                                                                 </VisualStateGroup>
                                                                             </VisualStateManager.VisualStateGroups>
                                                                             <Rectangle
-                                                                                                    Fill="#11E5EBF1"
-                                                                                                    Stretch="Fill"
-                                                                                                    Opacity="1" />
+                                                                                Fill="#11E5EBF1"
+                                                                                Stretch="Fill"
+                                                                                Opacity="1" />
                                                                             <Grid>
                                                                                 <Path
-                                                                                                        Margin="0,-6,14,0"
-                                                                                                        Height="10"
-                                                                                                        Width="6"
-                                                                                                        VerticalAlignment="Center"
-                                                                                                        HorizontalAlignment="Right"
-                                                                                                        Stretch="Fill"
-                                                                                                        Data="M282.875,231.875 L282.875,240.375 L288.625,236 z">
+                                                                                    Margin="0,-6,14,0"
+                                                                                    Height="10"
+                                                                                    Width="6"
+                                                                                    VerticalAlignment="Center"
+                                                                                    HorizontalAlignment="Right"
+                                                                                    Stretch="Fill"
+                                                                                    Data="M282.875,231.875 L282.875,240.375 L288.625,236 z">
                                                                                     <Path.Fill>
                                                                                         <SolidColorBrush
-                                                                                                                x:Name="TextColor"
-                                                                                                                Color="#FF333333" />
+                                                                                            x:Name="TextColor"
+                                                                                            Color="#FF333333" />
                                                                                     </Path.Fill>
                                                                                 </Path>
                                                                             </Grid>
@@ -1630,32 +1633,32 @@
 
                                                                     <!-- Start: Header button template -->
                                                                     <ControlTemplate
-                                                                                            x:Key="HeaderButtonTemplate"
-                                                                                            TargetType="Button">
+                                                                        x:Key="HeaderButtonTemplate"
+                                                                        TargetType="Button">
                                                                         <Grid Cursor="Hand">
                                                                             <VisualStateManager.VisualStateGroups>
                                                                                 <VisualStateGroup
-                                                                                                        x:Name="CommonStates">
+                                                                                    x:Name="CommonStates">
                                                                                     <VisualState
-                                                                                                            x:Name="Normal" />
+                                                                                        x:Name="Normal" />
                                                                                     <VisualState
-                                                                                                            x:Name="MouseOver">
+                                                                                        x:Name="MouseOver">
                                                                                         <Storyboard>
                                                                                             <ColorAnimation
-                                                                                                                    Storyboard.TargetName="TextColor"
-                                                                                                                    Storyboard.TargetProperty="Color"
-                                                                                                                    To="#9AEDAB"
-                                                                                                                    Duration="0" />
+                                                                                                Storyboard.TargetName="TextColor"
+                                                                                                Storyboard.TargetProperty="Color"
+                                                                                                To="#9AEDAB"
+                                                                                                Duration="0" />
                                                                                         </Storyboard>
                                                                                     </VisualState>
                                                                                     <VisualState
-                                                                                                            x:Name="Disabled">
+                                                                                        x:Name="Disabled">
                                                                                         <Storyboard>
                                                                                             <DoubleAnimation
-                                                                                                                    Storyboard.TargetName="buttonContent"
-                                                                                                                    Storyboard.TargetProperty="Opacity"
-                                                                                                                    To=".5"
-                                                                                                                    Duration="0" />
+                                                                                                Storyboard.TargetName="buttonContent"
+                                                                                                Storyboard.TargetProperty="Opacity"
+                                                                                                To=".5"
+                                                                                                Duration="0" />
                                                                                         </Storyboard>
                                                                                     </VisualState>
                                                                                 </VisualStateGroup>
@@ -1663,7 +1666,7 @@
 
                                                                             <!-- This Border is new -->
                                                                             <Border
-                                                                                                    Padding="12 0">
+                                                                                Padding="12 0">
                                                                                 <!--<Border.Background>
                                                                                                             <LinearGradientBrush
                                                                                                                 StartPoint="0 0"
@@ -1678,16 +1681,16 @@
                                                                                                         </Border.Background>-->
 
                                                                                 <ContentPresenter
-                                                                                                        x:Name="buttonContent"
-                                                                                                        Content="{TemplateBinding Content}"
-                                                                                                        ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                                                                        Margin="1,4,1,9"
-                                                                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                                                                    x:Name="buttonContent"
+                                                                                    Content="{TemplateBinding Content}"
+                                                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                                    Margin="1,4,1,9"
+                                                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                                                                     <TextElement.Foreground>
                                                                                         <SolidColorBrush
-                                                                                                                x:Name="TextColor"
-                                                                                                                Color="#FF333333" />
+                                                                                            x:Name="TextColor"
+                                                                                            Color="#FF333333" />
                                                                                     </TextElement.Foreground>
                                                                                 </ContentPresenter>
                                                                             </Border>
@@ -1699,103 +1702,103 @@
 
                                                                 <!-- Start: Previous button content -->
                                                                 <Button
-                                                                                        x:Name="PART_PreviousButton"
-                                                                                        Grid.Row="0"
-                                                                                        Grid.Column="0"
-                                                                                        Template="{StaticResource PreviousButtonTemplate}"
-                                                                                        Height="20" Width="28"
-                                                                                        HorizontalAlignment="Left"
-                                                                                        Focusable="False" />
+                                                                    x:Name="PART_PreviousButton"
+                                                                    Grid.Row="0"
+                                                                    Grid.Column="0"
+                                                                    Template="{StaticResource PreviousButtonTemplate}"
+                                                                    Height="20" Width="28"
+                                                                    HorizontalAlignment="Left"
+                                                                    Focusable="False" />
                                                                 <!-- End: Previous button content -->
 
                                                                 <!-- Start: Header button content -->
                                                                 <Button
-                                                                                        x:Name="PART_HeaderButton"
-                                                                                        Grid.Row="0"
-                                                                                        Grid.Column="1"
-                                                                                        Template="{StaticResource HeaderButtonTemplate}"
-                                                                                        HorizontalAlignment="Center"
-                                                                                        VerticalAlignment="Center"
-                                                                                        FontWeight="Bold"
-                                                                                        FontSize="10.5"
-                                                                                        Focusable="False" />
+                                                                    x:Name="PART_HeaderButton"
+                                                                    Grid.Row="0"
+                                                                    Grid.Column="1"
+                                                                    Template="{StaticResource HeaderButtonTemplate}"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    FontWeight="Bold"
+                                                                    FontSize="10.5"
+                                                                    Focusable="False" />
                                                                 <!-- End: Header button content -->
 
                                                                 <!-- Start: Next button content -->
                                                                 <Button
-                                                                                        x:Name="PART_NextButton"
-                                                                                        Grid.Row="0"
-                                                                                        Grid.Column="2"
-                                                                                        Height="20" Width="28"
-                                                                                        HorizontalAlignment="Right"
-                                                                                        Template="{StaticResource NextButtonTemplate}"
-                                                                                        Focusable="False" />
+                                                                    x:Name="PART_NextButton"
+                                                                    Grid.Row="0"
+                                                                    Grid.Column="2"
+                                                                    Height="20" Width="28"
+                                                                    HorizontalAlignment="Right"
+                                                                    Template="{StaticResource NextButtonTemplate}"
+                                                                    Focusable="False" />
                                                                 <!-- End: Next button content -->
 
                                                                 <!-- Start: Month Content Grid -->
                                                                 <Grid x:Name="PART_MonthView"
-                                                                                          Grid.Row="1"
-                                                                                          Grid.ColumnSpan="3"
-                                                                                          Visibility="Visible"
-                                                                                          Margin="6,-1,6,6">
+                                                                      Grid.Row="1"
+                                                                      Grid.ColumnSpan="3"
+                                                                      Visibility="Visible"
+                                                                      Margin="6,-1,6,6">
                                                                     <Grid.RowDefinitions>
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                     </Grid.RowDefinitions>
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                     </Grid.ColumnDefinitions>
                                                                 </Grid>
                                                                 <!-- End: Month Content Grid -->
 
                                                                 <!-- End: Year Content Grid -->
                                                                 <Grid x:Name="PART_YearView"
-                                                                                          Grid.Row="1"
-                                                                                          Grid.ColumnSpan="3"
-                                                                                          Visibility="Hidden"
-                                                                                          Margin="6,-3,7,6">
+                                                                      Grid.Row="1"
+                                                                      Grid.ColumnSpan="3"
+                                                                      Visibility="Hidden"
+                                                                      Margin="6,-3,7,6">
                                                                     <Grid.RowDefinitions>
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                         <RowDefinition
-                                                                                                Height="Auto" />
+                                                                            Height="Auto" />
                                                                     </Grid.RowDefinitions>
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                         <ColumnDefinition
-                                                                                                Width="Auto" />
+                                                                            Width="Auto" />
                                                                     </Grid.ColumnDefinitions>
                                                                 </Grid>
                                                                 <!-- End: Year Content Grid -->
@@ -1803,54 +1806,54 @@
                                                         </Border>
                                                     </Border>
                                                     <Rectangle x:Name="PART_DisabledVisual"
-                                                                                   Opacity="0"
-                                                                                   Visibility="Collapsed"
-                                                                                   Stretch="Fill"
-                                                                                   StrokeThickness="1" RadiusX="2"
-                                                                                   RadiusY="2"
-                                                                                   Stroke="{StaticResource DisabledColor}"
-                                                                                   Fill="{StaticResource DisabledColor}" />
+                                                               Opacity="0"
+                                                               Visibility="Collapsed"
+                                                               Stretch="Fill"
+                                                               StrokeThickness="1" RadiusX="2"
+                                                               RadiusY="2"
+                                                               Stroke="{StaticResource DisabledColor}"
+                                                               Fill="{StaticResource DisabledColor}" />
                                                 </Grid>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsEnabled" Value="False">
                                                         <Setter
-                                                                                TargetName="PART_DisabledVisual"
-                                                                                Property="Visibility"
-                                                                                Value="Visible" />
+                                                            TargetName="PART_DisabledVisual"
+                                                            Property="Visibility"
+                                                            Value="Visible" />
                                                     </Trigger>
                                                     <DataTrigger Value="Year">
                                                         <DataTrigger.Binding>
                                                             <Binding Path="DisplayMode">
                                                                 <Binding.RelativeSource>
                                                                     <RelativeSource
-                                                                                            Mode="FindAncestor"
-                                                                                            AncestorType="{x:Type Calendar}" />
+                                                                        Mode="FindAncestor"
+                                                                        AncestorType="{x:Type Calendar}" />
                                                                 </Binding.RelativeSource>
                                                             </Binding>
                                                         </DataTrigger.Binding>
                                                         <Setter TargetName="PART_MonthView"
-                                                                                    Property="Visibility"
-                                                                                    Value="Hidden" />
+                                                                Property="Visibility"
+                                                                Value="Hidden" />
                                                         <Setter TargetName="PART_YearView"
-                                                                                    Property="Visibility"
-                                                                                    Value="Visible" />
+                                                                Property="Visibility"
+                                                                Value="Visible" />
                                                     </DataTrigger>
                                                     <DataTrigger Value="Decade">
                                                         <DataTrigger.Binding>
                                                             <Binding Path="DisplayMode">
                                                                 <Binding.RelativeSource>
                                                                     <RelativeSource
-                                                                                            Mode="FindAncestor"
-                                                                                            AncestorType="{x:Type Calendar}" />
+                                                                        Mode="FindAncestor"
+                                                                        AncestorType="{x:Type Calendar}" />
                                                                 </Binding.RelativeSource>
                                                             </Binding>
                                                         </DataTrigger.Binding>
                                                         <Setter TargetName="PART_MonthView"
-                                                                                    Property="Visibility"
-                                                                                    Value="Hidden" />
+                                                                Property="Visibility"
+                                                                Value="Hidden" />
                                                         <Setter TargetName="PART_YearView"
-                                                                                    Property="Visibility"
-                                                                                    Value="Visible" />
+                                                                Property="Visibility"
+                                                                Value="Visible" />
                                                     </DataTrigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
@@ -1874,34 +1877,34 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <TextBox
-                                                Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DatePicker},
+                            Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DatePicker},
                                                     Path=SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='dd.MM.yyyy'}"
-                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                Name="HeadlineTextBox" SelectionBrush="#FF08D94B"
-                                                BorderBrush="Transparent">
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Name="HeadlineTextBox" SelectionBrush="#FF08D94B"
+                            BorderBrush="Transparent">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type TextBox}">
                                                 <Border x:Name="border"
-                                                                            BorderBrush="Transparent"
-                                                                            BorderThickness="1">
+                                                        BorderBrush="Transparent"
+                                                        BorderThickness="1">
                                                     <ScrollViewer x:Name="PART_ContentHost"
-                                                                                      Focusable="false"
-                                                                                      HorizontalScrollBarVisibility="Hidden"
-                                                                                      VerticalScrollBarVisibility="Hidden" />
+                                                                  Focusable="false"
+                                                                  HorizontalScrollBarVisibility="Hidden"
+                                                                  VerticalScrollBarVisibility="Hidden" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="true">
                                                         <Setter Property="BorderBrush"
-                                                                                    TargetName="border"
-                                                                                    Value="Transparent" />
+                                                                TargetName="border"
+                                                                Value="Transparent" />
                                                     </Trigger>
                                                     <Trigger Property="IsFocused" Value="true">
                                                         <Setter Property="BorderBrush"
-                                                                                    TargetName="border"
-                                                                                    Value="Transparent" />
+                                                                TargetName="border"
+                                                                Value="Transparent" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
@@ -1923,22 +1926,22 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border x:Name="border"
-                                                BorderBrush="LightGray"
-                                                BorderThickness="1">
+                            BorderBrush="LightGray"
+                            BorderThickness="1">
                         <ScrollViewer x:Name="PART_ContentHost"
-                                                          Focusable="false"
-                                                          HorizontalScrollBarVisibility="Hidden"
-                                                          VerticalScrollBarVisibility="Hidden" />
+                                      Focusable="false"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="BorderBrush" TargetName="border"
-                                                        Value="#FF08D94B" />
+                                    Value="#FF08D94B" />
                             <Setter Property="BorderThickness" TargetName="border" Value="2" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="true">
                             <Setter Property="BorderBrush" TargetName="border"
-                                                        Value="#FF08D94B" />
+                                    Value="#FF08D94B" />
                             <Setter Property="BorderThickness" TargetName="border" Value="2" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -1959,4 +1962,115 @@
     </Style>
     <!--WaterMarkTextBlockStyle End-->
 
+    <!--MatchingEditLockToggleButtonTemplate Start-->
+    <ControlTemplate x:Key="MatchingEditLockToggleButtonTemplate" TargetType="ToggleButton">
+        <Border BorderBrush="Transparent" BorderThickness="0" Background="Transparent">
+            <Grid>
+                <Path Name="Visual_Part1" Data="M 15.5, 8.4 C 15.2,8.8 20,2 24.7,8.8" Stroke="DimGray"
+                      StrokeThickness="2" />
+                <Path Name="Visual_Part2" Stroke="DimGray" StrokeThickness="2"
+                      Data="M 15.5, 8.4 L 15.5, 20
+                                            M 24.5, 8.4 L 24.5, 24.5" />
+                <Path Name="Visual_Part3" Data="M 12.5, 25 L 27.5, 25" Stroke="DimGray"
+                      StrokeThickness="15" />
+                <Path
+                    Data="M 19.5,26 A 1,1 0 1 1 20.5,26
+                                            M 19.5,24.4 A 1,1 0 1 0 20.5,24.4"
+                    Stroke="White" StrokeThickness="3.5" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="False">
+                <Setter TargetName="Visual_Part1" Property="Stroke" Value="#65BC4A" />
+                <Setter TargetName="Visual_Part2" Property="Stroke" Value="#65BC4A" />
+                <Setter TargetName="Visual_Part3" Property="Stroke" Value="#65BC4A" />
+                <Setter TargetName="Visual_Part2" Property="Data"
+                        Value="M 33.5, 8.4 L 33.5, 20 M 24.5, 8.4 L 24.5, 24.5" />
+                <Setter TargetName="Visual_Part1" Property="Data"
+                        Value="M 24.7,8.4 C 24.7,8.2 29,2 33.7,8.8" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Visual_Part1" Property="Stroke" Value="#9AEDAB" />
+                <Setter TargetName="Visual_Part2" Property="Stroke" Value="#9AEDAB" />
+                <Setter TargetName="Visual_Part3" Property="Stroke" Value="#9AEDAB" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <!--MatchingEditLockToggleButtonTemplate End-->
+
+    <!--MatchingTableItemConverter Start-->
+    <converter:TextColorConverter x:Key="TextColorConverter" />
+    <converter:FontSizeConverter x:Key="FontSizeConverter" />
+    <converter:WidthConverter x:Key="WidthConverter" />
+    <converter:FontWeightConverter x:Key="FontWeightConverter" />
+    <converter:TimeColumnBoolToBorderThicknessConverter
+        x:Key="TimeColumnBoolToBorderThicknessConverter" />
+    <converter:MatchingMarginConverter x:Key="MatchingMarginConverter" />
+    <!--MatchingTableItemConverter End-->
+
+    <!--MatchingTable_DataTemplate_Level2 Template (MatchingItem) Start-->
+    <DataTemplate x:Key="DataTemplate_Level2">
+        <Border BorderBrush="#FF08D94B"
+                BorderThickness="{Binding IsTime, Converter={StaticResource TimeColumnBoolToBorderThicknessConverter}}">
+            <TextBox Text="{Binding Content}"
+                     Foreground="{Binding IsMentor, Converter={StaticResource TextColorConverter}}"
+                     HorizontalContentAlignment="Left"
+                     VerticalContentAlignment="Center"
+                     TextWrapping="Wrap"
+                     Background="{StaticResource HealthCareWhiteBrush}"
+                     Width="{Binding IsTime, Converter={StaticResource WidthConverter}}"
+                     MinHeight="40"
+                     FontSize="{Binding IsMentor, Converter={StaticResource FontSizeConverter}}"
+                     FontWeight="{Binding IsMentor, Converter={StaticResource FontWeightConverter}}"
+                     BorderThickness="0,0,0,1"
+                     BorderBrush="Black"
+                     Margin="{Binding IsMentor, Converter={StaticResource MatchingMarginConverter}}"
+                     IsReadOnly="{Binding ElementName=CheckBoxReadOnly, Path=IsChecked}"
+                     SelectionBrush="#FF08D94B">
+                <TextBox.Template>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Name="TextBoxBorder"
+                                Background="{TemplateBinding Background}"
+                                Width="{TemplateBinding Width}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Focusable="false"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          MinHeight="{TemplateBinding MinHeight}"
+                                          FontSize="{TemplateBinding FontSize}"
+                                          FontWeight="{TemplateBinding FontWeight}"
+                                          Background="{TemplateBinding Background}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="Black" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </TextBox.Template>
+            </TextBox>
+            <Border.Effect>
+                <DropShadowEffect Color="{StaticResource HealthCareGray}" ShadowDepth="2"
+                                  BlurRadius="5" Opacity="0.4" Direction="270" />
+            </Border.Effect>
+        </Border>
+    </DataTemplate>
+    <!--MatchingTable_DataTemplate_Level2 Template (MatchingItem) End-->
+
+    <!--MatchingTable_DataTemplate_Level1 Template (Row) Start-->
+    <DataTemplate x:Key="DataTemplate_Level1">
+        <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </DataTemplate>
+    <!--MatchingTable_DataTemplate_Level1 Template (Row) End-->
 </ResourceDictionary>

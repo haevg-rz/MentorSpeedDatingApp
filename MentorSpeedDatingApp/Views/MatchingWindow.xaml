@@ -3,64 +3,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         xmlns:vm="clr-namespace:MentorSpeedDatingApp.ViewModel"
-        xmlns:converter="clr-namespace:MentorSpeedDatingApp.Converter"
         mc:Ignorable="d"
         Title="Mentor-Speed-Dating Matching-Ergebnisse"
-        
         ResizeMode="CanResize">
+
     <Window.DataContext>
         <vm:MatchingViewModel />
     </Window.DataContext>
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/Styles.xaml" />
-                <ResourceDictionary>
-                    <converter:TextColorConverter x:Key="TextColorConverter"></converter:TextColorConverter>
-                    <converter:FontSizeConverter x:Key="FontSizeConverter"></converter:FontSizeConverter>
-                    <converter:WidthConverter x:Key="WidthConverter"></converter:WidthConverter>
-                    <converter:FontWeightConverter x:Key="FontWeightConverter"></converter:FontWeightConverter>
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <DataTemplate x:Key="DataTemplate_Level2">
-                        <TextBox Text="{Binding Content}"
-                                 Foreground="{Binding IsMentor, Converter={StaticResource TextColorConverter}}"
-                                 HorizontalContentAlignment="Left"
-                                 VerticalContentAlignment="Center"
-                                 TextWrapping="Wrap"
-                                 Background="{StaticResource HealthCareWhiteBrush}"
-                                 Width="{Binding IsTime, Converter={StaticResource WidthConverter}}"
-                                 MinHeight="40"
-                                 FontSize="{Binding IsMentor, Converter={StaticResource FontSizeConverter}}"
-                                 FontWeight="{Binding IsMentor, Converter={StaticResource FontWeightConverter}}"
-                                 BorderThickness="0,0,0,1"
-                                 BorderBrush="Black"
-                                 Margin="5"
-                                 IsReadOnly="{Binding ElementName=CheckBoxReadOnly, Path=IsChecked}">
-                            <TextBox.Effect>
-                                <DropShadowEffect Color="{StaticResource HealthCareGray}" ShadowDepth="2"
-                                                  BlurRadius="5" Opacity="0.4" Direction="270" />
-                            </TextBox.Effect>
-                        </TextBox>
-                    </DataTemplate>
-                    <DataTemplate x:Key="DataTemplate_Level1">
-                        <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </DataTemplate>
-                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
-    <!-- DO NOT USE STYLES/TEMPLATE FILES IN THIS XAML DOCUMENT!!! -->
-    <!-- DOING SO BREAKS SHAREDSIZEGROUPS!!! -->
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -68,199 +26,32 @@
             <RowDefinition Height="0.2*" />
         </Grid.RowDefinitions>
         <StackPanel>
-<!--       <Border BorderBrush="Transparent" Padding="10" BorderThickness="2" Grid.Row="0"
-                Background="{StaticResource HealthCareWhiteBrush}">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="4" Color="DarkOliveGreen" Direction="0" Opacity="0.5" BlurRadius="20" />
-                </Border.Effect>
-                <Grid x:Name="PrintGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition SharedSizeGroup="RowOuterSize" Height="Auto " />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Grid.Row="0">
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Border Grid.Row="0" BorderThickness="0,0,0,2"
-                                BorderBrush="{StaticResource HealthCareGrayBrush}">
-                                <TextBlock
-                                x:Name="UhrzeitTextBlock"
-                                Text="Uhrzeit"
-                                HorizontalAlignment="Center"
-                                Foreground="#FF20B613"
-                                FontWeight="Bold"
-                                Background="{StaticResource HealthCareWhiteBrush}"
-                                FontSize="24" />
-                            </Border>
-                            <ItemsControl Grid.Row="1" ItemsSource="{Binding DateTimes}"
-                                      Background="{StaticResource HealthCareWhiteBrush}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Time}"
-                                             FontSize="16"
-                                             BorderThickness="0,0,0,1"
-                                             BorderBrush="Black"
-                                             HorizontalContentAlignment="Center"
-                                             VerticalContentAlignment="Center"
-                                             Margin="2,0,2,4"
-                                             MinHeight="40"
-                                             Background="{StaticResource HealthCareWhiteBrush}">
-                                            <TextBox.Effect>
-                                                <DropShadowEffect Color="{StaticResource HealthCareGray}" ShadowDepth="2"
-                                                              BlurRadius="5" Opacity="0.4" Direction="270" />
-                                            </TextBox.Effect>
-                                        </TextBox>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Grid>
-                    </Grid>
-                    <Border Grid.Row="0" Grid.Column="1" BorderBrush="{StaticResource HealthCareGrayBrush}"
-                        BorderThickness="0.4,0,0,0" Margin="5,0,5,0">
-                        <Rectangle Width="4" Fill="#FF08D94B" Height="Auto" />
-                    </Border>
-                    <Grid Column="2" Grid.Row="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-
-                        <ItemsControl ItemsSource="{Binding Matchings}" Background="Transparent" Grid.RowSpan="2">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid IsSharedSizeScope="True">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" SharedSizeGroup="MenteeHeightSizeGroup" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" SharedSizeGroup="MenteeWidthSizeGroup" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBox x:Name="MentorTextBox"
-                                             Grid.Row="0"
-                                             Grid.IsSharedSizeScope="True"
-                                             BorderBrush="{StaticResource HealthCareGrayBrush}"
-                                             FontSize="24"
-                                             FontWeight="Bold"
-                                             Foreground="#FF20B613"
-                                             Background="{StaticResource HealthCareWhiteBrush}"
-                                             BorderThickness="0,0,0,2">
-                                            <TextBox.Text>
-                                                <MultiBinding Converter="{StaticResource NameConverter}">
-                                                    <Binding Path="Mentor.Titel" />
-                                                    <Binding Path="Mentor.Name" />
-                                                </MultiBinding>
-                                            </TextBox.Text>
-                                        </TextBox>
-
-                                        <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Dates}"
-                                                  AlternationCount="2">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <TextBox
-                                                        TextWrapping="Wrap"
-                                                        MinHeight="40"
-                                                        VerticalContentAlignment="Center"
-                                                        x:Name="MenteeTextBox"
-                                                        Text="{Binding Mentee}"
-                                                        Grid.IsSharedSizeScope="True"
-                                                        FontSize="16"
-                                                        BorderThickness="0,0,0,1"
-                                                        BorderBrush="Black"
-                                                        Background="{StaticResource HealthCareWhiteBrush}"
-                                                        IsReadOnly="{Binding ElementName=CheckBoxReadOnly, Path=IsChecked}"
-                                                        Margin="2,0,2,4">
-                                                            <TextBox.Effect>
-                                                                <DropShadowEffect Color="{StaticResource HealthCareGray}"
-                                                                              ShadowDepth="2" BlurRadius="5"
-                                                                              Opacity="0.4" Direction="270" />
-                                                            </TextBox.Effect>
-                                                            <TextBox.Style>
-                                                                <Style>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding Mentee}" Value="-">
-                                                                            <Setter Property="TextBox.Text"
-                                                                                Value="Pause" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBox.Style>
-                                                    </TextBox>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Grid>
-            </Grid>
-        </Border>-->
-            <Border  BorderBrush="Transparent" Padding="10" BorderThickness="2" Grid.Row="0"
+            <Border BorderBrush="Transparent" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top"
                     Background="{StaticResource HealthCareWhiteBrush}">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="4" Color="DarkOliveGreen" Direction="0" Opacity="0.5" BlurRadius="20" />
+                    <DropShadowEffect ShadowDepth="4" Color="DarkOliveGreen" Direction="0" Opacity="0.5"
+                                      BlurRadius="20" />
                 </Border.Effect>
-                <Grid >
-                    <ItemsControl ItemsSource="{Binding Path=MatchingList}" ItemTemplate="{DynamicResource DataTemplate_Level1}" Background="{StaticResource HealthCareWhiteBrush}" Name="MatchingItemsControl" SizeChanged="MatchingItemsControl_OnSizeChanged"/>
-                    <Rectangle Width="4" Fill="#FF08D94B" Height="Auto" Name="Rectangle"/>
-                </Grid>
+                <ItemsControl ItemsSource="{Binding Path=MatchingList}"
+                              ItemTemplate="{DynamicResource DataTemplate_Level1}"
+                              Padding="10" x:Name="PrintGrid" />
             </Border>
         </StackPanel>
         <Grid Grid.Row="1" Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="400" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <telerik:RadButton Command="{Binding ExportCommand}" Grid.Column="0" Height="40"
-                               Content="Exportieren" />
-            <telerik:RadButton Command="{Binding PrintCommand}" CommandParameter="{Binding ElementName=PrintGrid}"
-                               Height="40"
-                               Grid.Column="1" Content="Drucken" />
-            <telerik:RadButton Grid.Column="2" Content="Speichern"
-                               IsEnabled="False" Height="40" />
-            <telerik:RadToggleButton Grid.Column="3" Name="CheckBoxReadOnly"
-                                     CornerRadius="5" Width="40" Height="40" IsChecked="True"
-                                     ToolTip="Anklicken zum Bearbeiten der Tabelle.">
-                <telerik:RadToggleButton.Style>
-                    <Style TargetType="{x:Type ToggleButton}">
-                        <Style.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <telerik:RadGlyph Glyph="&#xe113;" FontSize="25" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="False">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <telerik:RadGlyph Glyph="&#xe114;" FontSize="25" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </telerik:RadToggleButton.Style>
-            </telerik:RadToggleButton>
+            <Button Command="{Binding ExportCommand}" Grid.Column="0" Height="40" Width="300" BorderBrush="#9AEDAB"
+                    Content="Exportieren" Template="{DynamicResource ButtonTemplate}" />
+            <Button Command="{Binding PrintCommand}" CommandParameter="{Binding ElementName=PrintGrid}"
+                    Height="40" Width="300" BorderBrush="#9AEDAB"
+                    Grid.Column="1" Content="Drucken" Template="{DynamicResource ButtonTemplate}" />
+            <ToggleButton Grid.Column="2" Name="CheckBoxReadOnly" IsChecked="True" Width="40" Height="40"
+                          ToolTip="Anklicken zum Bearbeiten der Tabelle."
+                          Template="{DynamicResource MatchingEditLockToggleButtonTemplate}" />
         </Grid>
     </Grid>
 </Window>

@@ -1,46 +1,28 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using GalaSoft.MvvmLight.Ioc;
+using MentorSpeedDatingApp.Models;
+using MentorSpeedDatingApp.ViewModel;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using GalaSoft.MvvmLight.Ioc;
-using MentorSpeedDatingApp.ViewModel;
-using Telerik.Windows.Controls;
-// ReSharper disable PossibleNullReferenceException
 
 namespace MentorSpeedDatingApp.Views
 {
     public partial class MainWindow : Window
     {
+        private Control control;
+
+        private TabKeyActionControl tabKeyActionControl = TabKeyActionControl.BeginEditOnSelectedCell;
+
         public MainWindow()
         {
-            FluentPalette.Palette.AccentColor = (Color)ColorConverter.ConvertFromString("#FF20B613");
-            FluentPalette.Palette.AccentFocusedColor = (Color)ColorConverter.ConvertFromString("#FF08D94B");
-            FluentPalette.Palette.AccentMouseOverColor = (Color)ColorConverter.ConvertFromString("#FF11E800");
-            FluentPalette.Palette.AccentPressedColor = (Color)ColorConverter.ConvertFromString("#FF00A40F");
-            FluentPalette.Palette.AlternativeColor = (Color)ColorConverter.ConvertFromString("#FFF2F2F2");
-            FluentPalette.Palette.BasicColor = (Color)ColorConverter.ConvertFromString("#33000000");
-            FluentPalette.Palette.BasicSolidColor = (Color)ColorConverter.ConvertFromString("#FFCDCDCD");
-            FluentPalette.Palette.ComplementaryColor = (Color)ColorConverter.ConvertFromString("#FFCCCCCC");
-            FluentPalette.Palette.IconColor = (Color)ColorConverter.ConvertFromString("#CC000000");
-            FluentPalette.Palette.MainColor = (Color)ColorConverter.ConvertFromString("#1A000000");
-            FluentPalette.Palette.MarkerColor = (Color)ColorConverter.ConvertFromString("#FF000000");
-            FluentPalette.Palette.MarkerInvertedColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
-            FluentPalette.Palette.MarkerMouseOverColor = (Color)ColorConverter.ConvertFromString("#FF000000");
-            FluentPalette.Palette.MouseOverColor = (Color)ColorConverter.ConvertFromString("#9AEDAB");
-            FluentPalette.Palette.PressedColor = (Color)ColorConverter.ConvertFromString("#afccab");
-            FluentPalette.Palette.PrimaryBackgroundColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
-            FluentPalette.Palette.PrimaryColor = (Color)ColorConverter.ConvertFromString("#66FFFFFF");
-            FluentPalette.Palette.PrimaryMouseOverColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
-            FluentPalette.Palette.ReadOnlyBackgroundColor = (Color)ColorConverter.ConvertFromString("#00FFFFFF");
-            FluentPalette.Palette.ReadOnlyBorderColor = (Color)ColorConverter.ConvertFromString("#FFCDCDCD");
-            FluentPalette.Palette.ValidationColor = (Color)ColorConverter.ConvertFromString("#FFE81123");
-            FluentPalette.Palette.DisabledOpacity = 0.3;
-            FluentPalette.Palette.InputOpacity = 0.6;
-            FluentPalette.Palette.ReadOnlyOpacity = 0.5;
-            StyleManager.ApplicationTheme = new FluentTheme();
-
             InitializeComponent();
         }
 
@@ -55,6 +37,147 @@ namespace MentorSpeedDatingApp.Views
             }
 
             ViewModelLocator.Cleanup();
+        }
+
+        private void PreviewKeyDown_EventHandler(object sender, KeyEventArgs e)
+        {
+            if (!(sender is DataGridRow selectedRow))
+                return;
+
+            switch (e.Key)
+            {
+                case Key.Tab:
+                    switch (this.MentorsGridView.CurrentCell.Column.DisplayIndex)
+                    {
+                        case 0:
+                            if (this.tabKeyActionControl == TabKeyActionControl.BeginEditOnSelectedCell)
+                            {
+                                this.control.Focus();
+                                this.tabKeyActionControl = TabKeyActionControl.SwitchSelectedCell;
+                            }
+                            else
+                            {
+                                this.MentorsGridView.CurrentCell = new DataGridCellInfo(
+                                    this.MentorsGridView.Items[this.MentorsGridView.Items.IndexOf(selectedRow.Item)],
+                                    this.MentorsGridView.Columns[1]);
+                                this.tabKeyActionControl = TabKeyActionControl.BeginEditOnSelectedCell;
+                            }
+                            break;
+                        case 1:
+                            if (this.tabKeyActionControl == TabKeyActionControl.BeginEditOnSelectedCell)
+                            {
+                                this.control.Focus();
+                                this.tabKeyActionControl = TabKeyActionControl.SwitchSelectedCell;
+                            }
+                            else
+                            {
+                                this.MentorsGridView.CurrentCell = new DataGridCellInfo(
+                                this.MentorsGridView.Items[this.MentorsGridView.Items.IndexOf(selectedRow.Item)],
+                                this.MentorsGridView.Columns[2]);
+                                this.tabKeyActionControl = TabKeyActionControl.BeginEditOnSelectedCell;
+                            }
+                            break;
+                        case 2:
+                            this.control.Focus();
+                            break;
+                    }
+
+                    
+                    e.Handled = true;
+                    break;
+
+                case Key.Enter:
+                    if (selectedRow.Item is Mentor mentor && !String.IsNullOrEmpty(mentor.Name) &&
+                        !String.IsNullOrEmpty(mentor.Vorname))
+                    {
+                        var idx = this.MentorsGridView.Items.IndexOf(this.MentorsGridView.SelectedItem) + 1;
+                        this.MentorsGridView.SelectedItem =
+                            this.MentorsGridView.Items[idx];
+                        this.MentorsGridView.CurrentCell = new DataGridCellInfo(
+                            this.MentorsGridView.Items[idx], this.MentorsGridView.Columns[1]);
+                    }
+
+                    e.Handled = true;
+                    break;
+
+                case Key.Down:
+                    if (this.MentorsGridView.SelectedItem.Equals(this.MentorsGridView.Items[^2]) 
+                    && !String.IsNullOrEmpty((this.MentorsGridView.SelectedItem as Mentor).Name)
+                    && !String.IsNullOrEmpty((this.MentorsGridView.SelectedItem as Mentor).Vorname))
+                    {
+                        var idx = this.MentorsGridView.Items.IndexOf(this.MentorsGridView.SelectedItem) + 1;
+                        this.MentorsGridView.SelectedItem =
+                            this.MentorsGridView.Items[idx];
+                        this.MentorsGridView.CurrentCell = new DataGridCellInfo(
+                            this.MentorsGridView.Items[idx], this.MentorsGridView.Columns[1]);
+                    }
+                    break;
+            }
+        }
+
+        private void MentorsGridView_OnFocused(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource.GetType() == typeof(DataGridCell))
+            {
+                // Starts the Edit on the row;
+                DataGrid grd = (DataGrid) sender;
+                grd.BeginEdit(e);
+                    
+                this.control = this.GetFirstChildByType<Control>(e.OriginalSource as DataGridCell);
+            }
+        }
+
+        private T GetFirstChildByType<T>(DependencyObject prop) where T : DependencyObject
+        {
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(prop); i++)
+            {
+                var child = VisualTreeHelper.GetChild((prop), i);
+                if (child is T castedProp)
+                    return castedProp;
+
+                castedProp = this.GetFirstChildByType<T>(child);
+
+                if (castedProp != null)
+                    return castedProp;
+            }
+
+            return null;
+        }
+
+        private enum TabKeyActionControl
+        {
+            SwitchSelectedCell,
+            BeginEditOnSelectedCell
+        }
+
+        private void MentorsGridView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //if (this.MentorsGridView.SelectedCells.Count > 3)
+            //{
+            //    for (int i = this.MentorsGridView.SelectedCells.Count - 1; i >= 3; i--)
+            //    {
+            //        this.MentorsGridView.SelectedCells.RemoveAt(i);
+            //    }
+            //}
+            
+
+            if (this.MentorsGridView.SelectedItem == null || this.MentorsGridView.SelectedItem.Equals(CollectionView.NewItemPlaceholder))
+                return;
+
+            if (this.MentorsGridView.CurrentItem is Mentor m)
+                if (String.IsNullOrEmpty(m.Name) || String.IsNullOrEmpty(m.Vorname))
+                    return;
+
+            foreach (var mentor in new List<Mentor>(SimpleIoc.Default.GetInstance<MainViewModel>().Mentors))
+            {
+                if (this.MentorsGridView.SelectedItem.Equals(mentor))
+                    continue;
+
+                if (String.IsNullOrEmpty(mentor.Name) || String.IsNullOrEmpty(mentor.Vorname))
+                {
+                    SimpleIoc.Default.GetInstance<MainViewModel>().Mentors.Remove(mentor);
+                }
+            }
         }
     }
 }
