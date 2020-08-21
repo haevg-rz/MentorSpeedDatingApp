@@ -198,6 +198,7 @@
                     <DataGrid.RowStyle>
                         <Style BasedOn="{StaticResource DataGridRowStyle}" TargetType="DataGridRow">
                             <EventSetter Event="PreviewKeyDown" Handler="PreviewKeyDown_EventHandler"></EventSetter>
+                            <EventSetter Event="PreviewMouseDown" Handler="EventSetter_OnHandler"></EventSetter>
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
