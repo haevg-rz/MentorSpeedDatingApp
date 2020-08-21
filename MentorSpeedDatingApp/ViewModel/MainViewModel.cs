@@ -493,8 +493,11 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentors = new List<Mentor>()
             };
 
-            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
-                this.AppSaveConfig.AppSaveFileName));
+            if (!File.Exists(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)))
+            {
+                    File.Create(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)).Close();
+            }
+            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
             if (deserializedJson == null && jsonData == "")
                 return false;
