@@ -1,12 +1,10 @@
 ﻿<Window x:Class="MentorSpeedDatingApp.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
-        xmlns:validators="clr-namespace:MentorSpeedDatingApp.Validators"
-        xmlns:converters="clr-namespace:MentorSpeedDatingApp.Converter"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:converter="clr-namespace:MentorSpeedDatingApp.Converter"
         mc:Ignorable="d"
         Title="Mentor Speed Dating Matching"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
@@ -17,6 +15,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/Styles.xaml" />
+                <ResourceDictionary>
+                    <converter:NavigationMenuVisibilityConverter x:Key="NavigationMenuVisibilityConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -27,243 +28,333 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
+
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="34" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-            <!-- Begin Menu Region -->
-            <Canvas Grid.Column="1" VerticalAlignment="Top" ZIndex="1" x:Name="ExpanderCanvasNavMenu"
-                    Background="Transparent" Width="40" Height="{Binding ElementName=ExpanderCanvasNavMenu, Path=ActualHeight}" HorizontalAlignment="Left">
-                <telerik:RadNavigationView x:Name="ExpandNavMenu" PaneBackground="Transparent" Background="Transparent"
-                                           AutoChangeDisplayMode="False" DisplayMode="Compact"
-                                           Height="Auto"
-                                           VerticalAlignment="Top"
-                                           HorizontalAlignment="Left"
-                                           ExpandedPaneWidth="300"
-                                           BorderBrush="Transparent">
-                    <telerik:RadNavigationView.PaneHeader>
-                        <TextBlock Text="Menü" Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}"
-                                   FontWeight="Bold" />
-                    </telerik:RadNavigationView.PaneHeader>
-                    <telerik:RadNavigationView.Items>
-                        <telerik:RadNavigationViewItem Content="Alles löschen!"
-                                                       Command="{Binding DeleteAllDataCommand}" Background="White">
-                            <telerik:RadNavigationViewItem.Icon>
-                                <telerik:RadGlyph Glyph="&#xe10c;" FontSize="20" />
-                            </telerik:RadNavigationViewItem.Icon>
-                        </telerik:RadNavigationViewItem>
-                        <telerik:RadNavigationViewItem Content="Speichern Unter" Command="{Binding SaveCommand}"
-                                                       Background="White">
-                            <telerik:RadNavigationViewItem.Icon>
-                                <telerik:RadGlyph Glyph="&#xe109;" FontSize="20" />
-                            </telerik:RadNavigationViewItem.Icon>
-                        </telerik:RadNavigationViewItem>
-                        <telerik:RadNavigationViewItem Content="Infos" Command="{Binding ShowInfoCommand}"
-                                                       Background="White">
-                            <telerik:RadNavigationViewItem.Icon>
-                                <telerik:RadGlyph Glyph="&#xe401;" FontSize="20" />
-                            </telerik:RadNavigationViewItem.Icon>
-                        </telerik:RadNavigationViewItem>
-                    </telerik:RadNavigationView.Items>
-                </telerik:RadNavigationView>
-            </Canvas>
-            <!-- End Menu Region  -->
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Height="136" VerticalAlignment="Top" ZIndex="1"
+                    HorizontalAlignment="Left" Background="White"
+                    Width="{Binding ElementName=MenuVisibilityControlButon, Path=IsChecked, Converter={StaticResource NavigationMenuVisibilityConverter}}">
+            <ToggleButton Height="34" VerticalAlignment="Top" Background="White" Name="MenuVisibilityControlButon"
+                          IsChecked="False" BorderBrush="Transparent"
+                          Template="{DynamicResource NavigationMenuToggleButtonTemplate}" />
+            <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
+                    Command="{Binding Path=DeleteAllDataCommand}"
+                    Template="{DynamicResource NavigationMenuDeleteAllButtonTemplate}" />
+            <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
+                    Command="{Binding Path=SaveCommand}"
+                    Template="{DynamicResource NavigationMenuSaveAsButtonTemplate}" />
+            <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
+                    Command="{Binding ShowInfoCommand}"
+                    Template="{DynamicResource NavigationMenuShowInfoButtonTemplate}" />
+        </StackPanel>
 
-            <!-- CONTENT -->
-            <Grid Grid.Column="1" Margin="60,0,10,10">
+        <!-- CONTENT -->
+        <Grid Grid.Column="1" Margin="30,0,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <!-- Begin Control Region upper -->
+            <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <!-- Begin Control Region upper -->
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Überschrift: " HorizontalAlignment="Left" />
-                    <telerik:RadWatermarkTextBox WatermarkContent="Mentor Speed-Dating" MinWidth="200"
-                                                 HorizontalContentAlignment="Center" HorizontalAlignment="Left"
-                                                 Grid.Row="1"
-                                                 Grid.Column="0" Text="{Binding Headline}"
-                                                 ToolTip="Bitte die Überschrift eingeben." Margin="0,0,0,5" />
-                    <telerik:RadDatePicker SelectedDate="{Binding Date}" MinWidth="200"
-                                           HorizontalContentAlignment="Center" HorizontalAlignment="Left" Grid.Row="2"
-                                           Grid.Column="0" ToolTip="Bitte das Datum auswählen"
-                                           BorderBrush="Transparent" Margin="0,5,0,5" />
-                    <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" Margin="0,5,0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" MinWidth="50" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" MinWidth="50" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Start-Uhrzeit" HorizontalAlignment="Right"
-                                   Margin="0,5,5,0" />
-                        <telerik:RadWatermarkTextBox
-                            validators:ValidationBehavior.HasError="{Binding StartTimeHoursHasErrors}" Grid.Column="1"
-                            Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="40"
-                            Height="30">
-                            <TextBox.Text>
-                                <Binding Path="StartTimeHours" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                                    <Binding.ValidationRules>
-                                        <validators:HourValidationRule />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </telerik:RadWatermarkTextBox>
-                        <TextBlock Grid.Column="2" Grid.Row="0" Margin="5,5,5,0" Text=":" />
-                        <telerik:RadWatermarkTextBox
-                            validators:ValidationBehavior.HasError="{Binding StartTimeMinutessHasErrors}"
-                            Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Left"
-                            Width="40" Height="30">
-                            <TextBox.Text>
-                                <Binding Path="StartTimeMinutes" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <validators:MinuteValidationRule />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </telerik:RadWatermarkTextBox>
-                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Ende-Uhrzeit" HorizontalAlignment="Right"
-                                   Margin="0,5,5,0" />
-                        <telerik:RadWatermarkTextBox
-                            validators:ValidationBehavior.HasError="{Binding EndTimeHoursHasErrors}" Grid.Column="1"
-                            Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="40"
-                            Height="30">
-                            <TextBox.Text>
-                                <Binding Path="EndTimeHours" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <validators:HourValidationRule />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </telerik:RadWatermarkTextBox>
-                        <TextBlock Grid.Column="2" Grid.Row="1" Margin="5,5,5,0">:</TextBlock>
-                        <telerik:RadWatermarkTextBox
-                            validators:ValidationBehavior.HasError="{Binding EndTimeMinutesHasErrors}" Grid.Column="3"
-                            Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="40"
-                            Height="30">
-                            <TextBox.Text>
-                                <Binding Path="EndTimeMinutes" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <validators:MinuteValidationRule />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </telerik:RadWatermarkTextBox>
-                    </Grid>
-                    <Grid Grid.Row="0" RowSpan="4" Column="1">
-                        <telerik:RadButton Command="{Binding GenerateMatchingCommand}" HorizontalAlignment="Center" FontWeight="Bold"
-                                           VerticalAlignment="Center" MinWidth="160" MinHeight="100" Content="Matchen!" />
-                    </Grid>
-                </Grid>
-                <!-- End Control Region upper -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-                <!-- Begin Tabellen Region  -->
-                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <TextBlock Text="Überschrift: " HorizontalAlignment="Left" />
+                <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=Headline}"
+                         ToolTip="Bitte die Überschrift eingeben." Width="300"
+                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                         HorizontalAlignment="Left" Margin="0,0,0,5"
+                         Name="HeadlineTextBox" Height="30" SelectionBrush="#FF08D94B"
+                         Style="{StaticResource WaterMarkTextBoxStyle}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" IsHitTestVisible="False" Text="Mentor Speed-Dating"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" Margin="0,0,0,5" Foreground="DarkGray" FontStyle="Italic"
+                           Style="{StaticResource WaterMarkTextBlockStyle}" />
+
+                <DatePicker Template="{DynamicResource DatePickerTemplate1}" Grid.Row="2" Grid.Column="0"
+                            Height="30" VerticalContentAlignment="Center"
+                            BorderBrush="Transparent"
+                            ToolTip="Bitte das Datum auswählen" Margin="0,5,0,5" SelectedDate="{Binding Path=Date}"
+                            HorizontalAlignment="Left" SelectedDateFormat="Short" Language="de"
+                            Style="{StaticResource DatePickerStyle}"
+                            Resources="{StaticResource DatePickerTextBoxStyle}" />
+
+                <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" Margin="0,5,0,5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="300" />
-                        <ColumnDefinition MinWidth="300" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" MinWidth="50" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" MinWidth="50" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition MinHeight="360" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
-                               Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}" FontWeight="Bold"
-                               FontSize="18" Text="Mentorinnen"/>
-                    <!-- Mentoren Tabelle -->
-                    <telerik:RadGridView x:Name="MentorsGridView"
-                                         Grid.Row="1" Grid.Column="0"
-                                         CanUserInsertRows="True"
-                                         GroupRenderMode="Flat"
-                                         NewRowPosition="Bottom"
-                                         ItemsSource="{Binding Mentors}"
-                                         HorizontalContentAlignment="Center"
-                                         AutoGenerateColumns="False"
-                                         CanUserReorderColumns="False"
-                                         CanUserResizeColumns="True"
-                                         ShowGroupPanel="False"
-                                         Foreground="Black"
-                                         AlternationCount="2"
-                                         Margin="0,0,5,0">
-                        <telerik:RadGridView.Columns>
-                            <telerik:GridViewDataColumn Header="Titel"
-                                                        DataMemberBinding="{Binding Titel}"
-                                                        SortMemberPath="Titel" 
-                                                        IsReadOnly="False"
-                                                        MinWidth="50" />
-                            <telerik:GridViewDataColumn Header="Vorname"
-                                                        SortMemberPath="Vorname"
-                                                        DataMemberBinding="{Binding Vorname}"
-                                                        IsReadOnly="False"
-                                                        MinWidth="100" />
-                            <telerik:GridViewDataColumn Header="Name"
-                                                        SortMemberPath="Name"
-                                                        DataMemberBinding="{Binding Name}"
-                                                        IsReadOnly="False"
-                                                        MinWidth="100" />
-                        </telerik:RadGridView.Columns>
-                    </telerik:RadGridView>
-                    <Button Grid.Row="2" Grid.Column="0" Margin="0,0,5,0" Command="{Binding DeleteMentorsCommand}"
-                            Style="{StaticResource BottomMenuButtonStyle}" Content="Mentorinnen löschen"/>
-                        <!-- Mentee Tabelle -->
-                    <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"
-                               Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}" FontWeight="Bold"
-                               FontSize="18">
-                        Mentees
-                    </TextBlock>
-                    <telerik:RadGridView Grid.Row="1" Grid.Column="1"
-                                         CanUserInsertRows="True"
-                                         NewRowPosition="Bottom"
-                                         GroupRenderMode="Flat"
-                                         ItemsSource="{Binding Mentees}"
-                                         AutoGenerateColumns="False"
-                                         CanUserReorderColumns="False"
-                                         CanUserResizeColumns="True"
-                                         ShowGroupPanel="False"
-                                         ShowToolTipOnTrimmedText="True"
-                                         AlternationCount="2"
-                                         Margin="5,0,0,0">
-                        <telerik:RadGridView.Columns>
-                            <telerik:GridViewDataColumn Header="Titel"
-                                                        SortMemberPath="Titel"
-                                                        DataMemberBinding="{Binding Titel}"
-                                                        IsReadOnly="False"
-                                                        MinWidth="50" />
-                            <telerik:GridViewDataColumn Header="Vorname"
-                                                        SortMemberPath="Name"
-                                                        DataMemberBinding="{Binding Vorname}"
-                                                        IsReadOnly="False"
-                                                        MinWidth="100" />
-                            <telerik:GridViewDataColumn Header="Name"
-                                                        SortMemberPath="Name"
-                                                        DataMemberBinding="{Binding Name}"
-                                                        IsReadOnly="False"
-                                                        MinWidth="100" />
-                        </telerik:RadGridView.Columns>
-                    </telerik:RadGridView>
-                    <Button Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Command="{Binding DeleteMenteesCommand}"
-                            Style="{StaticResource BottomMenuButtonStyle}" Content="Mentees löschen" />
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Start-Uhrzeit" HorizontalAlignment="Right"
+                               Margin="0,5,5,0" />
+
+                    <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="1" Grid.Row="0" Width="45"
+                              Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              HorizontalAlignment="Right"
+                              BorderBrush="LightGray" BorderThickness="1"
+                              SelectedItem="{Binding Path=StartTimeHours}"
+                              ItemContainerStyle="{StaticResource ComboBoxItem}"
+                              ItemsSource="{Binding AllowedHourValues}" />
+
+                    <TextBlock Grid.Column="2" Grid.Row="0" Margin="5,5,5,0" Text=":" />
+
+                    <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="3" Grid.Row="0" Width="45"
+                              Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              HorizontalAlignment="Left"
+                              BorderBrush="LightGray" BorderThickness="1"
+                              SelectedItem="{Binding Path=StartTimeMinutes}"
+                              ItemContainerStyle="{StaticResource ComboBoxItem}"
+                              ItemsSource="{Binding AllowedMinuteValues}" />
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Ende-Uhrzeit" HorizontalAlignment="Right"
+                               Margin="0,5,5,0" />
+
+                    <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="1" Grid.Row="1" Width="45"
+                              Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              HorizontalAlignment="Right"
+                              BorderBrush="LightGray" BorderThickness="1"
+                              SelectedItem="{Binding Path=EndTimeHours}"
+                              ItemContainerStyle="{StaticResource ComboBoxItem}"
+                              ItemsSource="{Binding AllowedHourValues}" />
+
+                    <TextBlock Grid.Column="2" Grid.Row="1" Margin="5,5,5,0">:</TextBlock>
+
+                    <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="3" Grid.Row="1" Width="45"
+                              Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              HorizontalAlignment="Left"
+                              BorderBrush="LightGray" BorderThickness="1"
+                              SelectedItem="{Binding Path=EndTimeMinutes}"
+                              ItemContainerStyle="{StaticResource ComboBoxItem}"
+                              ItemsSource="{Binding AllowedMinuteValues}" />
+
                 </Grid>
-                <!-- Tabelle Region Ende -->
+                <Grid Grid.Row="0" RowSpan="4" Column="1">
+                    <Button Command="{Binding GenerateMatchingCommand}" HorizontalAlignment="Center"
+                            FontWeight="Bold" Background="#e5e5e5" BorderBrush="#e5e5e5"
+                            VerticalAlignment="Center" MinWidth="160" MinHeight="100" Content="Matchen!"
+                            Template="{DynamicResource ButtonTemplate}" />
+                </Grid>
             </Grid>
+            <!-- End Control Region upper -->
+
+            <!-- Begin Tabellen Region  -->
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="300" />
+                    <ColumnDefinition MinWidth="300" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition MinHeight="360" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
+                           Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}" FontWeight="Bold"
+                           FontSize="18" Text="Mentorinnen" />
+                <!-- Mentoren Tabelle -->
+                <DataGrid x:Name="MentorsGridView"
+                          Grid.Row="1" Grid.Column="0"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="True"
+                          ItemsSource="{Binding Path=Mentors}"
+                          HorizontalContentAlignment="Center"
+                          AutoGenerateColumns="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
+                          Foreground="Black"
+                          AlternationCount="2"
+                          Margin="0,0,5,0"
+                          HorizontalGridLinesBrush="DarkGray"
+                          VerticalGridLinesBrush="Transparent"
+                          BorderBrush="DarkGray"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          CellStyle="{StaticResource DataGridCellStyle}"
+                          ColumnHeaderStyle="{StaticResource DatagridColumnHeaderStyle}"
+                          RowHeaderStyle="{StaticResource DataGridRowHeaderStyle}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu StaysOpen="False">
+                            <MenuItem Header="Neuen Mentor hinzufügen" Command="{Binding AddNewMentorCommand}"
+                                      Template="{DynamicResource MenuItemControlTemplate}" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRowStyle}">
+                            <EventSetter Event="PreviewKeyDown" Handler="MentorsGriView_KeyDownEventHandler" />
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Titel">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Titel}"
+                                             IsHitTestVisible="False"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="50" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="50"
+                                             Text="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Vorname">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Vorname}"
+                                             IsHitTestVisible="False"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100"
+                                             Text="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Name">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Name}"
+                                             IsHitTestVisible="False"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100"
+                                             Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button Grid.Row="2" Grid.Column="0" Margin="0,0,5,0" Command="{Binding DeleteMentorsCommand}"
+                        Style="{StaticResource BottomMenuButtonStyle}" Content="Mentorinnen löschen" />
+                <!-- Mentee Tabelle -->
+                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"
+                           Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}" FontWeight="Bold"
+                           FontSize="18" Text="Mentees" />
+
+                <DataGrid x:Name="MenteesGridView"
+                          Grid.Row="1" Grid.Column="1"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="True"
+                          ItemsSource="{Binding Path=Mentees}"
+                          HorizontalContentAlignment="Center"
+                          AutoGenerateColumns="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
+                          Foreground="Black"
+                          AlternationCount="2"
+                          Margin="5,0,0,0"
+                          HorizontalGridLinesBrush="DarkGray"
+                          VerticalGridLinesBrush="Transparent"
+                          BorderBrush="DarkGray"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          CellStyle="{StaticResource DataGridCellStyle}"
+                          ColumnHeaderStyle="{StaticResource DatagridColumnHeaderStyle}"
+                          RowHeaderStyle="{StaticResource DataGridRowHeaderStyle}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu StaysOpen="False">
+                            <MenuItem Header="Neuen Mentee hinzufügen" Command="{Binding AddNewMenteeCommand}"
+                                      Template="{DynamicResource MenuItemControlTemplate}" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRowStyle}">
+                            <EventSetter Event="PreviewKeyDown" Handler="MenteesGriView_KeyDownEventHandler" />
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Titel">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Titel}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="50"
+                                             IsHitTestVisible="False" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="50" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Vorname">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Vorname}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100"
+                                             IsHitTestVisible="False" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Name">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Name}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100"
+                                             IsHitTestVisible="False" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Command="{Binding DeleteMenteesCommand}"
+                        Style="{StaticResource BottomMenuButtonStyle}" Content="Mentees löschen" />
+            </Grid>
+            <!-- Tabelle Region Ende -->
         </Grid>
     </Grid>
+
 </Window>

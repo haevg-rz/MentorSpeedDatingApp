@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.WindowManagement;
@@ -13,8 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using Formatting = Newtonsoft.Json.Formatting;
 
@@ -130,6 +127,18 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.timeSlots, value);
         }
 
+
+        public List<string> AllowedHourValues { get; set; } = new List<string>
+        {
+            "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17",
+            "18", "19", "20", "21", "22", "23"
+        };
+
+        public List<string> AllowedMinuteValues { get; set; } = new List<string>
+        {
+            "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"
+        };
+
         #endregion
 
         public bool ValidationRulesHasError => this.startTimeHoursHasErrors || this.startTimeMinutesHasErrors ||
@@ -156,6 +165,9 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public RelayCommand OnLoadedCommand { get; set; }
 
+        public RelayCommand AddNewMentorCommand { get; set; }
+        public RelayCommand AddNewMenteeCommand { get; set; }
+
         #endregion
 
         #endregion
@@ -176,6 +188,9 @@ namespace MentorSpeedDatingApp.ViewModel
             this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
 
             this.OnLoadedCommand = new RelayCommand(this.OnLoadedCommandHandling);
+
+            this.AddNewMentorCommand = new RelayCommand(this.AddNewMentorCommandHandling);
+            this.AddNewMenteeCommand = new RelayCommand(this.AddNewMenteeCommandHandling);
 
             if (base.IsInDesignMode || this.IsInDesignMode)
             {
@@ -202,6 +217,16 @@ namespace MentorSpeedDatingApp.ViewModel
                     new Mentor {Vorname = "Emma", Name = "Watson", Titel = "Prof."}
                 };
             }
+        }
+
+        private void AddNewMenteeCommandHandling()
+        {
+            this.Mentees.Add(new Mentee());
+        }
+
+        private void AddNewMentorCommandHandling()
+        {
+            this.Mentors.Add(new Mentor());
         }
 
         #region CommandHandlings
@@ -254,7 +279,28 @@ namespace MentorSpeedDatingApp.ViewModel
                     Convert.ToInt32(this.EndTimeMinutes), 00);
             }
 
+            this.ValidateMentorAndMenteeLists();
+
             WindowManager.ShowMatchingWindow(this);
+        }
+
+        internal void ValidateMentorAndMenteeLists()
+        {
+            for (var i = this.Mentees.Count - 1; i >= 0; i--)
+            {
+                if (String.IsNullOrEmpty(this.Mentees[i].Name) || String.IsNullOrEmpty(this.Mentees[i].Vorname))
+                {
+                    this.Mentees.RemoveAt(i);
+                }
+            }
+
+            for (var i = this.Mentors.Count - 1; i >= 0; i--)
+            {
+                if (String.IsNullOrEmpty(this.Mentors[i].Name) || String.IsNullOrEmpty(this.Mentors[i].Vorname))
+                {
+                    this.Mentors.RemoveAt(i);
+                }
+            }
         }
 
         private bool CanExecuteGenerateMatchingCommandHandling()
@@ -280,7 +326,8 @@ namespace MentorSpeedDatingApp.ViewModel
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
             this.AppSaveConfig.AppSaveFileName = sfd.FileName;
             this.AppSaveConfig.AppSaveFileFolder = Path.GetDirectoryName(sfd.FileName);
-            File.WriteAllText( Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName), jsonData);
+            File.WriteAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName),
+                jsonData);
         }
 
         private void OnLoadedCommandHandling()
@@ -296,7 +343,7 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 File.Create(this.AppSaveConfig.AppConfigPath).Close();
                 var defaultConfig = new
-                    { Folder = this.AppSaveConfig.AppDefaultFolder, FileName = this.AppSaveConfig.AppDefaultFileName};
+                    {Folder = this.AppSaveConfig.AppDefaultFolder, FileName = this.AppSaveConfig.AppDefaultFileName};
                 var jsonConfig = JsonConvert.SerializeObject(defaultConfig, Formatting.Indented);
                 File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
             }
@@ -305,21 +352,21 @@ namespace MentorSpeedDatingApp.ViewModel
             if (String.IsNullOrEmpty(fileContent))
             {
                 var defaultConfig = new
-                    { Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName };
+                    {Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName};
                 var jsonConfig = JsonConvert.SerializeObject(defaultConfig, Formatting.Indented);
                 File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
             }
-            
+
             #endregion
 
             #region Config laden
 
-            var configDefinition= new {Folder = "", FileName = ""};
+            var configDefinition = new {Folder = "", FileName = ""};
 
             var savedConfig = File.ReadAllText(this.AppSaveConfig.AppConfigPath);
             var savedConfigDeserialzed = JsonConvert.DeserializeAnonymousType(savedConfig, configDefinition);
 
-            if (savedConfigDeserialzed==null)
+            if (savedConfigDeserialzed == null)
                 return;
             this.AppSaveConfig.AppSaveFileFolder = savedConfigDeserialzed.Folder;
             this.AppSaveConfig.AppSaveFileName = savedConfigDeserialzed.FileName;
@@ -346,7 +393,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
             if (!File.Exists(this.AppSaveConfig.CombineAppPaths()))
                 return;
-            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
+            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
+                this.AppSaveConfig.AppSaveFileName));
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, saveDataDefinition);
 
             if (deserializedJson == null)
@@ -399,7 +447,7 @@ namespace MentorSpeedDatingApp.ViewModel
             #region Config überschreiben
 
             var newConfig = new
-                { Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName };
+                {Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName};
             var jsonConfig = JsonConvert.SerializeObject(newConfig, Formatting.Indented);
             File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
 
@@ -427,6 +475,7 @@ namespace MentorSpeedDatingApp.ViewModel
                     File.Create(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)).Close();
             }
             var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
+            
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
             if (deserializedJson == null && jsonData == "")
                 return false;

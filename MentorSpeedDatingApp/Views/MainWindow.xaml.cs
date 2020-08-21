@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Media;
-using GalaSoft.MvvmLight.Ioc;
+﻿using GalaSoft.MvvmLight.Ioc;
+using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.ViewModel;
-using Telerik.Windows.Controls;
-// ReSharper disable PossibleNullReferenceException
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MentorSpeedDatingApp.Views
 {
@@ -13,32 +14,6 @@ namespace MentorSpeedDatingApp.Views
     {
         public MainWindow()
         {
-            FluentPalette.Palette.AccentColor = (Color)ColorConverter.ConvertFromString("#FF20B613");
-            FluentPalette.Palette.AccentFocusedColor = (Color)ColorConverter.ConvertFromString("#FF08D94B");
-            FluentPalette.Palette.AccentMouseOverColor = (Color)ColorConverter.ConvertFromString("#FF11E800");
-            FluentPalette.Palette.AccentPressedColor = (Color)ColorConverter.ConvertFromString("#FF00A40F");
-            FluentPalette.Palette.AlternativeColor = (Color)ColorConverter.ConvertFromString("#FFF2F2F2");
-            FluentPalette.Palette.BasicColor = (Color)ColorConverter.ConvertFromString("#33000000");
-            FluentPalette.Palette.BasicSolidColor = (Color)ColorConverter.ConvertFromString("#FFCDCDCD");
-            FluentPalette.Palette.ComplementaryColor = (Color)ColorConverter.ConvertFromString("#FFCCCCCC");
-            FluentPalette.Palette.IconColor = (Color)ColorConverter.ConvertFromString("#CC000000");
-            FluentPalette.Palette.MainColor = (Color)ColorConverter.ConvertFromString("#1A000000");
-            FluentPalette.Palette.MarkerColor = (Color)ColorConverter.ConvertFromString("#FF000000");
-            FluentPalette.Palette.MarkerInvertedColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
-            FluentPalette.Palette.MarkerMouseOverColor = (Color)ColorConverter.ConvertFromString("#FF000000");
-            FluentPalette.Palette.MouseOverColor = (Color)ColorConverter.ConvertFromString("#9AEDAB");
-            FluentPalette.Palette.PressedColor = (Color)ColorConverter.ConvertFromString("#afccab");
-            FluentPalette.Palette.PrimaryBackgroundColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
-            FluentPalette.Palette.PrimaryColor = (Color)ColorConverter.ConvertFromString("#66FFFFFF");
-            FluentPalette.Palette.PrimaryMouseOverColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
-            FluentPalette.Palette.ReadOnlyBackgroundColor = (Color)ColorConverter.ConvertFromString("#00FFFFFF");
-            FluentPalette.Palette.ReadOnlyBorderColor = (Color)ColorConverter.ConvertFromString("#FFCDCDCD");
-            FluentPalette.Palette.ValidationColor = (Color)ColorConverter.ConvertFromString("#FFE81123");
-            FluentPalette.Palette.DisabledOpacity = 0.3;
-            FluentPalette.Palette.InputOpacity = 0.6;
-            FluentPalette.Palette.ReadOnlyOpacity = 0.5;
-            StyleManager.ApplicationTheme = new FluentTheme();
-
             InitializeComponent();
         }
 
@@ -54,6 +29,41 @@ namespace MentorSpeedDatingApp.Views
 
             ViewModelLocator.Cleanup();
         }
-        
+
+        private void MentorsGriView_KeyDownEventHandler(object sender, KeyEventArgs e)
+        {
+            if (!(sender is DataGridRow selectedRow))
+                return;
+
+            if (!selectedRow.Item.Equals(this.MentorsGridView.Items[^1]))
+                return;
+
+            if (e.Key == Key.Enter || e.Key == Key.Tab)
+            {
+                var mentorsList = SimpleIoc.Default.GetInstance<MainViewModel>().Mentors;
+                if (!String.IsNullOrEmpty(mentorsList.Last().Name) && !String.IsNullOrEmpty(mentorsList.Last().Vorname))
+                {
+                    mentorsList.Add(new Mentor());
+                }
+            }
+        }
+
+        private void MenteesGriView_KeyDownEventHandler(object sender, KeyEventArgs e)
+        {
+            if (!(sender is DataGridRow selectedRow))
+                return;
+
+            if (!selectedRow.Item.Equals(this.MenteesGridView.Items[^1]))
+                return;
+
+            if (e.Key == Key.Enter || e.Key == Key.Tab)
+            {
+                var menteesList = SimpleIoc.Default.GetInstance<MainViewModel>().Mentees;
+                if (!String.IsNullOrEmpty(menteesList.Last().Name) && !String.IsNullOrEmpty(menteesList.Last().Vorname))
+                {
+                    menteesList.Add(new Mentee());
+                }
+            }
+        }
     }
 }

@@ -23,13 +23,13 @@ namespace MentorSpeedDatingApp.Converter
             {
                 name = values[0].ToString() + " " + values[1].ToString();
             }
-            return name;
 
+            return name;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            string[] splitValues = ((string)value).Split(' ');
+            string[] splitValues = ((string) value).Split(' ');
             return splitValues;
         }
     }
