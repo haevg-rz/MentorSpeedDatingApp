@@ -165,6 +165,9 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public RelayCommand OnLoadedCommand { get; set; }
 
+        public RelayCommand AddNewMentorCommand { get; set; }
+        public RelayCommand AddNewMenteeCommand { get; set; }
+
         #endregion
 
         #endregion
@@ -185,6 +188,9 @@ namespace MentorSpeedDatingApp.ViewModel
             this.ShowInfoCommand = new RelayCommand(this.ShowInfoCommandHandling);
 
             this.OnLoadedCommand = new RelayCommand(this.OnLoadedCommandHandling);
+
+            this.AddNewMentorCommand = new RelayCommand(this.AddNewMentorCommandHandling);
+            this.AddNewMenteeCommand = new RelayCommand(this.AddNewMenteeCommandHandling);
 
             if (base.IsInDesignMode || this.IsInDesignMode)
             {
@@ -211,6 +217,16 @@ namespace MentorSpeedDatingApp.ViewModel
                     new Mentor {Vorname = "Emma", Name = "Watson", Titel = "Prof."}
                 };
             }
+        }
+
+        private void AddNewMenteeCommandHandling()
+        {
+            this.Mentees.Add(new Mentee());
+        }
+
+        private void AddNewMentorCommandHandling()
+        {
+            this.Mentors.Add(new Mentor());
         }
 
         #region CommandHandlings

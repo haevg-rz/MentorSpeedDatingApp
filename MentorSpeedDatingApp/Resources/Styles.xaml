@@ -1004,7 +1004,8 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="Validation.HasError" Value="True">
-                <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"></Setter>
+                <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -2073,4 +2074,21 @@
         </ItemsControl>
     </DataTemplate>
     <!--MatchingTable_DataTemplate_Level1 Template (Row) End-->
+
+    <!--MenuItem ControlTemplate Start-->
+    <ControlTemplate x:Key="MenuItemControlTemplate" TargetType="MenuItem">
+        <Border>
+            <TextBlock Text="{TemplateBinding Header}" />
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#9AEDAB" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+    </ControlTemplate>
+    <!--MenuItem ControlTemplate End-->
 </ResourceDictionary>

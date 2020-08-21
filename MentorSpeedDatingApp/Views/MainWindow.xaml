@@ -1,12 +1,10 @@
 ﻿<Window x:Class="MentorSpeedDatingApp.Views.MainWindow"
-        x:Name="MainWindowName"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converter="clr-namespace:MentorSpeedDatingApp.Converter"
-        xmlns:validators="clr-namespace:MentorSpeedDatingApp.Validators"
         mc:Ignorable="d"
         Title="Mentor Speed Dating Matching"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
@@ -19,7 +17,6 @@
                 <ResourceDictionary Source="../Resources/Styles.xaml" />
                 <ResourceDictionary>
                     <converter:NavigationMenuVisibilityConverter x:Key="NavigationMenuVisibilityConverter" />
-                    <validators:UserInputValidationRule x:Key="InputValidationRule"></validators:UserInputValidationRule>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -174,7 +171,7 @@
                 <!-- Mentoren Tabelle -->
                 <DataGrid x:Name="MentorsGridView"
                           Grid.Row="1" Grid.Column="0"
-                          CanUserAddRows="True"
+                          CanUserAddRows="False"
                           CanUserDeleteRows="True"
                           ItemsSource="{Binding Path=Mentors}"
                           HorizontalContentAlignment="Center"
@@ -192,32 +189,33 @@
                           SelectionUnit="FullRow"
                           CellStyle="{StaticResource DataGridCellStyle}"
                           ColumnHeaderStyle="{StaticResource DatagridColumnHeaderStyle}"
-                          RowHeaderStyle="{StaticResource DataGridRowHeaderStyle}"
-                          GotFocus="MentorsGridView_OnFocused" 
-                          SelectionChanged="MentorsGridView_OnSelectionChanged">
+                          RowHeaderStyle="{StaticResource DataGridRowHeaderStyle}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu StaysOpen="False">
+                            <MenuItem Header="Neuen Mentor hinzufügen" Command="{Binding AddNewMentorCommand}"
+                                      Template="{DynamicResource MenuItemControlTemplate}" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                     <DataGrid.RowStyle>
-                        <Style BasedOn="{StaticResource DataGridRowStyle}" TargetType="DataGridRow">
-                            <EventSetter Event="PreviewKeyDown" Handler="PreviewKeyDown_EventHandler"></EventSetter>
-                            <EventSetter Event="PreviewMouseDown" Handler="EventSetter_OnHandler"></EventSetter>
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRowStyle}">
+                            <EventSetter Event="PreviewKeyDown" Handler="MentorsGriView_KeyDownEventHandler" />
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Titel" >
+                        <DataGridTemplateColumn Header="Titel">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox Text="{Binding Path=Titel}"
                                              IsHitTestVisible="False"
                                              Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="50" >
-                                    </TextBox>
+                                             Width="50" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <TextBox Style="{StaticResource DataGridTextBoxStyle}"
                                              Width="50"
-                                             Text="{Binding Path=Titel}">
-                                    </TextBox>
+                                             Text="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
@@ -227,22 +225,14 @@
                                     <TextBox Text="{Binding Path=Vorname}"
                                              IsHitTestVisible="False"
                                              Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100" >
-                                    </TextBox>
+                                             Width="100" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <TextBox Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100" >
-                                        <TextBox.Text>
-                                            <Binding Path="Vorname" UpdateSourceTrigger="PropertyChanged" >
-                                                <Binding.ValidationRules>
-                                                    <validators:UserInputValidationRule />
-                                                </Binding.ValidationRules>
-                                            </Binding>
-                                        </TextBox.Text>
-                                    </TextBox>
+                                             Width="100"
+                                             Text="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
@@ -252,22 +242,14 @@
                                     <TextBox Text="{Binding Path=Name}"
                                              IsHitTestVisible="False"
                                              Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100" >
-                                    </TextBox>
+                                             Width="100" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <TextBox Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100" >
-                                        <TextBox.Text>
-                                            <Binding Path="Name" UpdateSourceTrigger="PropertyChanged" >
-                                                <Binding.ValidationRules>
-                                                    <validators:UserInputValidationRule />
-                                                </Binding.ValidationRules>
-                                            </Binding>
-                                        </TextBox.Text>
-                                    </TextBox>
+                                             Width="100"
+                                             Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
@@ -283,7 +265,7 @@
 
                 <DataGrid x:Name="MenteesGridView"
                           Grid.Row="1" Grid.Column="1"
-                          CanUserAddRows="True"
+                          CanUserAddRows="False"
                           CanUserDeleteRows="True"
                           ItemsSource="{Binding Path=Mentees}"
                           HorizontalContentAlignment="Center"
@@ -300,39 +282,70 @@
                           SelectionMode="Single"
                           SelectionUnit="FullRow"
                           CellStyle="{StaticResource DataGridCellStyle}"
-                          RowStyle="{StaticResource DataGridRowStyle}"
                           ColumnHeaderStyle="{StaticResource DatagridColumnHeaderStyle}"
                           RowHeaderStyle="{StaticResource DataGridRowHeaderStyle}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu StaysOpen="False">
+                            <MenuItem Header="Neuen Mentee hinzufügen" Command="{Binding AddNewMenteeCommand}"
+                                      Template="{DynamicResource MenuItemControlTemplate}" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRowStyle}">
+                            <EventSetter Event="PreviewKeyDown" Handler="MenteesGriView_KeyDownEventHandler" />
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Titel">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox Name="HeadlineTextBox"
-                                             Text="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBox Text="{Binding Path=Titel}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="50"
+                                             IsHitTestVisible="False" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}"
                                              Style="{StaticResource DataGridTextBoxStyle}"
                                              Width="50" />
                                 </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Vorname">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox Name="HeadlineTextBox"
-                                             Text="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBox Text="{Binding Path=Vorname}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100"
+                                             IsHitTestVisible="False" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}"
                                              Style="{StaticResource DataGridTextBoxStyle}"
                                              Width="100" />
                                 </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Name">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox Name="HeadlineTextBox"
-                                             Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBox Text="{Binding Path=Name}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100"
+                                             IsHitTestVisible="False" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
                                              Style="{StaticResource DataGridTextBoxStyle}"
                                              Width="100" />
                                 </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>

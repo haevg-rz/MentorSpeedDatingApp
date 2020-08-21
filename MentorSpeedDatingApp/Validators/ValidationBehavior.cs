@@ -7,14 +7,14 @@ namespace MentorSpeedDatingApp.Validators
 {
     public class ValidationBehavior
     {
-
         #region Attached Properties
 
         public static readonly DependencyProperty HasErrorProperty = DependencyProperty.RegisterAttached(
             "HasError",
             typeof(bool),
             typeof(ValidationBehavior),
-            new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, null, CoerceHasError));
+            new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, null,
+                CoerceHasError));
 
         private static readonly DependencyProperty HasErrorDescriptorProperty = DependencyProperty.RegisterAttached(
             "HasErrorDescriptor",
@@ -25,7 +25,7 @@ namespace MentorSpeedDatingApp.Validators
 
         private static DependencyPropertyDescriptor GetHasErrorDescriptor(DependencyObject d)
         {
-            return (DependencyPropertyDescriptor)d.GetValue(HasErrorDescriptorProperty);
+            return (DependencyPropertyDescriptor) d.GetValue(HasErrorDescriptorProperty);
         }
 
         private static void SetHasErrorDescriptor(DependencyObject d, DependencyPropertyDescriptor value)
@@ -37,7 +37,7 @@ namespace MentorSpeedDatingApp.Validators
 
         public static bool GetHasError(DependencyObject d)
         {
-            return (bool)d.GetValue(HasErrorProperty);
+            return (bool) d.GetValue(HasErrorProperty);
         }
 
         public static void SetHasError(DependencyObject d, bool value)
@@ -51,12 +51,13 @@ namespace MentorSpeedDatingApp.Validators
 
         private static object CoerceHasError(DependencyObject d, object baseValue)
         {
-            var result = (bool)baseValue;
+            var result = (bool) baseValue;
             if (BindingOperations.IsDataBound(d, HasErrorProperty))
             {
                 if (GetHasErrorDescriptor(d) == null)
                 {
-                    var desc = DependencyPropertyDescriptor.FromProperty(System.Windows.Controls.Validation.HasErrorProperty, d.GetType());
+                    var desc = DependencyPropertyDescriptor.FromProperty(
+                        System.Windows.Controls.Validation.HasErrorProperty, d.GetType());
                     desc.AddValueChanged(d, OnHasErrorChanged);
                     SetHasErrorDescriptor(d, desc);
                     result = System.Windows.Controls.Validation.GetHasError(d);
@@ -71,8 +72,10 @@ namespace MentorSpeedDatingApp.Validators
                     SetHasErrorDescriptor(d, null);
                 }
             }
+
             return result;
         }
+
         private static void OnHasErrorChanged(object sender, EventArgs e)
         {
             var d = sender as DependencyObject;
@@ -83,6 +86,5 @@ namespace MentorSpeedDatingApp.Validators
         }
 
         #endregion
-
     }
 }
