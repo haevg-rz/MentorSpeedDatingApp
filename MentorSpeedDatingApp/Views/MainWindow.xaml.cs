@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.ViewModel;
 using System;
@@ -29,6 +29,7 @@ namespace MentorSpeedDatingApp.Views
 
             ViewModelLocator.Cleanup();
         }
+
 
         private void MentorsGriView_KeyDownEventHandler(object sender, KeyEventArgs e)
         {

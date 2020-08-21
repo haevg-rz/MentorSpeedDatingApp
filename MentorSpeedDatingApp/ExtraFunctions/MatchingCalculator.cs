@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace MentorSpeedDatingApp.ExtraFunctions
 {
@@ -13,17 +14,19 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         private List<Mentee> mentees;
         private List<TimeSlot> timeSlots;
         private double amountOfDates;
+        private List<(Mentor, Mentee)> noGoDates;
         public List<Matching> Matchings { get; set; }
         public List<IDate> MatchingDates { get; set; }
         public double DateDuration { get; set; }
         private int mentorIndex;
 
-        public MatchingCalculator(DateTime startTime, DateTime endTime, List<Mentor> mentors, List<Mentee> mentees)
+        public MatchingCalculator(DateTime startTime, DateTime endTime, List<Mentor> mentors, List<Mentee> mentees, List<(Mentor, Mentee)> noGoDates)
         {
             this.startTime = startTime;
             this.endTime = endTime;
             this.mentors = mentors;
             this.mentees = mentees;
+            this.noGoDates = noGoDates;
             this.Initiate();
         }
 
@@ -38,6 +41,10 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             this.timeSlots = this.CalculateTimeSlots();
             this.Matchings = this.CalculateMatchings();
             this.Matchings = this.TrimMatchings(this.Matchings);
+            if (this.noGoDates != null)
+            {
+                this.Matchings = this.ReplaceNoGoDatesWithBreaks(this.Matchings, this.noGoDates);
+            }
             this.MatchingDates = this.RetrieveDates(this.Matchings);
         }
 
@@ -177,22 +184,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             return timeSlots;
         }
 
-        #region static helper methods
-
-        private static List<Matching> ReplaceNoGoDatesWithBreaks(List<Matching> matchings,
-            List<(Mentor, Mentee)> noGoDates)
-        {
-            foreach (var matching in matchings)
-            {
-                var dates = matching.Dates;
-                //noGoDates.Any(m => m.Item1 == matching.Mentor)
-                //var noGoDate = noGoDates.Select(n => (n.Item1, n.Item2)).Where());
-                //noGoDates.Any(m => m.Item1 == matching.Mentor)
-                //var noGomentee = dates.Where(d => d.Mentee==);
-            }
-
-            return matchings;
-        }
+        #region helper methods
 
         private static double CalculateAmountOfDates(int mentorCount, int menteeCount)
         {
@@ -278,6 +270,27 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             }
 
             return longestDates;
+        }
+
+        private List<Matching> ReplaceNoGoDatesWithBreaks(List<Matching> matchings,
+            List<(Mentor, Mentee)> noGoDates)
+        {
+            foreach (var matching in matchings)
+            {
+                foreach (var noGoDate in noGoDates.Where(ngd => ngd.Item1.Equals(matching.Mentor)))
+                {
+                    var noGoMentee = noGoDate.Item2;
+                    var dates = matching.Dates;
+                    foreach (var date in dates.Where(m => m.Mentee.Equals(noGoMentee)))
+                    {
+                        date.Mentee = " - ";
+                        //QUESTIONABLE:
+                        date.TimeSlot.IsBreak = true;
+                    }
+                }
+            }
+
+            return matchings;
         }
 
         #endregion

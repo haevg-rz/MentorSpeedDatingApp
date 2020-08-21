@@ -68,6 +68,8 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
+        public List<(Mentor, Mentee)> NoGoDates { get; set; }
+
         public List<DateSpan> DateTimes
         {
             get => this.dateTimes;
@@ -131,12 +133,13 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         public MatchingViewModel(ObservableCollection<Mentor> mentorsList,
-            ObservableCollection<Mentee> menteeList, DateTime startTime, DateTime endTime, String headline)
+            ObservableCollection<Mentee> menteeList, DateTime startTime, DateTime endTime, String headline, List<(Mentor, Mentee)> noGoDates)
         {
             this.StartTime = startTime;
             this.EndTime = endTime;
             this.Mentors = mentorsList.ToList();
             this.Mentees = menteeList.ToList();
+            this.NoGoDates = noGoDates;
             this.Headline = headline;
             this.PrintCommand = new RelayCommand<Visual>(this.PrintCommandHandling);
             this.ExportCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(this.ExportCommandHandling);
@@ -146,7 +149,7 @@ namespace MentorSpeedDatingApp.ViewModel
         private void Initiate()
         {
             this.matchingCalculator =
-                new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees);
+                new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees, this.NoGoDates);
             this.Matchings = this.matchingCalculator.Matchings;
             this.DateTimes = this.FormatDateTimeList(this.matchingCalculator.MatchingDates);
 
@@ -259,6 +262,7 @@ namespace MentorSpeedDatingApp.ViewModel
                 DisplayAlerts = false
             };
             var workBook = excel.Workbooks.Add("");
+
             var lenghOfTimeSlot = Matchings[0].Dates[1].TimeSlot.Time.Minute - Matchings[0].Dates[0].TimeSlot.Time.Minute;
 
             _Worksheet sheet = (_Worksheet) workBook.ActiveSheet;

@@ -59,6 +59,297 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <!-- Begin Control Region upper -->
+            <TabControl TabStripPlacement="Top" Grid.IsSharedSizeScope="True">
+                <TabItem Header="       " IsSelected="True" >
+                    <Grid Margin="10" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition SharedSizeGroup="SharedHeightTabItem"/>
+                        </Grid.RowDefinitions>
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Überschrift: " HorizontalAlignment="Left" />
+                            <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=Headline}"
+                             ToolTip="Bitte die Überschrift eingeben." Width="300"
+                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                             HorizontalAlignment="Left" Margin="0,0,0,5"
+                             Name="HeadlineTextBox" Height="30" SelectionBrush="#FF08D94B"
+                             Style="{StaticResource WaterMarkTextBoxStyle}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" IsHitTestVisible="False" Text="Mentor Speed-Dating"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" Margin="0,0,0,5" Foreground="DarkGray" FontStyle="Italic"
+                               Style="{StaticResource WaterMarkTextBlockStyle}" />
+
+                            <DatePicker Template="{DynamicResource DatePickerTemplate1}" Grid.Row="2" Grid.Column="0"
+                                Height="30" VerticalContentAlignment="Center"
+                                BorderBrush="Transparent"
+                                ToolTip="Bitte das Datum auswählen" Margin="0,5,0,5" SelectedDate="{Binding Path=Date}"
+                                HorizontalAlignment="Left" SelectedDateFormat="Short" Language="de"
+                                Style="{StaticResource DatePickerStyle}"
+                                Resources="{StaticResource DatePickerTextBoxStyle}" />
+
+                            <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" Margin="0,5,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" MinWidth="50" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" MinWidth="50" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Column="0" Grid.Row="0" Text="Start-Uhrzeit" HorizontalAlignment="Right"
+                                   Margin="0,5,5,0" />
+
+                                <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="1" Grid.Row="0" Width="45"
+                                  Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="LightGray" BorderThickness="1"
+                                  SelectedItem="{Binding Path=StartTimeHours}"
+                                  ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                  ItemsSource="{Binding AllowedHourValues}" />
+
+                                <TextBlock Grid.Column="2" Grid.Row="0" Margin="5,5,5,0" Text=":" />
+
+                                <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="3" Grid.Row="0" Width="45"
+                                  Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  BorderBrush="LightGray" BorderThickness="1"
+                                  SelectedItem="{Binding Path=StartTimeMinutes}"
+                                  ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                  ItemsSource="{Binding AllowedMinuteValues}" />
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Ende-Uhrzeit" HorizontalAlignment="Right"
+                                   Margin="0,5,5,0" />
+
+                                <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="1" Grid.Row="1" Width="45"
+                                  Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="LightGray" BorderThickness="1"
+                                  SelectedItem="{Binding Path=EndTimeHours}"
+                                  ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                  ItemsSource="{Binding AllowedHourValues}" />
+
+                                <TextBlock Grid.Column="2" Grid.Row="1" Margin="5,5,5,0">:</TextBlock>
+
+                                <ComboBox Template="{DynamicResource ComboBoxTemplate}" Grid.Column="3" Grid.Row="1" Width="45"
+                                  Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  BorderBrush="LightGray" BorderThickness="1"
+                                  SelectedItem="{Binding Path=EndTimeMinutes}"
+                                  ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                  ItemsSource="{Binding AllowedMinuteValues}" />
+
+                            </Grid>
+                            <Grid Grid.Row="0" RowSpan="4" Column="1">
+                                <Button Command="{Binding GenerateMatchingCommand}" HorizontalAlignment="Right" 
+                                FontWeight="Bold" Background="#67B432" BorderBrush="#e5e5e5" Foreground="White" Opacity="0.8" Width="200" Height="100" Content="Matchen!"
+                                Template="{DynamicResource ButtonTemplate}" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                </TabItem>
+                <TabItem Header="NoGo-Dates">
+                    <Grid Margin="10" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition SharedSizeGroup="SharedHeightTabItem"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="NoGoSizeGroup" MinWidth="150"/>
+                                <ColumnDefinition SharedSizeGroup="NoGoSizeGroup" MinWidth="150"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <ComboBox Template="{DynamicResource ComboBoxTemplate}" ItemsSource="{Binding Mentors}" SelectedItem="{Binding NoGoMentor}" Grid.Column="0" Grid.Row="0"/>
+                            <ComboBox Template="{DynamicResource ComboBoxTemplate}" ItemsSource="{Binding Mentees}" SelectedItem="{Binding NoGoMentee}" Grid.Column="1" Grid.Row="0"/>
+                            <Button Template="{DynamicResource ButtonTemplate}" Background="#67B432" Padding="6" Foreground="White" BorderBrush="#e5e5e5" Opacity="0.8" FontWeight="Bold" Content="NoGo-Date erzeugen" Command="{Binding AddNoGoDateCommand}" Grid.Column="0" Grid.Row="1"/>
+                            <Button Template="{DynamicResource ButtonTemplate}" 
+                                    Background="#67B432" 
+                                    Padding="6" 
+                                    Foreground="White" 
+                                    BorderBrush="#e5e5e5" 
+                                    Opacity="0.8" 
+                                    FontWeight="Bold" 
+                                    Content="NoGo-Dates ansehen" 
+                                    Command="{Binding ShowNoGoDatesCommand}" 
+                                    Grid.Column="1" 
+                                    Grid.Row="1"/>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Button Template="{DynamicResource ButtonTemplate}" 
+                                    Command="{Binding GenerateMatchingCommand}" 
+                                    HorizontalAlignment="Right" 
+                                    Content="Mit NoGo-Dates matchen!" 
+                                    BorderBrush="#e5e5e5" 
+                                    Opacity="0.8" 
+                                    Background="#67B432" 
+                                    Foreground="White" 
+                                    FontWeight="Bold" 
+                                    Width="200" 
+                                    Height="100"/>
+                        </Grid>
+                    </Grid>
+
+                </TabItem>
+            </TabControl>
+            <!-- End Control Region upper -->
+
+            <!-- Begin Tabellen Region  -->
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="300" />
+                    <ColumnDefinition MinWidth="300" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition MinHeight="360" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
+                           Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}" FontWeight="Bold"
+                           FontSize="18" Text="Mentorinnen" />
+                <!-- Mentoren Tabelle -->
+                <DataGrid x:Name="MentorsGridView"
+                          Grid.Row="1" Grid.Column="0"
+                          CanUserAddRows="True"
+                          CanUserDeleteRows="True"
+                          ItemsSource="{Binding Path=Mentors}"
+                          HorizontalContentAlignment="Center"
+                          AutoGenerateColumns="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
+                          Foreground="Black"
+                          AlternationCount="2"
+                          Margin="0,0,5,0"
+                          HorizontalGridLinesBrush="DarkGray"
+                          VerticalGridLinesBrush="Transparent"
+                          BorderBrush="DarkGray"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          CellStyle="{StaticResource DataGridCellStyle}"
+                          RowStyle="{StaticResource DataGridRowStyle}"
+                          ColumnHeaderStyle="{StaticResource DatagridColumnHeaderStyle}"
+                          RowHeaderStyle="{StaticResource DataGridRowHeaderStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Titel">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Name="HeadlineTextBox"
+                                             Text="{Binding Path=Titel}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="50" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Vorname">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Name="HeadlineTextBox"
+                                             Text="{Binding Path=Vorname}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Name">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Name="HeadlineTextBox"
+                                             Text="{Binding Path=Name}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button Grid.Row="2" Grid.Column="0" Margin="0,0,5,0" Command="{Binding DeleteMentorsCommand}"
+                        Style="{StaticResource BottomMenuButtonStyle}" Content="Mentorinnen löschen" IsTabStop="False"/>
+                <!-- Mentee Tabelle -->
+                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"
+                           Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}" FontWeight="Bold"
+                           FontSize="18">
+                    Mentees
+                </TextBlock>
+                <DataGrid x:Name="MenteesGridView"
+                          Grid.Row="1" Grid.Column="1"
+                          CanUserAddRows="True"
+                          CanUserDeleteRows="True"
+                          ItemsSource="{Binding Path=Mentees}"
+                          HorizontalContentAlignment="Center"
+                          AutoGenerateColumns="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
+                          Foreground="Black"
+                          AlternationCount="2"
+                          Margin="5,0,0,0"
+                          HorizontalGridLinesBrush="DarkGray"
+                          VerticalGridLinesBrush="Transparent"
+                          BorderBrush="DarkGray"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          CellStyle="{StaticResource DataGridCellStyle}"
+                          RowStyle="{StaticResource DataGridRowStyle}"
+                          ColumnHeaderStyle="{StaticResource DatagridColumnHeaderStyle}"
+                          RowHeaderStyle="{StaticResource DataGridRowHeaderStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Titel">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Name="HeadlineTextBox"
+                                             Text="{Binding Path=Titel}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="50" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Vorname">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Name="HeadlineTextBox"
+                                             Text="{Binding Path=Vorname}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Name">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Name="HeadlineTextBox"
+                                             Text="{Binding Path=Name}"
+                                             Style="{StaticResource DataGridTextBoxStyle}"
+                                             Width="100" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Command="{Binding DeleteMenteesCommand}"
+                        Style="{StaticResource BottomMenuButtonStyle}" Content="Mentees löschen" IsTabStop="False"/>
+            </Grid>
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
