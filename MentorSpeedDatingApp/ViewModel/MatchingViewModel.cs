@@ -141,7 +141,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Mentees = menteeList.ToList();
             this.NoGoDates = noGoDates;
             this.Headline = headline;
-            this.PrintCommand = new RelayCommand<Visual>(PrintCommandHandling);
+            this.PrintCommand = new RelayCommand<Visual>(this.PrintCommandHandling);
             this.ExportCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(this.ExportCommandHandling);
             this.Initiate();
         }
@@ -266,6 +266,7 @@ namespace MentorSpeedDatingApp.ViewModel
             var lenghOfTimeSlot = Matchings[0].Dates[1].TimeSlot.Time.Minute - Matchings[0].Dates[0].TimeSlot.Time.Minute;
 
             _Worksheet sheet = (_Worksheet) workBook.ActiveSheet;
+
             try
             {
                 sheet.Cells[1, 1] = this.headline;
@@ -292,9 +293,9 @@ namespace MentorSpeedDatingApp.ViewModel
                 sheet.Range["A1", "A9"].EntireColumn.Font.Bold = true;
                 sheet.Range["A1", "A9"].EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 sheet.Range["A1", "Z2"].EntireColumn.AutoFit();
-
                 var title = string.IsNullOrWhiteSpace( this.headline) ? "SpeedDateMatching.xlsx" : this.headline + ".xlsx";
                 var outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+
                     "MSDAPP", title);
 
                 workBook.SaveAs(outputPath,

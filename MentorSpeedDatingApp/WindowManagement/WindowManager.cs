@@ -1,4 +1,4 @@
-﻿using MentorSpeedDatingApp.Models;
+using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.ViewModel;
 using MentorSpeedDatingApp.Views;
 using System.Collections.Generic;
@@ -19,6 +19,7 @@ namespace MentorSpeedDatingApp.WindowManagement
         {
             var window = new ShowNoGoDatesWindow();
             window.DataContext = new ShowNoGoDatesViewModel(noGoDates);
+                new MatchingViewModel(mVm.Mentors, mVm.Mentees, mVm.StartTime, mVm.EndTime, mVm.Headline);
             window.Show();
         }
     }

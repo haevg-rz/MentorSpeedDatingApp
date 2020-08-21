@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.WindowManagement;
@@ -14,8 +13,6 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using Formatting = Newtonsoft.Json.Formatting;
 
@@ -176,6 +173,9 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public RelayCommand OnLoadedCommand { get; set; }
 
+        public RelayCommand AddNewMentorCommand { get; set; }
+        public RelayCommand AddNewMenteeCommand { get; set; }
+
         #endregion
 
         #endregion
@@ -200,6 +200,9 @@ namespace MentorSpeedDatingApp.ViewModel
             this.ShowNoGoDatesCommand = new RelayCommand(this.ShowNoGoDatesCommandHandling);
 
             this.OnLoadedCommand = new RelayCommand(this.OnLoadedCommandHandling);
+
+            this.AddNewMentorCommand = new RelayCommand(this.AddNewMentorCommandHandling);
+            this.AddNewMenteeCommand = new RelayCommand(this.AddNewMenteeCommandHandling);
 
             if (base.IsInDesignMode || this.IsInDesignMode)
             {
@@ -228,7 +231,15 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
+        private void AddNewMenteeCommandHandling()
+        {
+            this.Mentees.Add(new Mentee());
+        }
 
+        private void AddNewMentorCommandHandling()
+        {
+            this.Mentors.Add(new Mentor());
+        }
 
         #region CommandHandlings
 
@@ -307,7 +318,7 @@ namespace MentorSpeedDatingApp.ViewModel
             WindowManager.ShowMatchingWindow(this);
         }
 
-        private void ValidateMentorAndMenteeLists()
+        internal void ValidateMentorAndMenteeLists()
         {
             for (var i = this.Mentees.Count - 1; i >= 0; i--)
             {
@@ -498,6 +509,7 @@ namespace MentorSpeedDatingApp.ViewModel
                     File.Create(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)).Close();
             }
             var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
+            
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
             if (deserializedJson == null && jsonData == "")
                 return false;
