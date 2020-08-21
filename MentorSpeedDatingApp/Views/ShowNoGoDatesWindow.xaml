@@ -6,8 +6,18 @@
         xmlns:local="clr-namespace:MentorSpeedDatingApp.Views"
         mc:Ignorable="d"
         Title="ShowNoGoDatesWindow" Height="450" Width="800"
+        SizeToContent="WidthAndHeight"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Grid>
-        <ListView ItemsSource="{Binding NoGoDates}" />
+        <ListView ItemsSource="{Binding NoGoDates}" Margin="20">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Background" Value="#67B432" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Style>
+            </ListView.Resources>
+        </ListView>
     </Grid>
 </Window>

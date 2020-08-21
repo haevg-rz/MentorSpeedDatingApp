@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="Views\UserControls\" />
   </ItemGroup>
 
   <ItemGroup>

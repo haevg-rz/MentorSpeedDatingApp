@@ -5,7 +5,6 @@
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
     <converter:TimeOfDayMinutesConverter x:Key="TimeOfDayMinutesConverter" />
-    <converter:NavMenuOverlapConverter x:Key="NavMenuOverlapConverter" />
     <converter:MultiBindingNameConverter x:Key="NameConverter" />
 
     <!-- Colors Begin -->
