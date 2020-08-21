@@ -19,7 +19,6 @@ namespace MentorSpeedDatingApp.WindowManagement
         {
             var window = new ShowNoGoDatesWindow();
             window.DataContext = new ShowNoGoDatesViewModel(noGoDates);
-                new MatchingViewModel(mVm.Mentors, mVm.Mentees, mVm.StartTime, mVm.EndTime, mVm.Headline);
             window.Show();
         }
     }
