@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.ViewModel;
+using MentorSpeedDatingApp.WindowManagement;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace MentorSpeedDatingApp.Views
             }
 
             ViewModelLocator.Cleanup();
+            WindowManager.CloseAllWindows();
         }
 
 
