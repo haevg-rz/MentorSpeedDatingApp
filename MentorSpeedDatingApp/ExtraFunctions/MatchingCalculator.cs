@@ -1,8 +1,8 @@
 ﻿using MentorSpeedDatingApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace MentorSpeedDatingApp.ExtraFunctions
 {
@@ -14,19 +14,22 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         private List<Mentee> mentees;
         private List<TimeSlot> timeSlots;
         private double amountOfDates;
-        private List<(Mentor, Mentee)> noGoDates;
+        private ObservableCollection<(Mentor, Mentee)> noGoDates;
         public List<Matching> Matchings { get; set; }
         public List<IDate> MatchingDates { get; set; }
         public double DateDuration { get; set; }
         private int mentorIndex;
+        private bool useNoGoDates;
 
-        public MatchingCalculator(DateTime startTime, DateTime endTime, List<Mentor> mentors, List<Mentee> mentees, List<(Mentor, Mentee)> noGoDates)
+        public MatchingCalculator(DateTime startTime, DateTime endTime, List<Mentor> mentors, List<Mentee> mentees,
+            ObservableCollection<(Mentor, Mentee)> noGoDates, bool useNoGoDates)
         {
             this.startTime = startTime;
             this.endTime = endTime;
             this.mentors = mentors;
             this.mentees = mentees;
             this.noGoDates = noGoDates;
+            this.useNoGoDates = useNoGoDates;
             this.Initiate();
         }
 
@@ -41,10 +44,11 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             this.timeSlots = this.CalculateTimeSlots();
             this.Matchings = this.CalculateMatchings();
             this.Matchings = this.TrimMatchings(this.Matchings);
-            if (this.noGoDates != null)
+            if (this.noGoDates != null && this.useNoGoDates)
             {
                 this.Matchings = this.ReplaceNoGoDatesWithBreaks(this.Matchings, this.noGoDates);
             }
+
             this.MatchingDates = this.RetrieveDates(this.Matchings);
         }
 
@@ -273,7 +277,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         }
 
         private List<Matching> ReplaceNoGoDatesWithBreaks(List<Matching> matchings,
-            List<(Mentor, Mentee)> noGoDates)
+            ObservableCollection<(Mentor, Mentee)> noGoDates)
         {
             foreach (var matching in matchings)
             {

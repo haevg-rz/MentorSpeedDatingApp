@@ -68,7 +68,7 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        public List<(Mentor, Mentee)> NoGoDates { get; set; }
+        public ObservableCollection<(Mentor, Mentee)> NoGoDates { get; set; }
 
         public List<DateSpan> DateTimes
         {
@@ -90,6 +90,8 @@ namespace MentorSpeedDatingApp.ViewModel
             get => this.headline;
             set => base.Set(ref this.headline, value);
         }
+
+        public bool UseNoGoDates { get; set; }
 
         #endregion
 
@@ -133,7 +135,8 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         public MatchingViewModel(ObservableCollection<Mentor> mentorsList,
-            ObservableCollection<Mentee> menteeList, DateTime startTime, DateTime endTime, String headline, List<(Mentor, Mentee)> noGoDates)
+            ObservableCollection<Mentee> menteeList, DateTime startTime, DateTime endTime, String headline,
+            ObservableCollection<(Mentor, Mentee)> noGoDates, bool useNoGoDates)
         {
             this.StartTime = startTime;
             this.EndTime = endTime;
@@ -143,13 +146,15 @@ namespace MentorSpeedDatingApp.ViewModel
             this.Headline = headline;
             this.PrintCommand = new RelayCommand<Visual>(this.PrintCommandHandling);
             this.ExportCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(this.ExportCommandHandling);
+            this.UseNoGoDates = useNoGoDates;
             this.Initiate();
         }
 
         private void Initiate()
         {
             this.matchingCalculator =
-                new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees, this.NoGoDates);
+                new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees, this.NoGoDates,
+                    this.UseNoGoDates);
             this.Matchings = this.matchingCalculator.Matchings;
             this.DateTimes = this.FormatDateTimeList(this.matchingCalculator.MatchingDates);
 
@@ -246,7 +251,8 @@ namespace MentorSpeedDatingApp.ViewModel
                         capabilities.PageImageableArea.ExtentHeight);
                     e.Measure(availableSize);
                     e.Arrange(new Rect(
-                        new Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight),
+                        new Point(capabilities.PageImageableArea.OriginWidth,
+                            capabilities.PageImageableArea.OriginHeight),
                         availableSize));
                 }
 
@@ -263,7 +269,8 @@ namespace MentorSpeedDatingApp.ViewModel
             };
             var workBook = excel.Workbooks.Add("");
 
-            var lenghOfTimeSlot = Matchings[0].Dates[1].TimeSlot.Time.Minute - Matchings[0].Dates[0].TimeSlot.Time.Minute;
+            var lenghOfTimeSlot =
+                Matchings[0].Dates[1].TimeSlot.Time.Minute - Matchings[0].Dates[0].TimeSlot.Time.Minute;
 
             _Worksheet sheet = (_Worksheet) workBook.ActiveSheet;
 
@@ -278,7 +285,9 @@ namespace MentorSpeedDatingApp.ViewModel
                     var j = 3;
                     foreach (var date in matching.Dates)
                     {
-                        sheet.Cells[j, 1] = date.TimeSlot.Time.TimeOfDay.ToString("hh\\:mm") + " - " + date.TimeSlot.Time.AddMinutes(lenghOfTimeSlot).TimeOfDay.ToString("hh\\:mm");
+                        sheet.Cells[j, 1] = date.TimeSlot.Time.TimeOfDay.ToString("hh\\:mm") + " - " +
+                                            date.TimeSlot.Time.AddMinutes(lenghOfTimeSlot).TimeOfDay
+                                                .ToString("hh\\:mm");
 
                         sheet.Cells[j, i] = date.Mentee.ToString();
 
@@ -293,9 +302,10 @@ namespace MentorSpeedDatingApp.ViewModel
                 sheet.Range["A1", "A9"].EntireColumn.Font.Bold = true;
                 sheet.Range["A1", "A9"].EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 sheet.Range["A1", "Z2"].EntireColumn.AutoFit();
-                var title = string.IsNullOrWhiteSpace( this.headline) ? "SpeedDateMatching.xlsx" : this.headline + ".xlsx";
+                var title = string.IsNullOrWhiteSpace(this.headline)
+                    ? "SpeedDateMatching.xlsx"
+                    : this.headline + ".xlsx";
                 var outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-
                     "MSDAPP", title);
 
                 workBook.SaveAs(outputPath,

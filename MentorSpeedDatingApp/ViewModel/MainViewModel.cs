@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
@@ -153,9 +152,8 @@ namespace MentorSpeedDatingApp.ViewModel
         #region Lists
 
         [DataMember] public ObservableCollection<Mentee> Mentees { get; set; }
-        [DataMember] public ObservableCollection<Mentor> Mentors { get; set; } 
-        public ObservableCollection<String> NoGoDatesObservableCollection { get; set; }
-        public List<(Mentor, Mentee)> NoGoDates { get; set; }
+        [DataMember] public ObservableCollection<Mentor> Mentors { get; set; }
+        public ObservableCollection<(Mentor, Mentee)> NoGoDates { get; set; }
 
         #endregion
 
@@ -175,6 +173,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         public RelayCommand AddNewMentorCommand { get; set; }
         public RelayCommand AddNewMenteeCommand { get; set; }
+        public RelayCommand GenerateMatchingWithNoGoDatesCommand { get; set; }
 
         #endregion
 
@@ -184,8 +183,7 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             this.Mentees = new ObservableCollection<Mentee>();
             this.Mentors = new ObservableCollection<Mentor>();
-            this.NoGoDatesObservableCollection = new ObservableCollection<string>();
-            this.NoGoDates = new List<(Mentor, Mentee)>();
+            this.NoGoDates = new ObservableCollection<(Mentor, Mentee)>();
             this.StartTime = new DateTime();
             this.EndTime = new DateTime();
 
@@ -203,6 +201,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
             this.AddNewMentorCommand = new RelayCommand(this.AddNewMentorCommandHandling);
             this.AddNewMenteeCommand = new RelayCommand(this.AddNewMenteeCommandHandling);
+            this.GenerateMatchingWithNoGoDatesCommand = new RelayCommand(
+                this.GenerateMatchingWithNoGoDatesCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
 
             if (base.IsInDesignMode || this.IsInDesignMode)
             {
@@ -255,14 +255,15 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             if (this.NoGoMentor == null || this.NoGoMentee == null)
             {
-                MessageBox.Show("Bitte eine Teilnehmerin auswählen.");
+                MessageBox.Show("Bitte eine Mentorin und eine Mentee für das NoGo-Date auswählen.", "Information",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            if (String.IsNullOrEmpty(this.NoGoMentor.ToString()) || String.IsNullOrEmpty(this.NoGoMentee.ToString()))
-                return;
-            var text = this.NoGoMentor + " - " + this.NoGoMentor;
-            this.NoGoDatesObservableCollection.Add(text);
-            this.NoGoDates.Add((this.NoGoMentor, this.NoGoMentee));
+
+            if (this.NoGoDates.All(ngd => ngd.Item1 != this.NoGoMentor && ngd.Item2 != this.NoGoMentee))
+            {
+                this.NoGoDates.Add((this.NoGoMentor, this.NoGoMentee));
+            }
         }
 
         private void DeleteAllDataCommandHandling()
@@ -289,6 +290,20 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void GenerateMatchingCommandHandling()
         {
+            this.PreMatchingGenerationValidationAndCorrectionRoutine();
+
+            WindowManager.ShowMatchingWindow(this, false);
+        }
+
+        private void GenerateMatchingWithNoGoDatesCommandHandling()
+        {
+            this.PreMatchingGenerationValidationAndCorrectionRoutine();
+
+            WindowManager.ShowMatchingWindow(this, true);
+        }
+
+        private void PreMatchingGenerationValidationAndCorrectionRoutine()
+        {
             if (String.IsNullOrEmpty(this.StartTimeHours) || String.IsNullOrEmpty(this.StartTimeMinutes))
             {
                 this.StartTime = new DateTime(this.Date.Year, this.Date.Month, this.Date.Day, 7,
@@ -314,8 +329,6 @@ namespace MentorSpeedDatingApp.ViewModel
             }
 
             this.ValidateMentorAndMenteeLists();
-
-            WindowManager.ShowMatchingWindow(this);
         }
 
         internal void ValidateMentorAndMenteeLists()
@@ -506,10 +519,13 @@ namespace MentorSpeedDatingApp.ViewModel
 
             if (!File.Exists(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)))
             {
-                    File.Create(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)).Close();
+                File.Create(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName))
+                    .Close();
             }
-            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
-            
+
+            var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
+                this.AppSaveConfig.AppSaveFileName));
+
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, definition);
             if (deserializedJson == null && jsonData == "")
                 return false;

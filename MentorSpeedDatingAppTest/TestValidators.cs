@@ -163,12 +163,5 @@ namespace MentorSpeedDatingAppTest
 
             #endregion
         }
-
-        [Theory]
-        [InlineData()]
-        public void Test_HourValidationRuleValidate_DifferentCultureInformations()
-        {
-
-        }
     }
 }
