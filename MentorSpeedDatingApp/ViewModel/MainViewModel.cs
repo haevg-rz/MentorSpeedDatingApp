@@ -260,7 +260,7 @@ namespace MentorSpeedDatingApp.ViewModel
                 return;
             }
 
-            if (this.NoGoDates.All(ngd => ngd.Item1 != this.NoGoMentor && ngd.Item2 != this.NoGoMentee))
+            if (this.NoGoDates.All(ngd => ngd.Item1 != this.NoGoMentor || ngd.Item2 != this.NoGoMentee))
             {
                 this.NoGoDates.Add((this.NoGoMentor, this.NoGoMentee));
             }

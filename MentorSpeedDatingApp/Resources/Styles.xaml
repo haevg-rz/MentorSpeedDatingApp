@@ -358,6 +358,7 @@
         </Setter>
     </Style>
     <Style TargetType="Button" x:Key="BottomMenuButtonStyle">
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Padding" Value="5" />
@@ -974,7 +975,8 @@
     <Style x:Key="DataGridTextBoxStyle" TargetType="TextBox">
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="SelectionBrush" Value="#FF08D94B" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="Template">
@@ -989,10 +991,6 @@
                                       VerticalScrollBarVisibility="Hidden" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="Black" TargetName="border" />
-                            <Setter Property="BorderThickness" Value="1.5" TargetName="border" />
-                        </Trigger>
                         <Trigger Property="IsFocused" Value="true">
                             <Setter Property="BorderBrush"
                                     TargetName="border"
@@ -1014,6 +1012,14 @@
         </Style.Triggers>
     </Style>
     <!--DataGridTextBox Style End-->
+
+    <!--DataGridTextColumnElement Style Start-->
+    <Style x:Key="DataGridTextColumnElementStyle" TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <!--DataGridTextColumnElement Style End-->
 
     <!--MenuTextbox Style Start-->
     <Style x:Key="MenuTextboxStyle" TargetType="TextBox">
@@ -1462,7 +1468,7 @@
                                                             Text="{Binding}"
                                                             Margin="0,6,0,6"
                                                             VerticalAlignment="Center" />
-                                                  </DataTemplate>
+                                                    </DataTemplate>
                                                     <!-- End: Data template for header button -->
                                                 </ControlTemplate.Resources>
                                                 <Grid Name="PART_Root">
@@ -1673,7 +1679,7 @@
                                                                             <Border
                                                                                 Padding="12 0">
 
-                                                                              <!--<Border.Background>
+                                                                                <!--<Border.Background>
                                                                                                             <LinearGradientBrush
                                                                                                                 StartPoint="0 0"
                                                                                                                 EndPoint="0 1">
@@ -1739,7 +1745,7 @@
                                                                     HorizontalAlignment="Right"
                                                                     Template="{StaticResource NextButtonTemplate}"
                                                                     Focusable="False" />
-                                                              <!-- End: Next button content -->
+                                                                <!-- End: Next button content -->
 
                                                                 <!-- Start: Month Content Grid -->
                                                                 <Grid x:Name="PART_MonthView"
@@ -1778,7 +1784,7 @@
                                                                             Width="Auto" />
                                                                         <ColumnDefinition
                                                                             Width="Auto" />
-                                                                  </Grid.ColumnDefinitions>
+                                                                    </Grid.ColumnDefinitions>
                                                                 </Grid>
                                                                 <!-- End: Month Content Grid -->
 

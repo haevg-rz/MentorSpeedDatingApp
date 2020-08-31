@@ -287,57 +287,18 @@
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Titel">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Titel}"
-                                             IsHitTestVisible="False"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="50" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="50"
-                                             Text="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Vorname">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Vorname}"
-                                             IsHitTestVisible="False"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100"
-                                             Text="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Name">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Name}"
-                                             IsHitTestVisible="False"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100"
-                                             Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Titel" Width="50"
+                                            Binding="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}"
+                                            EditingElementStyle="{StaticResource DataGridTextBoxStyle}"
+                                            ElementStyle="{StaticResource DataGridTextColumnElementStyle}" />
+                        <DataGridTextColumn Header="Vorname" Width="100"
+                                            Binding="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}"
+                                            EditingElementStyle="{StaticResource DataGridTextBoxStyle}"
+                                            ElementStyle="{StaticResource DataGridTextColumnElementStyle}" />
+                        <DataGridTextColumn Header="Name" Width="100"
+                                            Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                                            EditingElementStyle="{StaticResource DataGridTextBoxStyle}"
+                                            ElementStyle="{StaticResource DataGridTextColumnElementStyle}" />
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -381,57 +342,18 @@
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Titel">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Titel}"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="50"
-                                             IsHitTestVisible="False" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="50" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Vorname">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Vorname}"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100"
-                                             IsHitTestVisible="False" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Name">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Name}"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100"
-                                             IsHitTestVisible="False" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
-                                             Style="{StaticResource DataGridTextBoxStyle}"
-                                             Width="100" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Titel" Width="50"
+                                            Binding="{Binding Path=Titel, UpdateSourceTrigger=PropertyChanged}"
+                                            EditingElementStyle="{StaticResource DataGridTextBoxStyle}"
+                                            ElementStyle="{StaticResource DataGridTextColumnElementStyle}" />
+                        <DataGridTextColumn Header="Vorname" Width="100"
+                                            Binding="{Binding Path=Vorname, UpdateSourceTrigger=PropertyChanged}"
+                                            EditingElementStyle="{StaticResource DataGridTextBoxStyle}"
+                                            ElementStyle="{StaticResource DataGridTextColumnElementStyle}" />
+                        <DataGridTextColumn Header="Name" Width="100"
+                                            Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                                            EditingElementStyle="{StaticResource DataGridTextBoxStyle}"
+                                            ElementStyle="{StaticResource DataGridTextColumnElementStyle}" />
                     </DataGrid.Columns>
                 </DataGrid>
 
