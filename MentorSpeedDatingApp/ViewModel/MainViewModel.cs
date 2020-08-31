@@ -260,6 +260,17 @@ namespace MentorSpeedDatingApp.ViewModel
                 return;
             }
 
+            //TODO UNSCHÖN
+            if (String.IsNullOrEmpty(this.NoGoMentor.Name) 
+                || String.IsNullOrEmpty(this.NoGoMentor.Vorname) 
+                || String.IsNullOrEmpty(this.NoGoMentee.Name) 
+                || String.IsNullOrEmpty(this.NoGoMentee.Vorname))
+            {
+                MessageBox.Show("Ungültige Auswahl. Bitte eine Mentorin oder Mentee mit gültigem Namen und Vornamen wählen.", "Information",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
             if (this.NoGoDates.All(ngd => ngd.Item1 != this.NoGoMentor || ngd.Item2 != this.NoGoMentee))
             {
                 this.NoGoDates.Add((this.NoGoMentor, this.NoGoMentee));

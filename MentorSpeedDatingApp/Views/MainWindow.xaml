@@ -194,15 +194,20 @@
                                 <TextBlock HorizontalAlignment="Left"
                                            Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}"
                                            FontWeight="Bold" FontSize="15" Text="Mentorinnen" />
-                                <ComboBox Template="{DynamicResource ComboBoxTemplate}" ItemsSource="{Binding Mentors}"
-                                          SelectedItem="{Binding NoGoMentor}" />
+                                <ComboBox Template="{DynamicResource ComboBoxTemplate}"
+                                          ItemsSource="{Binding Path=Mentors}"
+                                          SelectedItem="{Binding NoGoMentor}"
+                                          ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                          ItemTemplate="{StaticResource ComboBoxItemTemplate}" />
                             </StackPanel>
                             <StackPanel Grid.Column="1" Grid.Row="0">
                                 <TextBlock HorizontalAlignment="Left"
                                            Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}"
                                            FontWeight="Bold" FontSize="15" Text="Mentees" />
                                 <ComboBox Template="{DynamicResource ComboBoxTemplate}" ItemsSource="{Binding Mentees}"
-                                          SelectedItem="{Binding NoGoMentee}" />
+                                          SelectedItem="{Binding NoGoMentee}"
+                                          ItemContainerStyle="{StaticResource ComboBoxItem}"
+                                          ItemTemplate="{StaticResource ComboBoxItemTemplate}" />
                             </StackPanel>
                             <Button Template="{DynamicResource ButtonTemplate}" Background="#67B432" Padding="6"
                                     Foreground="White" BorderBrush="#e5e5e5" Opacity="0.8" FontWeight="Bold"

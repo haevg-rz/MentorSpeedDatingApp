@@ -6,6 +6,7 @@
 
     <converter:TimeOfDayMinutesConverter x:Key="TimeOfDayMinutesConverter" />
     <converter:MultiBindingNameConverter x:Key="NameConverter" />
+    <converter:PersonToTextConverter x:Key="PersonToTextConverter" />
 
     <!-- Colors Begin -->
     <Color x:Key="HealthCareGreenDarkBackground">#65BC4A</Color>
@@ -776,13 +777,13 @@
                         <Trigger Property="IsHighlighted"
                                  Value="true">
                             <Setter Property="Background"
-                                    Value="#FF08D94B" />
+                                    Value="#9AEDAB" />
                             <Setter Property="Foreground"
                                     Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
                             <Setter Property="BorderThickness"
                                     Value="2" />
                             <Setter Property="BorderBrush"
-                                    Value="#FF08D94B" />
+                                    Value="#9AEDAB" />
                         </Trigger>
                         <Trigger Property="IsEnabled"
                                  Value="false">
@@ -1049,6 +1050,42 @@
         </Setter>
     </Style>
     <!--MenuTextbox Style End-->
+
+    <!--ListViewItem Style Start-->
+    <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="Background" Value="#67B432" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Margin" Value="1,2.5,1,2.5" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border>
+                        <TextBlock Text="{Binding}" Foreground="{TemplateBinding Foreground}" Background="Transparent"
+                                   FontWeight="{TemplateBinding FontWeight}"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" />
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background"
+                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Background}" />
+                                <Setter Property="BorderBrush"
+                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=BorderBrush}" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#9AEDAB" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--ListViewItem Style End-->
 
     <!--NavigationMenuToggleButtonTemplate Start-->
     <ControlTemplate x:Key="NavigationMenuToggleButtonTemplate" TargetType="ToggleButton">
@@ -1974,6 +2011,20 @@
         </Style.Triggers>
     </Style>
     <!--WaterMarkTextBlockStyle End-->
+
+    <!--ComboBoxItem Template Start-->
+    <DataTemplate x:Key="ComboBoxItemTemplate">
+        <TextBlock IsHitTestVisible="False" Background="Transparent">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource PersonToTextConverter}">
+                    <Binding Path="Titel" />
+                    <Binding Path="Name" />
+                    <Binding Path="Vorname" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+    </DataTemplate>
+    <!--ComboBoxItem Template End-->
 
     <!--MatchingEditLockToggleButtonTemplate Start-->
     <ControlTemplate x:Key="MatchingEditLockToggleButtonTemplate" TargetType="ToggleButton">
