@@ -21,44 +21,16 @@ namespace MentorSpeedDatingApp.ViewModel
     {
         #region Fields
 
-/*        private DateTime startTime;
-        private DateTime endTime;
-        private List<Mentor> mentors;
-        private List<Mentee> mentees;*/
         private List<Matching> matchings;
         private List<DateSpan> dateTimes;
         private MatchingCalculator matchingCalculator;
         private string headline;
+        private bool canExecuteExport = true;
+        private String exportToolTip = "";
 
         #endregion
 
         #region Properties
-
-/*
-        public DateTime StartTime
-        {
-            get => this.startTime;
-            set => base.Set(ref this.startTime, value);
-        }
-*/
-
-/*        public DateTime EndTime
-        {
-            get => this.endTime;
-            set => base.Set(ref this.endTime, value);
-        }*/
-
-/*        public List<Mentor> Mentors
-        {
-            get => this.mentors;
-            set => base.Set(ref this.mentors, value);
-        }*/
-
-/*        public List<Mentee> Mentees
-        {
-            get => this.mentees;
-            set => base.Set(ref this.mentees, value);
-        }*/
 
         public List<Matching> Matchings
         {
@@ -92,6 +64,8 @@ namespace MentorSpeedDatingApp.ViewModel
             get => this.headline;
             set => base.Set(ref this.headline, value);
         }
+
+        public String ExportToolTip { get => this.exportToolTip; set => base.Set(ref this.exportToolTip, value); }
 
         #endregion
 
@@ -134,13 +108,14 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        public MatchingViewModel(MatchingCalculator calc, List<Matching> matchings, string headline)
+        public MatchingViewModel(MatchingCalculator calc, List<Matching> matchings, string headline, bool canExecuteExport = true)
         {
-            this.ExportCommand = new RelayCommand(this.ExportCommandHandling);
+            this.ExportCommand = new RelayCommand(this.ExportCommandHandling, this.CanExecuteExport);
             this.PrintCommand = new GalaSoft.MvvmLight.Command.RelayCommand<Visual>(this.PrintCommandHandling);
             this.Headline = String.IsNullOrWhiteSpace(headline) ? "Mentor Speed Dating" : headline;
             this.matchingCalculator = calc;
             this.Matchings = matchings;
+            this.canExecuteExport = canExecuteExport;
             this.Initiate();
         }
 
@@ -299,6 +274,15 @@ namespace MentorSpeedDatingApp.ViewModel
                     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                     "MSDAPP"));
             }
+        }
+
+        private bool CanExecuteExport()
+        {
+            if (!this.canExecuteExport)
+            {
+                this.exportToolTip = "Bitte exportieren Sie das Matching aus der Gesamtübersicht.";
+            }
+            return this.canExecuteExport;
         }
 
         #endregion

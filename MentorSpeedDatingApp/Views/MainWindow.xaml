@@ -261,6 +261,7 @@
                 <!-- Mentoren Tabelle -->
                 <DataGrid x:Name="MentorsGridView"
                           Grid.Row="1" Grid.Column="0"
+                          ToolTip="{Binding TableToolTip}"
                           CanUserAddRows="False"
                           CanUserDeleteRows="True"
                           ItemsSource="{Binding Path=Mentors}"
@@ -316,6 +317,7 @@
 
                 <DataGrid x:Name="MenteesGridView"
                           Grid.Row="1" Grid.Column="1"
+                          ToolTip="{Binding TableToolTip}"
                           CanUserAddRows="False"
                           CanUserDeleteRows="True"
                           ItemsSource="{Binding Path=Mentees}"

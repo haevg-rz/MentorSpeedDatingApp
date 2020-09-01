@@ -26,6 +26,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Properties
 
+        public String TableToolTip { get; set; } = "Neuen Eintrag mit Rechtsklick hinzufügen...";
+
         public Config AppSaveConfig { get; set; } = new Config();
 
         private string headline = "";
@@ -373,7 +375,7 @@ namespace MentorSpeedDatingApp.ViewModel
             var sfd = new SaveFileDialog
             {
                 InitialDirectory = this.AppSaveConfig.AppSaveFileFolder,
-                FileName = this.AppSaveConfig.AppSaveFileName,
+                FileName = this.AppSaveConfig.AppDefaultFileName,
                 Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*",
                 DefaultExt = "JSON Files (*.json) | .json"
             };

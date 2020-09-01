@@ -46,12 +46,18 @@
                 <ColumnDefinition Width="400" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Command="{Binding ExportCommand}" Grid.Column="0" Height="40" Width="300" BorderBrush="#9AEDAB"
-                    Content="Exportieren" Template="{DynamicResource ButtonTemplate}" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="0.3*" />
+            </Grid.RowDefinitions>
+                <Button Command="{Binding ExportCommand}" Height="40" Width="300" BorderBrush="#9AEDAB"
+                        Content="Exportieren" Template="{DynamicResource ButtonTemplate}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ExportToolTip}" HorizontalAlignment="Center" Foreground="Red" FontWeight="Thin" FontSize="12"/>
+
             <Button Command="{Binding PrintCommand}" CommandParameter="{Binding ElementName=PrintGrid}"
                     Height="40" Width="300" BorderBrush="#9AEDAB"
-                    Grid.Column="1" Content="Drucken" Template="{DynamicResource ButtonTemplate}" />
-            <ToggleButton Grid.Column="2" Name="CheckBoxReadOnly" IsChecked="True" Width="40" Height="40"
+                    Grid.Row="0" Grid.Column="1" Content="Drucken" Template="{DynamicResource ButtonTemplate}" />
+            <ToggleButton Grid.Row="0" Grid.Column="2" Name="CheckBoxReadOnly" IsChecked="True" Width="40" Height="40"
                           ToolTip="Anklicken zum Bearbeiten der Tabelle."
                           Template="{DynamicResource MatchingEditLockToggleButtonTemplate}" />
         </Grid>

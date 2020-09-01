@@ -30,17 +30,17 @@ namespace MentorSpeedDatingApp.WindowManagement
                     "Die Ausgabemenge ist zu groß für eine Druckseite. Im Hintergrund haben sich Fenster geöffnet, die Sie einzeln drucken können.", "Warnung");
 
                 var firstWindow = new MatchingWindow();
-                firstWindow.DataContext = new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline);
+                firstWindow.DataContext = new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline + " Gesamtübersicht", true);
                 firstWindow.Show();
                 matchingWindows.Add(firstWindow);
 
                 for (var index = 0; index < listOfMatchings.Count; index++)
                 {
-                    var seitenLabel = mVm.Headline + " - Seite " + index;
+                    var seitenLabel = mVm.Headline + " - Seite " + index++;
                     var m = listOfMatchings[index];
                     var window = new MatchingWindow();
                     window.DataContext =
-                        new MatchingViewModel(calculator, m, seitenLabel);
+                        new MatchingViewModel(calculator, m, seitenLabel,false);
                     window.WindowState = WindowState.Minimized;
 
                     window.Show();
@@ -51,7 +51,7 @@ namespace MentorSpeedDatingApp.WindowManagement
             {
                 var window = new MatchingWindow();
                 window.DataContext =
-                    new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline);
+                    new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline, true);
                 window.Show();
                 matchingWindows.Add(window);
             }
