@@ -18,17 +18,7 @@
 
     <Grid>
         <ListView ItemsSource="{Binding NoGoDates}" Margin="20" SelectedItem="{Binding Path=SelectedNoGoDate}"
-                  MinWidth="200" MinHeight="100">
-            <ListView.Resources>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="Background" Value="#67B432" />
-                    <Setter Property="Foreground" Value="White" />
-                    <Setter Property="FontWeight" Value="Bold" />
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                    <Setter Property="Margin" Value="1,2.5,1,2.5" />
-                    <Setter Property="Height" Value="30" />
-                </Style>
-            </ListView.Resources>
+                  MinWidth="200" MinHeight="100" ItemContainerStyle="{StaticResource ListViewItemStyle}">
             <ListView.ContextMenu>
                 <ContextMenu StaysOpen="False">
                     <MenuItem Header="NoGoDate entfernen" Command="{Binding Path=DeleteNoGoDateCommand}"

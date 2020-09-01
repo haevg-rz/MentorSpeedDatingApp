@@ -41,12 +41,13 @@ namespace MentorSpeedDatingApp.Views
             if (!selectedRow.Item.Equals(this.MentorsGridView.Items[^1]))
                 return;
 
-            if (e.Key == Key.Enter || e.Key == Key.Tab)
+            if (e.Key == Key.Tab || e.Key == Key.Enter)
             {
                 var mentorsList = SimpleIoc.Default.GetInstance<MainViewModel>().Mentors;
                 if (!String.IsNullOrEmpty(mentorsList.Last().Name) && !String.IsNullOrEmpty(mentorsList.Last().Vorname))
                 {
                     mentorsList.Add(new Mentor());
+                    e.Handled = true;
                 }
             }
         }

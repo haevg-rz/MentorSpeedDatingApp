@@ -265,25 +265,12 @@ namespace MentorSpeedDatingApp.ViewModel
 
             try
             {
-                sheet.Cells[1, 1] = this.headline;
-                sheet.Cells[2, 1] = "Uhrzeit";
-                var i = 2;
-                foreach (Matching matching in this.matchings)
+                for (int i = 0; i < this.MatchingList.Count; i++)
                 {
-                    sheet.Cells[2, i] = matching.Mentor.ToString();
-                    var j = 3;
-                    foreach (var date in matching.Dates)
+                    for (int j = 0; j < this.MatchingList[i].Count; j++)
                     {
-                        sheet.Cells[j, 1] = date.TimeSlot.Time.TimeOfDay.ToString("hh\\:mm") + " - " +
-                                            date.TimeSlot.Time.AddMinutes(lenghOfTimeSlot).TimeOfDay
-                                                .ToString("hh\\:mm");
-
-                        sheet.Cells[j, i] = date.Mentee.ToString();
-
-                        j++;
+                        sheet.Cells[i + 2, j + 1] = this.MatchingList[i][j].Content.Trim();
                     }
-
-                    i++;
                 }
 
                 sheet.Range["A1", "Z2"].EntireRow.Font.Bold = true;
