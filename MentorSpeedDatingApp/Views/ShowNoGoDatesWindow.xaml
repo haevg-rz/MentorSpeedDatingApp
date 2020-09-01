@@ -17,7 +17,7 @@
     </Window.Resources>
 
     <Grid>
-        <ListView ItemsSource="{Binding NoGoDates}" Margin="20" SelectedItem="{Binding Path=SelectedNoGoDate}"
+        <ListView ItemsSource="{Binding ObservableNoGoDates}" Margin="20" SelectedItem="{Binding Path=SelectedNoGoDate}"
                   MinWidth="200" MinHeight="100" ItemContainerStyle="{StaticResource ListViewItemStyle}">
             <ListView.ContextMenu>
                 <ContextMenu StaysOpen="False">
