@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using Microsoft.Office.Interop.Excel;
@@ -13,6 +12,7 @@ using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using GalaSoft.MvvmLight.CommandWpf;
 using Point = System.Windows.Point;
 
 namespace MentorSpeedDatingApp.ViewModel
@@ -21,10 +21,10 @@ namespace MentorSpeedDatingApp.ViewModel
     {
         #region Fields
 
-        private DateTime startTime;
+/*        private DateTime startTime;
         private DateTime endTime;
         private List<Mentor> mentors;
-        private List<Mentee> mentees;
+        private List<Mentee> mentees;*/
         private List<Matching> matchings;
         private List<DateSpan> dateTimes;
         private MatchingCalculator matchingCalculator;
@@ -34,29 +34,31 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region Properties
 
+/*
         public DateTime StartTime
         {
             get => this.startTime;
             set => base.Set(ref this.startTime, value);
         }
+*/
 
-        public DateTime EndTime
+/*        public DateTime EndTime
         {
             get => this.endTime;
             set => base.Set(ref this.endTime, value);
-        }
+        }*/
 
-        public List<Mentor> Mentors
+/*        public List<Mentor> Mentors
         {
             get => this.mentors;
             set => base.Set(ref this.mentors, value);
-        }
+        }*/
 
-        public List<Mentee> Mentees
+/*        public List<Mentee> Mentees
         {
             get => this.mentees;
             set => base.Set(ref this.mentees, value);
-        }
+        }*/
 
         public List<Matching> Matchings
         {
@@ -91,13 +93,11 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.headline, value);
         }
 
-        public bool UseNoGoDates { get; set; }
-
         #endregion
 
         #region RelayCommands
 
-        public RelayCommand<Visual> PrintCommand { get; set; }
+        public GalaSoft.MvvmLight.Command.RelayCommand<Visual> PrintCommand { get; set; }
         public GalaSoft.MvvmLight.CommandWpf.RelayCommand ExportCommand { get; }
 
         #endregion
@@ -106,7 +106,6 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             if (this.IsInDesignMode)
             {
-                this.GenerateTestData();
                 this.MatchingList = new List<List<TableElement>>
                 {
                     new List<TableElement>
@@ -134,31 +133,21 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        public MatchingViewModel(ObservableCollection<Mentor> mentorsList,
-            ObservableCollection<Mentee> menteeList, DateTime startTime, DateTime endTime, String headline,
-            ObservableCollection<(Mentor, Mentee)> noGoDates, bool useNoGoDates)
+        public MatchingViewModel(MatchingCalculator calc, List<Matching> matchings, string headline)
         {
-            this.StartTime = startTime;
-            this.EndTime = endTime;
-            this.Mentors = mentorsList.ToList();
-            this.Mentees = menteeList.ToList();
-            this.NoGoDates = noGoDates;
+            this.ExportCommand = new RelayCommand(this.ExportCommandHandling);
+            this.PrintCommand = new GalaSoft.MvvmLight.Command.RelayCommand<Visual>(this.PrintCommandHandling);
             this.Headline = headline;
-            this.PrintCommand = new RelayCommand<Visual>(this.PrintCommandHandling);
-            this.ExportCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(this.ExportCommandHandling);
-            this.UseNoGoDates = useNoGoDates;
+            this.matchingCalculator = calc;
+            this.Matchings = matchings;
             this.Initiate();
         }
 
         private void Initiate()
         {
-            this.matchingCalculator =
-                new MatchingCalculator(this.StartTime, this.EndTime, this.Mentors, this.Mentees, this.NoGoDates,
-                    this.UseNoGoDates);
-            this.Matchings = this.matchingCalculator.Matchings;
             this.DateTimes = this.FormatDateTimeList(this.matchingCalculator.MatchingDates);
-
             this.MatchingList = new List<List<TableElement>> {new List<TableElement>()};
+
             this.MatchingList[0].Add(new TableElement {Content = "Uhrzeit", IsMentor = true, IsTime = true});
 
             foreach (var matching in this.Matchings)
@@ -322,99 +311,6 @@ namespace MentorSpeedDatingApp.ViewModel
                     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                     "MSDAPP"));
             }
-        }
-
-        #endregion
-
-        #region TestGenerators
-
-        private void GenerateTestData()
-        {
-            this.Mentors = GenerateTestMentors();
-            this.Mentees = GenerateTestMentees();
-            this.StartTime = new DateTime(2020, 7, 21, 9, 0, 0);
-            this.EndTime = new DateTime(2020, 7, 21, 16, 0, 0);
-            this.Matchings = this.GenerateTestMatchings();
-            this.DateTimes = this.GenerateTestDateTimes();
-        }
-
-        private List<DateSpan> GenerateTestDateTimes()
-        {
-            return new List<DateSpan>
-            {
-                new DateSpan {Time = "09:00 - 09:45"},
-                new DateSpan {Time = "09:00 - 09:45"},
-                new DateSpan {Time = "09:00 - 09:45"},
-                new DateSpan {Time = "09:00 - 09:45"},
-                new DateSpan {Time = "09:00 - 09:45"}
-            };
-        }
-
-        private List<Matching> GenerateTestMatchings()
-        {
-            var testMatchings = new List<Matching>();
-            foreach (var testMentor in GenerateTestMentors())
-            {
-                var testMatch = new Matching()
-                {
-                    Dates = this.GenerateTestDates(),
-                    Mentor = testMentor
-                };
-                testMatchings.Add(testMatch);
-            }
-
-            return testMatchings;
-        }
-
-        private List<IDate> GenerateTestDates()
-        {
-            var testDates = new List<IDate>();
-            foreach (var testMentee in GenerateTestMentees())
-            {
-                var date = new Date()
-                {
-                    Mentee = testMentee,
-                    TimeSlot = new TimeSlot()
-                    {
-                        IsBreak = false,
-                        Time = new DateTime(2020, 7, 21, 8, 30, 0).AddMinutes(30)
-                    }
-                };
-                testDates.Add(date);
-            }
-
-            return testDates;
-        }
-
-        private static List<Mentee> GenerateTestMentees()
-        {
-            var testMentees = new List<Mentee>()
-            {
-                new Mentee()
-                    {Name = "TestMentee1", Titel = "TestTitel1", Vorname = "TestVorname1", IsFiller = false},
-                new Mentee()
-                    {Name = "TestMentee2", Titel = "TestTitel2", Vorname = "TestVorname2", IsFiller = false},
-                new Mentee()
-                    {Name = "TestMentee3", Titel = "TestTitel3", Vorname = "TestVorname3", IsFiller = false},
-                new Mentee()
-                    {Name = "TestMentee4", Titel = "TestTitel4", Vorname = "TestVorname4", IsFiller = false},
-                new Mentee()
-                    {Name = "TestMentee5", Titel = "TestTitel5", Vorname = "TestVorname5", IsFiller = false}
-            };
-            return testMentees;
-        }
-
-        private static List<Mentor> GenerateTestMentors()
-        {
-            var testMentors = new List<Mentor>()
-            {
-                new Mentor() {Name = "TestMentor1", Titel = "TestTitel1", Vorname = "TestVorname1"},
-                new Mentor() {Name = "TestMentor2", Titel = "TestTitel2", Vorname = "TestVorname2"},
-                new Mentor() {Name = "TestMentor3", Titel = "TestTitel3", Vorname = "TestVorname3"},
-                new Mentor() {Name = "TestMentor4", Titel = "TestTitel4", Vorname = "TestVorname4"},
-                new Mentor() {Name = "TestMentor5", Titel = "TestTitel5", Vorname = "TestVorname5"}
-            };
-            return testMentors;
         }
 
         #endregion

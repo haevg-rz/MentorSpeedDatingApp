@@ -1,10 +1,13 @@
+using System;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.ViewModel;
 using MentorSpeedDatingApp.Views;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
+using MentorSpeedDatingApp.ExtraFunctions;
 
 namespace MentorSpeedDatingApp.WindowManagement
 {
@@ -15,12 +18,52 @@ namespace MentorSpeedDatingApp.WindowManagement
 
         public static void ShowMatchingWindow(MainViewModel mVm, bool useNoGoDates)
         {
-            var window = new MatchingWindow();
-            window.DataContext =
-                new MatchingViewModel(mVm.Mentors, mVm.Mentees, mVm.StartTime, mVm.EndTime, mVm.Headline, mVm.NoGoDates,
-                    useNoGoDates);
-            window.Show();
-            matchingWindows.Add(window);
+            List<Mentor> mentorList = mVm.Mentors.ToList();
+            List<Mentee> menteeList = mVm.Mentees.ToList();
+            var calculator = new MatchingCalculator(mVm.StartTime, mVm.EndTime, mentorList, menteeList, mVm.NoGoDates, useNoGoDates);
+            var matchings = calculator.Matchings;
+            var dates = calculator.MatchingDates;
+            List<List<Matching>> listOfMatchings = SplitMatchingsIntoSmallerMatchings(matchings, 8);
+            if (matchings.Count > 8)
+            {
+                MessageBox.Show(
+                    "Die Ausgabemenge ist zu groß für eine Druckseite. Im Hintergrund haben sich Fenster geöffnet, die Sie einzeln drucken können.", "Warnung");
+
+                var firstWindow = new MatchingWindow();
+                firstWindow.DataContext = new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline);
+                firstWindow.Show();
+                matchingWindows.Add(firstWindow);
+
+                foreach (var m in listOfMatchings)
+                {
+                    var window = new MatchingWindow();
+                    window.DataContext =
+                        new MatchingViewModel(calculator, m, mVm.Headline);
+                    window.WindowState = WindowState.Minimized;
+                    window.Show();
+                    matchingWindows.Add(window);
+                }
+            }
+            else
+            {
+                var window = new MatchingWindow();
+                window.DataContext =
+                    new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline);
+                window.Show();
+                matchingWindows.Add(window);
+            }
+
+        }
+
+        private static List<List<Matching>> SplitMatchingsIntoSmallerMatchings(List<Matching> matchings, int size)
+        {
+            var outerList = new List<List<Matching>>();
+            for (int i = 0; i < matchings.Count; i+=size)
+            {
+                outerList.Add(matchings.GetRange(i, Math.Min(size, matchings.Count - i)));
+            }
+
+            return outerList;
         }
 
         public static void ShowNoGoDatesWindow(ObservableCollection<(Mentor, Mentee)> noGoDates)

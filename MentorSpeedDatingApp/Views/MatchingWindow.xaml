@@ -25,18 +25,18 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="0.2*" />
         </Grid.RowDefinitions>
-        <StackPanel>
+        <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
             <Border BorderBrush="Transparent" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top"
                     Background="{StaticResource HealthCareWhiteBrush}">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="4" Color="DarkOliveGreen" Direction="0" Opacity="0.5"
                                       BlurRadius="20" />
-                </Border.Effect>
+                </Border.Effect> 
                 <ItemsControl ItemsSource="{Binding Path=MatchingList}"
-                              ItemTemplate="{DynamicResource DataTemplate_Level1}"
-                              Padding="10" x:Name="PrintGrid" />
+                                  ItemTemplate="{DynamicResource DataTemplate_Level1}"
+                                  Padding="10" x:Name="PrintGrid" />
             </Border>
-        </StackPanel>
+        </ScrollViewer>
         <Grid Grid.Row="1" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400" />

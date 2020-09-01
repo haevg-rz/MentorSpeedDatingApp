@@ -60,7 +60,7 @@
             </Grid.RowDefinitions>
             <!-- Begin Control Region upper -->
             <TabControl TabStripPlacement="Top" Grid.IsSharedSizeScope="True">
-                <TabItem Header="       " IsSelected="True">
+                <TabItem Header="Planung"  IsSelected="True">
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition SharedSizeGroup="SharedHeightTabItem" />
