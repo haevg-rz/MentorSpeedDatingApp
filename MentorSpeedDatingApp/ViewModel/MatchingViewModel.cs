@@ -106,6 +106,7 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             if (this.IsInDesignMode)
             {
+                this.Headline = "Mentor Speed Dating";
                 this.MatchingList = new List<List<TableElement>>
                 {
                     new List<TableElement>
@@ -137,7 +138,7 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             this.ExportCommand = new RelayCommand(this.ExportCommandHandling);
             this.PrintCommand = new GalaSoft.MvvmLight.Command.RelayCommand<Visual>(this.PrintCommandHandling);
-            this.Headline = headline;
+            this.Headline = String.IsNullOrWhiteSpace(headline) ? "Mentor Speed Dating" : headline;
             this.matchingCalculator = calc;
             this.Matchings = matchings;
             this.Initiate();
