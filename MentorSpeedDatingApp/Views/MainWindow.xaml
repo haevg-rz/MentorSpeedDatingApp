@@ -60,7 +60,7 @@
             </Grid.RowDefinitions>
             <!-- Begin Control Region upper -->
             <TabControl TabStripPlacement="Top" Grid.IsSharedSizeScope="True">
-                <TabItem Header="Planung"  IsSelected="True">
+                <TabItem Header="Planung" IsSelected="True">
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition SharedSizeGroup="SharedHeightTabItem" />
@@ -240,6 +240,30 @@
                         </Grid>
                     </Grid>
 
+                </TabItem>
+                <TabItem Header="Druckeinstellungen">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition SharedSizeGroup="SharedHeightTabItem" />
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock 
+                                           Height="20"
+                                           Width="200"
+                                           Text="Spaltenanzahl Druckseite: "
+                                           ToolTip="Geben Sie bitte den Wert für die maximale Anzahl der Spalten auf einer Druckseite an."
+                                           Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}"
+                                           FontSize="16" FontWeight="DemiBold" />
+                                <TextBox Margin="5,0,0,0" Text="{Binding MaxDruckSpalten}"
+                                         FontSize="16" Width="20" Height="20" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
                 </TabItem>
             </TabControl>
             <!-- End Control Region upper -->
