@@ -2,7 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Windows.Input;
 
 namespace MentorSpeedDatingApp.ExtraFunctions
 {
@@ -206,6 +210,18 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             var reservedTimeForDates = (endTime - startTime) - reservedTimeForBreaks;
 
             var dateDuration = reservedTimeForDates / amountOfDates;
+
+            //Is valid for operations between 00 and 99 Minutes dateDuration (See Thresholds)
+            if (!CheckForFivesOrZeros(dateDuration.ToString(CultureInfo.InvariantCulture)))
+            {
+                while (!CheckForFivesOrZeros(dateDuration.ToString(CultureInfo.InvariantCulture)))
+                {
+                    var intDuration = (int) dateDuration;
+                    intDuration++;
+                    dateDuration = intDuration;
+                }
+            }
+
             ///////////////////////////////////////////////////////////////////////
             //Thresholds for Date-Durations, later to be replaced with variables.//
             ///////////////////////////////////////////////////////////////////////
@@ -220,6 +236,13 @@ namespace MentorSpeedDatingApp.ExtraFunctions
             }
 
             return (dateDuration, amountOfTimeSlots);
+        }
+
+        private static bool CheckForFivesOrZeros(string input)
+        {
+            var pattern = "([0-9][05])";
+            var matches = Regex.Matches(input, pattern);
+            return matches.Any();
         }
 
         private List<Mentee> FixMenteeListSize(List<Mentee> mentees)
