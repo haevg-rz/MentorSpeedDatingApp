@@ -34,9 +34,10 @@ namespace MentorSpeedDatingApp.WindowManagement
                 firstWindow.Show();
                 matchingWindows.Add(firstWindow);
 
-                for (var index = 0; index < listOfMatchings.Count; index++)
+                for (var index = 0; index <= listOfMatchings.Count-1; index++)
                 {
-                    var seitenLabel = mVm.Headline + " - Seite " + index++;
+                    var seitenAnzahl = index + 1;
+                    var seitenLabel = mVm.Headline + " - Seite " + seitenAnzahl;
                     var m = listOfMatchings[index];
                     var window = new MatchingWindow();
                     window.DataContext =
