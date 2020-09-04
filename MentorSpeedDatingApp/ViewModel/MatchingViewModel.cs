@@ -221,7 +221,7 @@ namespace MentorSpeedDatingApp.ViewModel
                         availableSize));
                 }
 
-                printDialog.PrintVisual(e, "MentorSpeedDating_" + DateTime.Now.Date.ToShortDateString());
+                printDialog.PrintVisual(e, this.Headline + "_" + DateTime.Now.Date.ToShortDateString());
                 e.LayoutTransform = originalScale;
             }
         }

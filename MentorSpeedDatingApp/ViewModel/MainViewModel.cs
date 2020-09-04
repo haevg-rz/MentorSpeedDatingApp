@@ -32,12 +32,16 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private string headline = "";
 
+        private int maxDruckSpalten = 8;
+
         [DataMember]
         public string Headline
         {
             get => this.headline;
             set => base.Set(ref this.headline, value);
         }
+
+        public int MaxDruckSpalten { get => this.maxDruckSpalten; set => base.Set(ref this.maxDruckSpalten, value); }
 
         private DateTime date = DateTime.Now;
 
@@ -305,7 +309,7 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             this.PreMatchingGenerationValidationAndCorrectionRoutine();
 
-            WindowManager.ShowMatchingWindow(this, false);
+            WindowManager.ShowMatchingWindow(this, false, this.maxDruckSpalten);
         }
 
         private void GenerateMatchingWithNoGoDatesCommandHandling()

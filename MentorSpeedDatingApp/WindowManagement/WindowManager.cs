@@ -16,15 +16,15 @@ namespace MentorSpeedDatingApp.WindowManagement
         private static ShowNoGoDatesWindow noDatesWindow;
         private static List<MatchingWindow> matchingWindows = new List<MatchingWindow>();
 
-        public static void ShowMatchingWindow(MainViewModel mVm, bool useNoGoDates)
+        public static void ShowMatchingWindow(MainViewModel mVm, bool useNoGoDates, int maxDruckSpalten = 8)
         {
             List<Mentor> mentorList = mVm.Mentors.ToList();
             List<Mentee> menteeList = mVm.Mentees.ToList();
             var calculator = new MatchingCalculator(mVm.StartTime, mVm.EndTime, mentorList, menteeList, mVm.NoGoDates, useNoGoDates);
             var matchings = calculator.Matchings;
             var dates = calculator.MatchingDates;
-            List<List<Matching>> listOfMatchings = SplitMatchingsIntoSmallerMatchings(matchings, 8);
-            if (matchings.Count > 8)
+            List<List<Matching>> listOfMatchings = SplitMatchingsIntoSmallerMatchings(matchings, maxDruckSpalten);
+            if (matchings.Count > maxDruckSpalten)
             {
                 MessageBox.Show(
                     "Die Ausgabemenge ist zu groß für eine Druckseite. Im Hintergrund haben sich Fenster geöffnet, die Sie einzeln drucken können.", "Warnung");
