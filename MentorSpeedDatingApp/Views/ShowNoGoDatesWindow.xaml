@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="NoGoDates" Height="450" Width="800"
+        Title="NoGoDates" MinHeight="100" MinWidth="200"
         SizeToContent="WidthAndHeight"
         DataContext="{Binding Source={StaticResource Locator}, Path=NoGoVM}">
 
@@ -17,7 +17,7 @@
     </Window.Resources>
 
     <Grid>
-        <ListView ItemsSource="{Binding ObservableNoGoDates}" Margin="20" SelectedItem="{Binding Path=SelectedNoGoDate}"
+        <ListView ItemsSource="{Binding NoGoDates}" Margin="20" SelectedItem="{Binding Path=SelectedNoGoDate}"
                   MinWidth="200" MinHeight="100" ItemContainerStyle="{StaticResource ListViewItemStyle}">
             <ListView.ContextMenu>
                 <ContextMenu StaysOpen="False">

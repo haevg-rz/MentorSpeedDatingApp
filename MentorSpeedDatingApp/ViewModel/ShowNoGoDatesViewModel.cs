@@ -9,7 +9,6 @@ namespace MentorSpeedDatingApp.ViewModel
 {
     public class ShowNoGoDatesViewModel : ViewModelBase
     {
-        public ObservableCollection<String> ObservableNoGoDates { get; set; }
         public ObservableCollection<(Mentor, Mentee)> NoGoDates { get; set; }
         public RelayCommand DeleteNoGoDateCommand { get; set; }
 
@@ -39,18 +38,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public ShowNoGoDatesViewModel(ObservableCollection<(Mentor, Mentee)> noGoDates)
         {
             this.NoGoDates = noGoDates;
-            this.ObservableNoGoDates = new ObservableCollection<string>();
-            this.ConvertTupleToStringList();
             this.DeleteNoGoDateCommand = new RelayCommand(this.DeleteNoGoDateCommandHandling);
-        }
-
-        private void ConvertTupleToStringList()
-        {
-            foreach (var (mentor, mentee) in this.NoGoDates)
-            {
-                var s = mentor + " - " + mentee;
-                this.ObservableNoGoDates.Add(s);
-            }
         }
 
         private void DeleteNoGoDateCommandHandling()

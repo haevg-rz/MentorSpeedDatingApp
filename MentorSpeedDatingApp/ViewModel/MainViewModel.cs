@@ -41,7 +41,11 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.headline, value);
         }
 
-        public int MaxDruckSpalten { get => this.maxDruckSpalten; set => base.Set(ref this.maxDruckSpalten, value); }
+        public int MaxDruckSpalten
+        {
+            get => this.maxDruckSpalten;
+            set => base.Set(ref this.maxDruckSpalten, value);
+        }
 
         private DateTime date = DateTime.Now;
 
@@ -159,7 +163,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         [DataMember] public ObservableCollection<Mentee> Mentees { get; set; }
         [DataMember] public ObservableCollection<Mentor> Mentors { get; set; }
-        public ObservableCollection<(Mentor, Mentee)> NoGoDates { get; set; }
+        [DataMember] public ObservableCollection<(Mentor, Mentee)> NoGoDates { get; set; }
 
         #endregion
 
@@ -237,6 +241,8 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
+        #region CommandHandlings
+
         private void AddNewMenteeCommandHandling()
         {
             this.Mentees.Add(new Mentee());
@@ -246,8 +252,6 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             this.Mentors.Add(new Mentor());
         }
-
-        #region CommandHandlings
 
         private void ShowNoGoDatesCommandHandling()
         {
@@ -267,12 +271,14 @@ namespace MentorSpeedDatingApp.ViewModel
             }
 
             //TODO UNSCHÖN
-            if (String.IsNullOrEmpty(this.NoGoMentor.Name) 
-                || String.IsNullOrEmpty(this.NoGoMentor.Vorname) 
-                || String.IsNullOrEmpty(this.NoGoMentee.Name) 
+            if (String.IsNullOrEmpty(this.NoGoMentor.Name)
+                || String.IsNullOrEmpty(this.NoGoMentor.Vorname)
+                || String.IsNullOrEmpty(this.NoGoMentee.Name)
                 || String.IsNullOrEmpty(this.NoGoMentee.Vorname))
             {
-                MessageBox.Show("Ungültige Auswahl. Bitte eine Mentorin oder Mentee mit gültigem Namen und Vornamen wählen.", "Information",
+                MessageBox.Show(
+                    "Ungültige Auswahl. Bitte eine Mentorin oder Mentee mit gültigem Namen und Vornamen wählen.",
+                    "Information",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
@@ -452,7 +458,8 @@ namespace MentorSpeedDatingApp.ViewModel
                 EndTimeHours = "",
                 EndTimeMinutes = "",
                 Mentees = new List<Mentee>(),
-                Mentors = new List<Mentor>()
+                Mentors = new List<Mentor>(),
+                NoGoDates = new List<(Mentor, Mentee)>()
             };
 
             if (!File.Exists(this.AppSaveConfig.CombineAppPaths()))
@@ -481,6 +488,14 @@ namespace MentorSpeedDatingApp.ViewModel
                 this.Mentees.Add(mentee);
             }
 
+            if (deserializedJson.NoGoDates == null)
+                return;
+
+            foreach (var noGoDate in deserializedJson.NoGoDates)
+            {
+                this.NoGoDates.Add(noGoDate);
+            }
+
             #endregion
         }
 
@@ -488,7 +503,7 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             MessageBox.Show(
                 messageBoxText:
-                "Version 1.0.1 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp",
+                "Version 1.0.2 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp",
                 caption: "App-Informationen");
         }
 
@@ -531,7 +546,8 @@ namespace MentorSpeedDatingApp.ViewModel
                 EndTimeHours = "",
                 EndTimeMinutes = "",
                 Mentees = new List<Mentee>(),
-                Mentors = new List<Mentor>()
+                Mentors = new List<Mentor>(),
+                NoGoDates = new List<(Mentor, Mentee)>()
             };
 
             if (!File.Exists(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)))
@@ -560,7 +576,28 @@ namespace MentorSpeedDatingApp.ViewModel
                    || this.StartTimeHours != deserializedJson.StartTimeHours
                    || this.StartTimeMinutes != deserializedJson.StartTimeMinutes
                    || this.EndTimeHours != deserializedJson.EndTimeHours
-                   || this.EndTimeMinutes != deserializedJson.EndTimeMinutes;
+                   || this.EndTimeMinutes != deserializedJson.EndTimeMinutes
+                   || this.CheckNoGoDatesForChanges(deserializedJson.NoGoDates);
+        }
+
+        private bool CheckNoGoDatesForChanges(List<(Mentor, Mentee)> noGoDates)
+        {
+            if (this.NoGoDates.Any() && noGoDates == null || !this.NoGoDates.Any() && noGoDates != null)
+                return true;
+
+            if (!this.NoGoDates.Any() && noGoDates == null)
+                return false;
+
+            if (this.NoGoDates.Count != noGoDates.Count)
+                return true;
+
+            return !this.NoGoDates.CompareCollectionsOnEqualContent(noGoDates, (tuple, valueTuple) =>
+                tuple.Item1.Name == valueTuple.Item1.Name
+                && tuple.Item1.Vorname == valueTuple.Item1.Vorname
+                && tuple.Item1.Titel == valueTuple.Item1.Titel
+                && tuple.Item2.Name == valueTuple.Item2.Name
+                && tuple.Item2.Vorname == valueTuple.Item2.Vorname
+                && tuple.Item2.Titel == valueTuple.Item2.Titel);
         }
 
         #endregion
