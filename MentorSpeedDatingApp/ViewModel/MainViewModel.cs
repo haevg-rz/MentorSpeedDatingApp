@@ -488,7 +488,7 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             MessageBox.Show(
                 messageBoxText:
-                "Version 0.1.0 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp",
+                "Version 1.0.1 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp",
                 caption: "App-Informationen");
         }
 
