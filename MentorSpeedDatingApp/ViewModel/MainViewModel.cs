@@ -381,14 +381,13 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var combinedPath = this.AppSaveConfig.AppSaveFileFolder;
-
             var sfd = new SaveFileDialog
             {
                 InitialDirectory = this.AppSaveConfig.AppSaveFileFolder,
                 FileName = this.AppSaveConfig.AppDefaultFileName,
                 Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*",
-                DefaultExt = "JSON Files (*.json) | .json"
+                DefaultExt = "JSON Files (*.json) | .json",
+                RestoreDirectory = true
             };
 
             if (sfd.ShowDialog() != true)
@@ -399,6 +398,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.AppSaveConfig.AppSaveFileFolder = Path.GetDirectoryName(sfd.FileName);
             File.WriteAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName),
                 jsonData);
+            this.AppSaveConfig.AppDefaultFileName = sfd.FileName;
         }
 
         private void OnLoadedCommandHandling()

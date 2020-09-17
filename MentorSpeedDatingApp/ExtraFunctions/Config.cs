@@ -13,11 +13,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         public string AppDefaultFolder { get; } =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
 
-        public string AppDefaultFileName { get; } = "savedData";
-
-        public string AppDefaultCombination { get; } =
-            Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP"),
-                "savedData.json");
+        public string AppDefaultFileName { get; set; } = "savedData";
 
         public string AppConfigPath { get; } =
             Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP"),
