@@ -25,6 +25,7 @@ namespace MentorSpeedDatingApp.ViewModel
         private List<DateSpan> dateTimes;
         private MatchingCalculator matchingCalculator;
         private string headline;
+        private string printHeadline;
         private bool canExecuteExport = true;
         private String exportToolTip = "";
 
@@ -64,6 +65,8 @@ namespace MentorSpeedDatingApp.ViewModel
             get => this.headline;
             set => base.Set(ref this.headline, value);
         }
+
+        public String PrintHeadline { get => this.printHeadline; set => base.Set(ref this.printHeadline, value); }
 
         public String ExportToolTip { get => this.exportToolTip; set => base.Set(ref this.exportToolTip, value); }
 
@@ -108,15 +111,36 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        public MatchingViewModel(MatchingCalculator calc, List<Matching> matchings, string headline, bool canExecuteExport = true)
+        public MatchingViewModel(MatchingCalculator calc, List<Matching> matchings, string headline, int seitenAnzahl, bool canExecuteExport = true)
         {
             this.ExportCommand = new RelayCommand(this.ExportCommandHandling, this.CanExecuteExport);
             this.PrintCommand = new GalaSoft.MvvmLight.Command.RelayCommand<Visual>(this.PrintCommandHandling);
-            this.Headline = String.IsNullOrWhiteSpace(headline) ? "Mentor Speed Dating" : headline;
+            this.Headline = this.TransformMultipageHeadlines(headline, seitenAnzahl);
+            this.PrintHeadline = String.IsNullOrWhiteSpace(headline) ? "Kennenlerntag " + DateTime.Now.Year : headline;
             this.matchingCalculator = calc;
             this.Matchings = matchings;
             this.canExecuteExport = canExecuteExport;
             this.Initiate();
+        }
+
+        private string TransformMultipageHeadlines(string title, int seitenAnzahl)
+        {
+            if (seitenAnzahl == 0)
+            {
+                return title;
+            }
+            string seitenLabel;
+            if (String.IsNullOrEmpty(title))
+            {
+                seitenLabel = "Kennenlerntag " + DateTime.Now.Year;
+                seitenLabel = seitenLabel + " - Seite " + seitenAnzahl;
+            }
+            else
+            {
+                seitenLabel = title + " - Seite " + seitenAnzahl;
+            }
+
+            return seitenLabel;
         }
 
         private void Initiate()
@@ -193,6 +217,8 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void PrintCommandHandling(Visual v)
         {
+            var origHeadline = this.Headline;
+            this.Headline = PrintHeadline;
             if (!(v is FrameworkElement e))
                 return;
 
@@ -224,6 +250,8 @@ namespace MentorSpeedDatingApp.ViewModel
                 printDialog.PrintVisual(e, this.Headline + "_" + DateTime.Now.Date.ToShortDateString());
                 e.LayoutTransform = originalScale;
             }
+
+            this.Headline = origHeadline;
         }
 
         private void ExportCommandHandling()
