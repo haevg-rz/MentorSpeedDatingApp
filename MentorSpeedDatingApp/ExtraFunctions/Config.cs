@@ -10,15 +10,6 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         public string AppSaveFileFolder { get; set; }
         public string AppSaveFileName { get; set; }
 
-        public string AppDefaultFolder { get; } =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
-
-        public string AppDefaultFileName { get; } = "savedData";
-
-        public string AppDefaultCombination { get; } =
-            Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP"),
-                "savedData.json");
-
         public string AppConfigPath { get; } =
             Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP"),
                 "config.json");
@@ -30,7 +21,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         {
             this.AppSaveFileFolder =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
-            this.AppSaveFileName = "savedData.json";
+            this.AppSaveFileName = "myMentorSpeedDating.json";
         }
 
         public string CombineAppPaths()
@@ -42,7 +33,7 @@ namespace MentorSpeedDatingApp.ExtraFunctions
         {
             this.AppSaveFileFolder =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MSDAPP");
-            this.AppSaveFileName = "savedData.json";
+            this.AppSaveFileName = "myMentorSpeedDating.json";
         }
 
         public override string ToString()

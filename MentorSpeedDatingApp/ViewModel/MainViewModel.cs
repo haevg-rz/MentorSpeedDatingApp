@@ -381,14 +381,16 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void SaveCommandHandling()
         {
-            var combinedPath = this.AppSaveConfig.AppSaveFileFolder;
+            var splits = this.AppSaveConfig.AppSaveFileName.Split('\\');
+            var split = splits.FirstOrDefault(x => x.Contains(".json"));
 
             var sfd = new SaveFileDialog
             {
                 InitialDirectory = this.AppSaveConfig.AppSaveFileFolder,
-                FileName = this.AppSaveConfig.AppDefaultFileName,
+                FileName = split,
                 Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*",
-                DefaultExt = "JSON Files (*.json) | .json"
+                DefaultExt = "JSON Files (*.json) | .json",
+                RestoreDirectory = true
             };
 
             if (sfd.ShowDialog() != true)
@@ -405,16 +407,16 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             #region Config/Default erstellen
 
-            if (!Directory.Exists(this.AppSaveConfig.AppDefaultFolder))
+            if (!Directory.Exists(this.AppSaveConfig.AppSaveFileFolder))
             {
-                Directory.CreateDirectory(this.AppSaveConfig.AppDefaultFolder);
+                Directory.CreateDirectory(this.AppSaveConfig.AppSaveFileFolder);
             }
 
             if (!File.Exists(this.AppSaveConfig.AppConfigPath))
             {
                 File.Create(this.AppSaveConfig.AppConfigPath).Close();
                 var defaultConfig = new
-                    {Folder = this.AppSaveConfig.AppDefaultFolder, FileName = this.AppSaveConfig.AppDefaultFileName};
+                    {Folder = this.AppSaveConfig.AppSaveFileFolder, FileName = this.AppSaveConfig.AppSaveFileName};
                 var jsonConfig = JsonConvert.SerializeObject(defaultConfig, Formatting.Indented);
                 File.WriteAllText(this.AppSaveConfig.AppConfigPath, jsonConfig);
             }
@@ -512,7 +514,8 @@ namespace MentorSpeedDatingApp.ViewModel
             sb.Append(".");
             sb.Append(versionBuild);
             var versionNo = sb.ToString();
-            var msg = "Version " + versionNo + "\nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp";
+            var msg = "Version " + versionNo +
+                      "\nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp";
             MessageBox.Show(msg,
                 "App-Informationen");
         }
@@ -592,7 +595,7 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private bool CheckNoGoDatesForChanges(List<(Mentor, Mentee)> noGoDates)
         {
-            if (this.NoGoDates.Any() && noGoDates == null || !this.NoGoDates.Any() && noGoDates != null)
+            if (this.NoGoDates.Any() && noGoDates == null)
                 return true;
 
             if (!this.NoGoDates.Any() && noGoDates == null)
