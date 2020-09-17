@@ -349,3 +349,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 MentorSpeedDatingApp/Herz_Logo.ico
+/MentorSpeedDatingApp/AssemblyInfoOrig.cs

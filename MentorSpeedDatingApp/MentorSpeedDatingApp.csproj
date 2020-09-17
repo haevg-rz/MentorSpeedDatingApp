@@ -9,6 +9,7 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <StartupObject>MentorSpeedDatingApp.App</StartupObject>
     <ApplicationIcon>Herz_Logo2.ico</ApplicationIcon>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>

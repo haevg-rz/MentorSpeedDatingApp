@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Windows;
 using Formatting = Newtonsoft.Json.Formatting;
 
@@ -486,10 +487,19 @@ namespace MentorSpeedDatingApp.ViewModel
 
         private void ShowInfoCommandHandling()
         {
-            MessageBox.Show(
-                messageBoxText:
-                "Version 1.0.1 \nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp",
-                caption: "App-Informationen");
+            var sb = new StringBuilder();
+            var versionMajor = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major;
+            var versionMinor = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Minor;
+            var versionBuild = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build;
+            sb.Append(versionMajor);
+            sb.Append(".");
+            sb.Append(versionMinor);
+            sb.Append(".");
+            sb.Append(versionBuild);
+            var versionNo = sb.ToString();
+            var msg = "Version " + versionNo + "\nDiese App wurde vom HÄVGRZ-Alphateam entwickelt.\nhttps://github.com/haevg-rz/MentorSpeedDatingApp";
+            MessageBox.Show(msg,
+                "App-Informationen");
         }
 
         #endregion
