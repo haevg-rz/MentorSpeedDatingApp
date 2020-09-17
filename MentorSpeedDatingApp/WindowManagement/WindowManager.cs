@@ -1,13 +1,13 @@
-using System;
+using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using MentorSpeedDatingApp.ViewModel;
 using MentorSpeedDatingApp.Views;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using System.Windows;
-using MentorSpeedDatingApp.ExtraFunctions;
 
 namespace MentorSpeedDatingApp.WindowManagement
 {
@@ -18,31 +18,35 @@ namespace MentorSpeedDatingApp.WindowManagement
 
         public static void ShowMatchingWindow(MainViewModel mVm, bool useNoGoDates, int maxDruckSpalten = 8)
         {
-            List<Mentor> mentorList = mVm.Mentors.ToList();
-            List<Mentee> menteeList = mVm.Mentees.ToList();
-            var calculator = new MatchingCalculator(mVm.StartTime, mVm.EndTime, mentorList, menteeList, mVm.NoGoDates, useNoGoDates);
+            var calculator = new MatchingCalculator(mVm.StartTime, mVm.EndTime, mVm.Mentors.ToList(),
+                mVm.Mentees.ToList(), mVm.NoGoDates, useNoGoDates);
             var matchings = calculator.Matchings;
-            var dates = calculator.MatchingDates;
-            List<List<Matching>> listOfMatchings = SplitMatchingsIntoSmallerMatchings(matchings, maxDruckSpalten);
+            List<List<Matching>> listOfSplitMatchings = SplitMatchingsIntoSmallerMatchings(matchings, maxDruckSpalten);
+
             if (matchings.Count > maxDruckSpalten)
             {
                 MessageBox.Show(
-                    "Die Ausgabemenge ist zu groß für eine Druckseite. Im Hintergrund haben sich Fenster geöffnet, die Sie einzeln drucken können.", "Warnung");
+                    "Die Ausgabemenge ist zu groß für eine Druckseite. Im Hintergrund haben sich Fenster geöffnet, die Sie einzeln drucken können.",
+                    "Warnung");
 
-                var firstWindow = new MatchingWindow();
-                firstWindow.DataContext = new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline + " Gesamtübersicht", true);
+                var firstWindow = new MatchingWindow
+                {
+                    DataContext = new MatchingViewModel(calculator, calculator.Matchings,
+                        mVm.Headline + " Gesamtübersicht", true)
+                };
                 firstWindow.Show();
                 matchingWindows.Add(firstWindow);
 
-                for (var index = 0; index <= listOfMatchings.Count-1; index++)
+                for (var index = 0; index <= listOfSplitMatchings.Count - 1; index++)
                 {
                     var seitenAnzahl = index + 1;
                     var seitenLabel = mVm.Headline + " - Seite " + seitenAnzahl;
-                    var m = listOfMatchings[index];
-                    var window = new MatchingWindow();
-                    window.DataContext =
-                        new MatchingViewModel(calculator, m, seitenLabel,false);
-                    window.WindowState = WindowState.Minimized;
+                    var submatchings = listOfSplitMatchings[index];
+                    var window = new MatchingWindow
+                    {
+                        DataContext = new MatchingViewModel(calculator, submatchings, seitenLabel, false),
+                        WindowState = WindowState.Minimized
+                    };
 
                     window.Show();
                     matchingWindows.Add(window);
@@ -50,19 +54,19 @@ namespace MentorSpeedDatingApp.WindowManagement
             }
             else
             {
-                var window = new MatchingWindow();
-                window.DataContext =
-                    new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline, true);
+                var window = new MatchingWindow
+                {
+                    DataContext = new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline, true)
+                };
                 window.Show();
                 matchingWindows.Add(window);
             }
-
         }
 
-        private static List<List<Matching>> SplitMatchingsIntoSmallerMatchings(List<Matching> matchings, int size)
+        public static List<List<Matching>> SplitMatchingsIntoSmallerMatchings(List<Matching> matchings, int size)
         {
             var outerList = new List<List<Matching>>();
-            for (int i = 0; i < matchings.Count; i+=size)
+            for (var i = 0; i < matchings.Count; i += size)
             {
                 outerList.Add(matchings.GetRange(i, Math.Min(size, matchings.Count - i)));
             }
@@ -70,6 +74,7 @@ namespace MentorSpeedDatingApp.WindowManagement
             return outerList;
         }
 
+        [ExcludeFromCodeCoverage]
         public static void ShowNoGoDatesWindow(ObservableCollection<(Mentor, Mentee)> noGoDates)
         {
             if (noDatesWindow != null && Application.Current.Windows.OfType<ShowNoGoDatesWindow>().Any())
@@ -81,6 +86,7 @@ namespace MentorSpeedDatingApp.WindowManagement
             noDatesWindow.Show();
         }
 
+        [ExcludeFromCodeCoverage]
         public static void CloseAllWindows()
         {
             noDatesWindow?.Close();
