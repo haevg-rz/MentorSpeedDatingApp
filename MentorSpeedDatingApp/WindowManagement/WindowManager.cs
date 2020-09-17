@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace MentorSpeedDatingApp.WindowManagement
@@ -32,7 +33,7 @@ namespace MentorSpeedDatingApp.WindowManagement
                 var firstWindow = new MatchingWindow
                 {
                     DataContext = new MatchingViewModel(calculator, calculator.Matchings,
-                        mVm.Headline + " Gesamtübersicht", true)
+                        mVm.Headline + " Gesamtübersicht", 0, true)
                 };
                 firstWindow.Show();
                 matchingWindows.Add(firstWindow);
@@ -40,11 +41,10 @@ namespace MentorSpeedDatingApp.WindowManagement
                 for (var index = 0; index <= listOfSplitMatchings.Count - 1; index++)
                 {
                     var seitenAnzahl = index + 1;
-                    var seitenLabel = mVm.Headline + " - Seite " + seitenAnzahl;
                     var submatchings = listOfSplitMatchings[index];
                     var window = new MatchingWindow
                     {
-                        DataContext = new MatchingViewModel(calculator, submatchings, seitenLabel, false),
+                        DataContext = new MatchingViewModel(calculator, submatchings, mVm.Headline, seitenAnzahl, false),
                         WindowState = WindowState.Minimized
                     };
 
@@ -56,7 +56,7 @@ namespace MentorSpeedDatingApp.WindowManagement
             {
                 var window = new MatchingWindow
                 {
-                    DataContext = new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline, true)
+                    DataContext = new MatchingViewModel(calculator, calculator.Matchings, mVm.Headline, 0, true)
                 };
                 window.Show();
                 matchingWindows.Add(window);
