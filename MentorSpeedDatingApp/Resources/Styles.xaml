@@ -1067,7 +1067,7 @@
                     <Border>
                         <TextBlock Foreground="{TemplateBinding Foreground}" Background="Transparent"
                                    FontWeight="{TemplateBinding FontWeight}"
-                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" >
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
                             <TextBlock.Text>
                                 <Binding Converter="{StaticResource NoGoDateToFormattedStringConverter}" />
                             </TextBlock.Text>
@@ -1275,6 +1275,62 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
     <!--NavigationMenuSaveAsButtonTemplate End-->
+
+    <!--NavigationMenuOpenSpecificSaveButtonTemplate Start-->
+    <ControlTemplate x:Key="NavigationMenuOpenSpecificSaveButtonTemplate" TargetType="Button">
+        <Border x:Name="buttonBorder" Background="{TemplateBinding Background}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                SnapsToDevicePixels="true">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel VerticalAlignment="Center" Height="34" Width="34">
+                    <ContentPresenter x:Name="borderContentPresenter" Focusable="False"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Path Stroke="Black" Fill="White" Width="20" Height="19" Stretch="Fill" Margin="0,6,0,0"
+                          Data="F1 M 19,50L 28,34L 63,34L 54,50L 19,50 Z M 19,28.0001
+                          L 35,28C 36,25 37.4999,24.0001 37.4999,24.0001L 48.75,24
+                          C 49.3023,24 50,24.6977 50,25.25L 50,28L 53.9999,28.0001
+                          L 53.9999,32L 27,32L 19,46.4L 19,28.0001 Z" />
+                </StackPanel>
+                <TextBox Text="Öffnen" Style="{StaticResource MenuTextboxStyle}" />
+            </StackPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Button.IsDefaulted" Value="true">
+                <Setter Property="BorderBrush" TargetName="buttonBorder"
+                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="buttonBorder"
+                        Value="{StaticResource Button.MouseOver.Background}" />
+                <Setter Property="BorderBrush" TargetName="buttonBorder"
+                        Value="{StaticResource Button.MouseOver.Border}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" TargetName="buttonBorder"
+                        Value="{StaticResource Button.Pressed.Background}" />
+                <Setter Property="BorderBrush" TargetName="buttonBorder"
+                        Value="{StaticResource Button.Pressed.Border}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" TargetName="buttonBorder"
+                        Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" TargetName="buttonBorder"
+                        Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="TextElement.Foreground" TargetName="borderContentPresenter"
+                        Value="{StaticResource Button.Disabled.Foreground}" />
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" TargetName="buttonBorder" Value="#e5e5e5" />
+                <Setter Property="BorderBrush" TargetName="buttonBorder" Value="#FF08D94B" />
+                <Setter Property="BorderThickness" TargetName="buttonBorder" Value="1.5" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <!--NavigationMenuOpenSpecificSaveButtonTemplate End-->
 
     <!--NavigationMenuShowInfoButtonTemplate Start-->
     <ControlTemplate x:Key="NavigationMenuShowInfoButtonTemplate" TargetType="Button">

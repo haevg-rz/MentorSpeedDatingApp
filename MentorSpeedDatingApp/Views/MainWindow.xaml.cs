@@ -66,6 +66,7 @@ namespace MentorSpeedDatingApp.Views
                 if (!String.IsNullOrEmpty(menteesList.Last().Name) && !String.IsNullOrEmpty(menteesList.Last().Vorname))
                 {
                     menteesList.Add(new Mentee());
+                    e.Handled = true;
                 }
             }
         }

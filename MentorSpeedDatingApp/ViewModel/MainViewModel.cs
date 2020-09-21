@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
+using System.Xml.XPath;
 using Formatting = Newtonsoft.Json.Formatting;
 
 [assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
@@ -185,6 +186,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand AddNewMentorCommand { get; set; }
         public RelayCommand AddNewMenteeCommand { get; set; }
         public RelayCommand GenerateMatchingWithNoGoDatesCommand { get; set; }
+        public RelayCommand OpenSpecificSaveFileCommand { get; set; }
 
         #endregion
 
@@ -214,6 +216,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.AddNewMenteeCommand = new RelayCommand(this.AddNewMenteeCommandHandling);
             this.GenerateMatchingWithNoGoDatesCommand = new RelayCommand(
                 this.GenerateMatchingWithNoGoDatesCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
+            this.OpenSpecificSaveFileCommand = new RelayCommand(this.OpenSpecificSaveFileCommandHandling);
 
             if (base.IsInDesignMode || this.IsInDesignMode)
             {
@@ -243,6 +246,74 @@ namespace MentorSpeedDatingApp.ViewModel
         }
 
         #region CommandHandlings
+
+        private void OpenSpecificSaveFileCommandHandling()
+        {
+            var openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                if (this.OnClosingDetectUnsavedChanges())
+                {
+                    var userDecision = MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!\n" +
+                                                   "Drücken Sie \"OK\" zum verwerfen, oder\n" +
+                                                   "\"Abbrechen\", um in die Anwendung zurückzukehren.",
+                        "Warnung", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+                    if (userDecision == MessageBoxResult.Cancel)
+                        return;
+                }
+
+                this.DeleteAllDataCommandHandling();
+                var splits = openFileDialog.FileName.Split("//");
+                this.AppSaveConfig.AppSaveFileFolder = Path.Combine(splits.Take(splits.Length - 2).ToArray());
+                this.AppSaveConfig.AppSaveFileName = splits.Last();
+                
+                var saveDataDefinition = new
+                {
+                    HeadLine = "",
+                    Date = DateTime.Now,
+                    StartTimeHours = "",
+                    StartTimeMinutes = "",
+                    EndTimeHours = "",
+                    EndTimeMinutes = "",
+                    Mentees = new List<Mentee>(),
+                    Mentors = new List<Mentor>(),
+                    NoGoDates = new List<(Mentor, Mentee)>()
+                };
+
+                var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
+                    this.AppSaveConfig.AppSaveFileName));
+                var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, saveDataDefinition);
+
+                if (deserializedJson == null)
+                    return;
+
+                this.Headline = deserializedJson.HeadLine;
+                this.Date = deserializedJson.Date;
+                this.StartTimeHours = deserializedJson.StartTimeHours;
+                this.StartTimeMinutes = deserializedJson.StartTimeMinutes;
+                this.EndTimeHours = deserializedJson.EndTimeHours;
+                this.EndTimeMinutes = deserializedJson.EndTimeMinutes;
+
+                foreach (var mentor in deserializedJson.Mentors)
+                {
+                    this.Mentors.Add(mentor);
+                }
+
+                foreach (var mentee in deserializedJson.Mentees)
+                {
+                    this.Mentees.Add(mentee);
+                }
+
+                if (deserializedJson.NoGoDates == null)
+                    return;
+
+                foreach (var noGoDate in deserializedJson.NoGoDates)
+                {
+                    this.NoGoDates.Add(noGoDate);
+                }
+            }
+        }
 
         private void AddNewMenteeCommandHandling()
         {

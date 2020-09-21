@@ -35,7 +35,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Height="136" VerticalAlignment="Top" ZIndex="1"
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Height="170" VerticalAlignment="Top" ZIndex="1"
                     HorizontalAlignment="Left" Background="White"
                     Width="{Binding ElementName=MenuVisibilityControlButon, Path=IsChecked, Converter={StaticResource NavigationMenuVisibilityConverter}}">
             <ToggleButton Height="34" VerticalAlignment="Top" Background="White" Name="MenuVisibilityControlButon"
@@ -44,6 +44,10 @@
             <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
                     Command="{Binding Path=DeleteAllDataCommand}"
                     Template="{DynamicResource NavigationMenuDeleteAllButtonTemplate}" />
+            <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
+                    Command="{Binding Path=OpenSpecificSaveFileCommand}"
+                    Template="{DynamicResource NavigationMenuOpenSpecificSaveButtonTemplate}"
+                    />
             <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
                     Command="{Binding Path=SaveCommand}"
                     Template="{DynamicResource NavigationMenuSaveAsButtonTemplate}" />
@@ -260,7 +264,8 @@
                                            Foreground="{StaticResource HealthCareGreenDarkBackgroundBrush}"
                                            FontSize="16" FontWeight="DemiBold" />
                                 <TextBox Margin="5,0,0,0" Text="{Binding MaxDruckSpalten}"
-                                         FontSize="16" Width="20" Height="20" HorizontalAlignment="Left"/>
+                                         FontSize="16" Width="25" Height="30" HorizontalAlignment="Left" Style="{StaticResource WaterMarkTextBoxStyle}"
+                                         SelectionBrush="#FF08D94B" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                             </StackPanel>
                         </Grid>
                     </Grid>
