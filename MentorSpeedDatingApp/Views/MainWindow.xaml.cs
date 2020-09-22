@@ -4,6 +4,7 @@ using MentorSpeedDatingApp.ViewModel;
 using MentorSpeedDatingApp.WindowManagement;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +27,15 @@ namespace MentorSpeedDatingApp.Views
             {
                 e.Cancel = true;
                 return;
+            }
+
+            if ((File.GetAttributes(Path.Combine(
+                     SimpleIoc.Default.GetInstance<MainViewModel>().AppSaveConfig.AppSaveFileFolder,
+                     SimpleIoc.Default.GetInstance<MainViewModel>().AppSaveConfig.AppSaveFileName)) &
+                 FileAttributes.Temporary) == FileAttributes.Temporary)
+            {
+                File.Delete(Path.Combine(SimpleIoc.Default.GetInstance<MainViewModel>().AppSaveConfig.AppSaveFileFolder,
+                    SimpleIoc.Default.GetInstance<MainViewModel>().AppSaveConfig.AppSaveFileName));
             }
 
             ViewModelLocator.Cleanup();

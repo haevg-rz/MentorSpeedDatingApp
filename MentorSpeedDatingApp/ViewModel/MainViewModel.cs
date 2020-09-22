@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
-using System.Xml.XPath;
 using Formatting = Newtonsoft.Json.Formatting;
 
 [assembly: InternalsVisibleTo("MentorSpeedDatingApp.MentorSpeedDatingAppTest")]
@@ -187,6 +186,7 @@ namespace MentorSpeedDatingApp.ViewModel
         public RelayCommand AddNewMenteeCommand { get; set; }
         public RelayCommand GenerateMatchingWithNoGoDatesCommand { get; set; }
         public RelayCommand OpenSpecificSaveFileCommand { get; set; }
+        public RelayCommand CreateNewFileCommand { get; set; }
 
         #endregion
 
@@ -217,6 +217,7 @@ namespace MentorSpeedDatingApp.ViewModel
             this.GenerateMatchingWithNoGoDatesCommand = new RelayCommand(
                 this.GenerateMatchingWithNoGoDatesCommandHandling, this.CanExecuteGenerateMatchingCommandHandling);
             this.OpenSpecificSaveFileCommand = new RelayCommand(this.OpenSpecificSaveFileCommandHandling);
+            this.CreateNewFileCommand = new RelayCommand(this.CreateNewFileCommandHandling);
 
             if (base.IsInDesignMode || this.IsInDesignMode)
             {
@@ -247,27 +248,80 @@ namespace MentorSpeedDatingApp.ViewModel
 
         #region CommandHandlings
 
+        private void CreateNewFileCommandHandling()
+        {
+            if (this.OnClosingDetectUnsavedChanges())
+            {
+                var userDecision = MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!\n" +
+                                                   "Drücken Sie \"OK\" zum verwerfen, oder\n" +
+                                                   "\"Abbrechen\", um in die Anwendung zurückzukehren.",
+                    "Warnung", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+                if (userDecision == MessageBoxResult.Cancel)
+                    return;
+            }
+
+            this.DeleteAllDataCommandHandling();
+
+            var temFilePath = Path.GetTempFileName();
+            this.AppSaveConfig.AppSaveFileName = temFilePath.Split("\\").Last();
+            this.AppSaveConfig.AppSaveFileFolder = temFilePath.Replace("\\" + this.AppSaveConfig.AppSaveFileName, "");
+
+            File.Create(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)).Close();
+            File.SetAttributes(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName),
+                FileAttributes.Temporary);
+
+            var emptyJsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(
+                Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName),
+                emptyJsonData);
+        }
+
         private void OpenSpecificSaveFileCommandHandling()
         {
-            var openFileDialog = new OpenFileDialog();
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "JSON Files(*.json) | *.json|All Files(*.*) | *.*",
+                DefaultExt = "JSON Files (*.json) | .json"
+            };
             if (openFileDialog.ShowDialog() == true)
             {
                 if (this.OnClosingDetectUnsavedChanges())
                 {
                     var userDecision = MessageBox.Show("Ungespeicherte Änderungen sind vorhanden!\n" +
-                                                   "Drücken Sie \"OK\" zum verwerfen, oder\n" +
-                                                   "\"Abbrechen\", um in die Anwendung zurückzukehren.",
+                                                       "Drücken Sie \"OK\" zum verwerfen, oder\n" +
+                                                       "\"Abbrechen\", um in die Anwendung zurückzukehren.",
                         "Warnung", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
 
                     if (userDecision == MessageBoxResult.Cancel)
                         return;
                 }
 
+                if (!openFileDialog.FileName.EndsWith(".json"))
+                {
+                    MessageBox.Show("Es können nur .json Dateien geöffnet werden!", "Information",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                if (openFileDialog.FileName.EndsWith("config.json"))
+                {
+                    MessageBox.Show("Konfigurationsdatei kann nicht geöffnet werden!", "Information",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                if ((File.GetAttributes(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
+                    this.AppSaveConfig.AppSaveFileName)) & FileAttributes.Temporary) == FileAttributes.Temporary)
+                {
+                    File.Delete(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
+                }
+
                 this.DeleteAllDataCommandHandling();
-                var splits = openFileDialog.FileName.Split("//");
-                this.AppSaveConfig.AppSaveFileFolder = Path.Combine(splits.Take(splits.Length - 2).ToArray());
+                var splits = openFileDialog.FileName.Split("\\");
+                this.AppSaveConfig.AppSaveFileFolder = "\\\\" + Path.Combine(splits.Take(splits.Length - 1).ToArray());
                 this.AppSaveConfig.AppSaveFileName = splits.Last();
-                
+
                 var saveDataDefinition = new
                 {
                     HeadLine = "",
@@ -285,7 +339,7 @@ namespace MentorSpeedDatingApp.ViewModel
                     this.AppSaveConfig.AppSaveFileName));
                 var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, saveDataDefinition);
 
-                if (deserializedJson == null)
+                if (deserializedJson?.Mentees == null || deserializedJson.Mentors == null)
                     return;
 
                 this.Headline = deserializedJson.HeadLine;
@@ -454,6 +508,16 @@ namespace MentorSpeedDatingApp.ViewModel
         {
             var splits = this.AppSaveConfig.AppSaveFileName.Split('\\');
             var split = splits.FirstOrDefault(x => x.Contains(".json"));
+            string tempPath = this.AppSaveConfig.AppSaveFileFolder;
+
+            if ((File.GetAttributes(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
+                this.AppSaveConfig.AppSaveFileName)) & FileAttributes.Temporary) == FileAttributes.Temporary)
+            {
+                tempPath = this.AppSaveConfig.AppSaveFileFolder;
+                this.AppSaveConfig.AppSaveFileFolder = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    "MentorSpeedDatingApp");
+            }
 
             var sfd = new SaveFileDialog
             {
@@ -464,10 +528,20 @@ namespace MentorSpeedDatingApp.ViewModel
                 RestoreDirectory = true
             };
 
-            if (sfd.ShowDialog() != true)
+            if (sfd.ShowDialog() == false)
+            {
+                this.AppSaveConfig.AppSaveFileFolder = tempPath;
                 return;
+            }
 
             var jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
+
+            if ((File.GetAttributes(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
+                this.AppSaveConfig.AppSaveFileName)) & FileAttributes.Temporary) == FileAttributes.Temporary)
+            {
+                File.Delete(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName));
+            }
+
             this.AppSaveConfig.AppSaveFileName = sfd.FileName;
             this.AppSaveConfig.AppSaveFileFolder = Path.GetDirectoryName(sfd.FileName);
             File.WriteAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName),
@@ -481,6 +555,17 @@ namespace MentorSpeedDatingApp.ViewModel
             if (!Directory.Exists(this.AppSaveConfig.AppSaveFileFolder))
             {
                 Directory.CreateDirectory(this.AppSaveConfig.AppSaveFileFolder);
+            }
+
+            if (!Directory.Exists(this.AppSaveConfig.AppExportFolderPath))
+            {
+                Directory.CreateDirectory(this.AppSaveConfig.AppExportFolderPath);
+            }
+
+            if (!Directory.Exists(this.AppSaveConfig.AppConfigFolderPath))
+            {
+                var drInfo = Directory.CreateDirectory(this.AppSaveConfig.AppConfigFolderPath);
+                drInfo.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
             }
 
             if (!File.Exists(this.AppSaveConfig.AppConfigPath))
@@ -536,8 +621,17 @@ namespace MentorSpeedDatingApp.ViewModel
                 NoGoDates = new List<(Mentor, Mentee)>()
             };
 
-            if (!File.Exists(this.AppSaveConfig.CombineAppPaths()))
-                return;
+            if (!File.Exists(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)))
+            {
+                File.Create(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName))
+                    .Close();
+
+                var emptyJsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
+                File.WriteAllText(
+                    Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName),
+                    emptyJsonData);
+            }
+
             var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
                 this.AppSaveConfig.AppSaveFileName));
             var deserializedJson = JsonConvert.DeserializeAnonymousType(jsonData, saveDataDefinition);
@@ -633,12 +727,6 @@ namespace MentorSpeedDatingApp.ViewModel
                 Mentors = new List<Mentor>(),
                 NoGoDates = new List<(Mentor, Mentee)>()
             };
-
-            if (!File.Exists(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName)))
-            {
-                File.Create(Path.Combine(this.AppSaveConfig.AppSaveFileFolder, this.AppSaveConfig.AppSaveFileName))
-                    .Close();
-            }
 
             var jsonData = File.ReadAllText(Path.Combine(this.AppSaveConfig.AppSaveFileFolder,
                 this.AppSaveConfig.AppSaveFileName));

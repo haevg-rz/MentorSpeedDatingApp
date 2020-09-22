@@ -35,22 +35,24 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Height="170" VerticalAlignment="Top" ZIndex="1"
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Height="204" VerticalAlignment="Top" ZIndex="1"
                     HorizontalAlignment="Left" Background="White"
                     Width="{Binding ElementName=MenuVisibilityControlButon, Path=IsChecked, Converter={StaticResource NavigationMenuVisibilityConverter}}">
             <ToggleButton Height="34" VerticalAlignment="Top" Background="White" Name="MenuVisibilityControlButon"
                           IsChecked="False" BorderBrush="Transparent"
                           Template="{DynamicResource NavigationMenuToggleButtonTemplate}" />
             <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
-                    Command="{Binding Path=DeleteAllDataCommand}"
-                    Template="{DynamicResource NavigationMenuDeleteAllButtonTemplate}" />
+                    Command="{Binding Path=CreateNewFileCommand}"
+                    Template="{DynamicResource NavigationMenuCreateNewMatchingButtonTemplate}"/>
             <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
                     Command="{Binding Path=OpenSpecificSaveFileCommand}"
-                    Template="{DynamicResource NavigationMenuOpenSpecificSaveButtonTemplate}"
-                    />
+                    Template="{DynamicResource NavigationMenuOpenSpecificSaveButtonTemplate}"/>
             <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
                     Command="{Binding Path=SaveCommand}"
                     Template="{DynamicResource NavigationMenuSaveAsButtonTemplate}" />
+            <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
+                    Command="{Binding Path=DeleteAllDataCommand}"
+                    Template="{DynamicResource NavigationMenuDeleteAllButtonTemplate}" />
             <Button Height="34" VerticalAlignment="Top" Background="White" BorderBrush="Transparent"
                     Command="{Binding ShowInfoCommand}"
                     Template="{DynamicResource NavigationMenuShowInfoButtonTemplate}" />
@@ -82,7 +84,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="Überschrift: " HorizontalAlignment="Left" />
-                            <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=Headline}"
+                            <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=Headline, UpdateSourceTrigger=PropertyChanged}"
                                      ToolTip="Bitte die Überschrift eingeben." Width="300"
                                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                                      HorizontalAlignment="Left" Margin="0,0,0,5"

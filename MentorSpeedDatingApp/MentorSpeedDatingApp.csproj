@@ -10,6 +10,8 @@
     <StartupObject>MentorSpeedDatingApp.App</StartupObject>
     <ApplicationIcon>Herz_Logo2.ico</ApplicationIcon>
     <SignAssembly>false</SignAssembly>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Ioc;
 using MentorSpeedDatingApp.ExtraFunctions;
 using MentorSpeedDatingApp.Models;
 using Microsoft.Office.Interop.Excel;
@@ -12,7 +14,6 @@ using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using GalaSoft.MvvmLight.CommandWpf;
 using Point = System.Windows.Point;
 
 namespace MentorSpeedDatingApp.ViewModel
@@ -66,9 +67,17 @@ namespace MentorSpeedDatingApp.ViewModel
             set => base.Set(ref this.headline, value);
         }
 
-        public String PrintHeadline { get => this.printHeadline; set => base.Set(ref this.printHeadline, value); }
+        public String PrintHeadline
+        {
+            get => this.printHeadline;
+            set => base.Set(ref this.printHeadline, value);
+        }
 
-        public String ExportToolTip { get => this.exportToolTip; set => base.Set(ref this.exportToolTip, value); }
+        public String ExportToolTip
+        {
+            get => this.exportToolTip;
+            set => base.Set(ref this.exportToolTip, value);
+        }
 
         #endregion
 
@@ -111,7 +120,8 @@ namespace MentorSpeedDatingApp.ViewModel
             }
         }
 
-        public MatchingViewModel(MatchingCalculator calc, List<Matching> matchings, string headline, int seitenAnzahl, bool canExecuteExport = true)
+        public MatchingViewModel(MatchingCalculator calc, List<Matching> matchings, string headline, int seitenAnzahl,
+            bool canExecuteExport = true)
         {
             this.ExportCommand = new RelayCommand(this.ExportCommandHandling, this.CanExecuteExport);
             this.PrintCommand = new GalaSoft.MvvmLight.Command.RelayCommand<Visual>(this.PrintCommandHandling);
@@ -129,6 +139,7 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 return title;
             }
+
             string seitenLabel;
             if (String.IsNullOrEmpty(title))
             {
@@ -285,8 +296,8 @@ namespace MentorSpeedDatingApp.ViewModel
                 var title = string.IsNullOrWhiteSpace(this.headline)
                     ? "SpeedDateMatching.xlsx"
                     : this.headline + ".xlsx";
-                var outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                    "MSDAPP", title);
+                var outputPath =
+                    Path.Combine(SimpleIoc.Default.GetInstance<MainViewModel>().AppSaveConfig.AppExportFolderPath, title);
 
                 workBook.SaveAs(outputPath,
                     XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, false,
@@ -298,9 +309,8 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 workBook.Close();
                 excel.Quit();
-                Process.Start("explorer.exe", Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                    "MSDAPP"));
+                Process.Start("explorer.exe",
+                    SimpleIoc.Default.GetInstance<MainViewModel>().AppSaveConfig.AppExportFolderPath);
             }
         }
 
@@ -310,6 +320,7 @@ namespace MentorSpeedDatingApp.ViewModel
             {
                 this.exportToolTip = "Bitte exportieren Sie das Matching aus der Gesamtübersicht.";
             }
+
             return this.canExecuteExport;
         }
 

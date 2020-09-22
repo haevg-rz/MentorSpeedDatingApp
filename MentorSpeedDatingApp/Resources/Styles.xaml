@@ -1276,6 +1276,59 @@
     </ControlTemplate>
     <!--NavigationMenuSaveAsButtonTemplate End-->
 
+    <!--NavigationMenuCreateNewMatchingButtonTemplate Start-->
+    <ControlTemplate x:Key="NavigationMenuCreateNewMatchingButtonTemplate" TargetType="Button">
+        <Border x:Name="buttonBorder" Background="{TemplateBinding Background}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                SnapsToDevicePixels="true">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel VerticalAlignment="Center" Height="34" Width="34">
+                    <ContentPresenter x:Name="borderContentPresenter" Focusable="False"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Path Stroke="Black" Fill="Black" Width="20" Height="19" Stretch="Fill" Margin="0,6,0,0" StrokeThickness="0.1"
+                          Data="F1 M 43,30L 50.75,30L 43,22.25L 43,30 Z M 52,34L 39,34L 39,21L 24,21L 24,45L 20,45L 20,17L 43.25,17L 56,29.75L 56,59L 34,59L 34,55L 52,55L 52,34 Z M 28,38L 33,38L 33,46L 41,46L 41,51L 33,51L 33,59L 28,59L 28,51L 20,51L 20,46L 28,46L 28,38 Z M 20,59L 20,52L 24,52L 24,55L 27,55L 27,59L 20,59 Z" />
+                </StackPanel>
+                <TextBox Text="Neue Datei" Style="{StaticResource MenuTextboxStyle}" />
+            </StackPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Button.IsDefaulted" Value="true">
+                <Setter Property="BorderBrush" TargetName="buttonBorder"
+                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="buttonBorder"
+                        Value="{StaticResource Button.MouseOver.Background}" />
+                <Setter Property="BorderBrush" TargetName="buttonBorder"
+                        Value="{StaticResource Button.MouseOver.Border}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" TargetName="buttonBorder"
+                        Value="{StaticResource Button.Pressed.Background}" />
+                <Setter Property="BorderBrush" TargetName="buttonBorder"
+                        Value="{StaticResource Button.Pressed.Border}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" TargetName="buttonBorder"
+                        Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" TargetName="buttonBorder"
+                        Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="TextElement.Foreground" TargetName="borderContentPresenter"
+                        Value="{StaticResource Button.Disabled.Foreground}" />
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" TargetName="buttonBorder" Value="#e5e5e5" />
+                <Setter Property="BorderBrush" TargetName="buttonBorder" Value="#FF08D94B" />
+                <Setter Property="BorderThickness" TargetName="buttonBorder" Value="1.5" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <!--NavigationMenuCreateNewMatchingButtonTemplate End-->
+
     <!--NavigationMenuOpenSpecificSaveButtonTemplate Start-->
     <ControlTemplate x:Key="NavigationMenuOpenSpecificSaveButtonTemplate" TargetType="Button">
         <Border x:Name="buttonBorder" Background="{TemplateBinding Background}"
