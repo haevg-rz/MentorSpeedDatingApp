@@ -319,7 +319,14 @@ namespace MentorSpeedDatingApp.ViewModel
 
                 this.DeleteAllDataCommandHandling();
                 var splits = openFileDialog.FileName.Split("\\");
-                this.AppSaveConfig.AppSaveFileFolder = "\\\\" + Path.Combine(splits.Take(splits.Length - 1).ToArray());
+                if (openFileDialog.FileName.StartsWith("\\\\"))
+                {
+                    this.AppSaveConfig.AppSaveFileFolder = "\\\\" + Path.Combine(splits.Take(splits.Length - 1).ToArray());
+                }
+                else
+                { 
+                    this.AppSaveConfig.AppSaveFileFolder = Path.Combine(splits.Take(splits.Length - 1).ToArray());
+                }
                 this.AppSaveConfig.AppSaveFileName = splits.Last();
 
                 var saveDataDefinition = new
@@ -396,7 +403,6 @@ namespace MentorSpeedDatingApp.ViewModel
                 return;
             }
 
-            //TODO UNSCHÖN
             if (String.IsNullOrEmpty(this.NoGoMentor.Name)
                 || String.IsNullOrEmpty(this.NoGoMentor.Vorname)
                 || String.IsNullOrEmpty(this.NoGoMentee.Name)
